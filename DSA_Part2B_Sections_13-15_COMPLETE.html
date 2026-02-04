@@ -1,0 +1,2267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Learning Journey - Part 2B (Sections 13-15)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.8; color: #1a1a1a; background: #f8f9fa; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 3em; margin-bottom: 20px; font-weight: 700; }
+        .hero p { font-size: 1.3em; opacity: 0.95; max-width: 700px; margin: 0 auto 20px; }
+        .part-navigation { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .part-nav-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3); }
+        .part-nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .part-nav-btn.active { background: white; color: #667eea; border-color: white; }
+        .nav-sticky { position: relative; background: white; border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .nav-btn { padding: 14px 20px; background: #f1f3f5; border: none; color: #495057; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-size: 0.95em; text-align: left; border: 2px solid transparent; }
+        .nav-btn:hover { background: #e9ecef; transform: translateY(-2px); }
+        .nav-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: white; border-radius: 16px; padding: 40px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .card h2 { color: #667eea; font-size: 2.2em; margin-bottom: 15px; font-weight: 700; }
+        .card h3 { color: #495057; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; font-weight: 600; padding-bottom: 10px; border-bottom: 2px solid #e9ecef; }
+        .card h4 { color: #764ba2; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; font-weight: 600; }
+        .card p { color: #495057; margin-bottom: 15px; font-size: 1.05em; }
+        .card ul, .card ol { margin-left: 30px; margin-bottom: 20px; color: #495057; }
+        .card li { margin-bottom: 10px; line-height: 1.7; }
+        .code-block { background: #1e1e1e; border-radius: 12px; overflow: hidden; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .code-header { background: #2d2d2d; padding: 12px 20px; color: #9cdcfe; font-size: 0.9em; font-weight: 600; border-bottom: 1px solid #404040; }
+        pre { padding: 25px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6; margin: 0; }
+        code { color: #d4d4d4; }
+        .comment { color: #6a9955; font-style: italic; }
+        .keyword { color: #569cd6; font-weight: 600; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .class { color: #4ec9b0; }
+        .builtin { color: #9cdcfe; }
+        .info-box { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 5px solid #2196f3; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .info-box strong { color: #1565c0; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .tip-box { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 5px solid #4caf50; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .tip-box strong { color: #2e7d32; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .warning-box { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 5px solid #ff9800; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .warning-box strong { color: #e65100; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .example-box { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 5px solid #9c27b0; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .example-box strong { color: #6a1b9a; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .visual-diagram { background: #ffffff; border: 2px solid #667eea; border-radius: 12px; padding: 30px; margin: 25px 0; text-align: center; }
+        .visual-diagram pre { background: transparent; padding: 0; color: #2c3e50; font-weight: 500; font-size: 16px; line-height: 2; }
+        .complexity { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+        .complexity span { padding: 8px 16px; background: #e8f5e9; color: #2e7d32; border-radius: 20px; font-size: 0.9em; font-weight: 600; border: 2px solid #4caf50; }
+        .complexity span.medium { background: #fff3e0; color: #e65100; border-color: #ff9800; }
+        .complexity span.bad { background: #ffebee; color: #c62828; border-color: #f44336; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e9ecef; color: #495057; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8f9fa; }
+        .compiler-container { background: white; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .compiler-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .compiler-title { font-size: 1.4em; color: #667eea; font-weight: 600; }
+        .compiler-controls { display: flex; gap: 10px; }
+        .run-btn, .clear-btn { border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .run-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .clear-btn { background: #f1f3f5; color: #495057; }
+        .run-btn:hover, .clear-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .code-editor { width: 100%; min-height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 14px; padding: 20px; border: 2px solid #e9ecef; border-radius: 10px; background: #1e1e1e; color: #d4d4d4; resize: vertical; }
+        .output-container { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; border: 2px solid #e9ecef; min-height: 100px; font-family: 'JetBrains Mono', monospace; font-size: 14px; white-space: pre-wrap; display: none; }
+        .output-container.show { display: block; }
+        .output-header { font-weight: 600; color: #667eea; margin-bottom: 10px; }
+        .leetcode-problem { background: linear-gradient(135deg, #fff9e6 0%, #ffedd5 100%); border-left: 5px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 8px; }
+        .leetcode-problem .problem-title { color: #d97706; font-size: 1.2em; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .difficulty { padding: 4px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .difficulty.easy { background: #d1fae5; color: #065f46; }
+        .difficulty.medium { background: #fef3c7; color: #92400e; }
+        .difficulty.hard { background: #fee2e2; color: #991b1b; }
+        .problem-link { display: inline-block; margin-top: 10px; padding: 8px 20px; background: #f59e0b; color: white; text-decoration: none; border-radius: 20px; font-size: 0.9em; font-weight: 600; transition: all 0.3s ease; }
+        .problem-link:hover { background: #d97706; transform: translateY(-2px); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2em; } .nav-grid { grid-template-columns: 1fr; } }
+    
+        /* Enhanced Input/Output styling for LeetCode examples */
+        .io-section { background: #f8f9fa; border-radius: 8px; padding: 15px; margin: 15px 0; border: 2px solid #dee2e6; }
+        .io-label { font-weight: 700; color: #2c3e50; font-size: 1em; margin-bottom: 8px; display: block; }
+        .io-content { color: #1a1a1a; font-family: 'JetBrains Mono', monospace; font-size: 0.95em; background: white; padding: 12px; border-radius: 6px; border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🚀 Complete DSA in Python</h1>
+        <p>Part 2B: Dynamic Programming, Sorting & Searching | Master Advanced Algorithms</p>
+        <div class="part-navigation">
+            <a href="index.html" class="part-nav-btn">Part 1A: Sec 1-3</a>
+            <a href="DSA_Part1B_Sections_4-6_COMPLETE.html" class="part-nav-btn">Part 1B: Sec 4-6</a>
+            <a href="DSA_Part1C_Sections_7-9_COMPLETE.html" class="part-nav-btn">Part 1C: Sec 7-9</a>
+            <a href="DSA_Part2A_Sections_10-12_COMPLETE.html" class="part-nav-btn">Part 2A: Sec 10-12</a>
+            <span class="part-nav-btn active">Part 2B: Sec 13-15</span>
+            <a href="DSA_Part2C_Sections_16-18_COMPLETE.html" class="part-nav-btn">Part 2C: Sec 16-18</a>
+        </div>
+    </div>
+    
+    <div class="nav-sticky">
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="showSection('dp')">13. 🧩 Dynamic Programming</button>
+            <button class="nav-btn" onclick="showSection('sorting')">14. 🔄 Sorting Algorithms</button>
+            <button class="nav-btn" onclick="showSection('searching')">15. 🔍 Searching Algorithms</button>
+        </div>
+    </div>
+
+    <!-- SECTION 13: DYNAMIC PROGRAMMING - COMPLETE -->
+    <div id="dp" class="section active">
+        <div class="card">
+            <h2>🧩 Dynamic Programming - The Ultimate Optimization</h2>
+            
+            <h3>What is Dynamic Programming (DP)?</h3>
+            <p>Dynamic Programming is an algorithmic technique for solving problems by <strong>breaking them down into overlapping subproblems</strong> and storing their solutions to avoid redundant calculations.</p>
+            
+            <div class="info-box">
+                <strong>When to Use Dynamic Programming:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Optimal Substructure:</strong> Solution can be built from optimal solutions of subproblems</li>
+                    <li><strong>Overlapping Subproblems:</strong> Same subproblems are solved multiple times</li>
+                    <li><strong>Keywords:</strong> "Maximum", "Minimum", "Count ways", "Longest", "Shortest"</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>Key Insight:</strong>
+                <p style="margin-top: 10px; margin-bottom: 0;">DP = Recursion + Memoization (or Tabulation)<br>
+                Instead of recalculating the same thing over and over, we store it!</p>
+            </div>
+
+            <h3>Two Approaches to DP</h3>
+            
+            <h4>1. Top-Down (Memoization)</h4>
+            <p>Start with the original problem, break it down recursively, and cache results.</p>
+            <ul>
+                <li>Uses recursion</li>
+                <li>Store results in a memo (dictionary/array)</li>
+                <li>Easier to write (think recursively first)</li>
+            </ul>
+
+            <h4>2. Bottom-Up (Tabulation)</h4>
+            <p>Start with smallest subproblems, build up to the original problem.</p>
+            <ul>
+                <li>Uses iteration</li>
+                <li>Fill a DP table from base cases upward</li>
+                <li>Often more space-efficient</li>
+                <li>Faster (no recursion overhead)</li>
+            </ul>
+
+            <h3>Classic Example: Fibonacci Sequence</h3>
+            <p>Let's see DP in action with the most famous example!</p>
+
+            <div class="visual-diagram">
+                <strong>Fibonacci Without DP (Exponential Time!):</strong>
+                <pre>
+fib(5) calls fib(4) and fib(3)
+fib(4) calls fib(3) and fib(2)
+fib(3) calls fib(2) and fib(1)
+...
+
+Notice: fib(3) is calculated TWICE!
+fib(2) is calculated THREE times!
+
+This grows exponentially: O(2^n)
+                </pre>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h4 style="text-align: center; color: #667eea; margin-bottom: 20px;">📊 Fibonacci Recursion Tree: Without DP vs With DP</h4>
+                <svg viewBox="0 0 1200 500" style="width: 100%; height: auto;">
+                    <!-- Left side: Without DP (Exponential) -->
+                    <text x="300" y="25" font-size="18" font-weight="bold" fill="#e74c3c" text-anchor="middle">Without DP: O(2^n) - Recalculates Everything!</text>
+                    
+                    <!-- fib(5) tree -->
+                    <circle cx="300" cy="60" r="25" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+                    <text x="300" y="67" font-size="14" fill="white" font-weight="bold" text-anchor="middle">fib(5)</text>
+                    
+                    <!-- Level 1 -->
+                    <line x1="300" y1="85" x2="200" y2="135" stroke="#e74c3c" stroke-width="2"/>
+                    <line x1="300" y1="85" x2="400" y2="135" stroke="#e74c3c" stroke-width="2"/>
+                    
+                    <circle cx="200" cy="150" r="23" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+                    <text x="200" y="157" font-size="13" fill="white" font-weight="bold" text-anchor="middle">fib(4)</text>
+                    
+                    <circle cx="400" cy="150" r="23" fill="#e67e22" stroke="#d35400" stroke-width="2"/>
+                    <text x="400" y="157" font-size="13" fill="white" font-weight="bold" text-anchor="middle">fib(3)</text>
+                    
+                    <!-- Level 2 -->
+                    <line x1="200" y1="173" x2="150" y2="223" stroke="#e67e22" stroke-width="1.5"/>
+                    <line x1="200" y1="173" x2="250" y2="223" stroke="#e67e22" stroke-width="1.5"/>
+                    <line x1="400" y1="173" x2="350" y2="223" stroke="#e67e22" stroke-width="1.5"/>
+                    <line x1="400" y1="173" x2="450" y2="223" stroke="#e67e22" stroke-width="1.5"/>
+                    
+                    <circle cx="150" cy="238" r="21" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="150" y="244" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(3)</text>
+                    
+                    <circle cx="250" cy="238" r="21" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="250" y="244" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(2)</text>
+                    
+                    <circle cx="350" cy="238" r="21" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="350" y="244" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(2)</text>
+                    
+                    <circle cx="450" cy="238" r="21" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="450" y="244" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(1)</text>
+                    
+                    <!-- Duplicate indicators -->
+                    <rect x="125" y="270" width="50" height="25" fill="#ff6b6b" rx="5"/>
+                    <text x="150" y="287" font-size="11" fill="white" font-weight="bold" text-anchor="middle">SAME!</text>
+                    
+                    <rect x="225" y="270" width="50" height="25" fill="#ff6b6b" rx="5"/>
+                    <text x="250" y="287" font-size="11" fill="white" font-weight="bold" text-anchor="middle">SAME!</text>
+                    
+                    <rect x="325" y="270" width="50" height="25" fill="#ff6b6b" rx="5"/>
+                    <text x="350" y="287" font-size="11" fill="white" font-weight="bold" text-anchor="middle">SAME!</text>
+                    
+                    <text x="300" y="330" font-size="13" fill="#e74c3c" font-weight="bold" text-anchor="middle">⚠️ Many duplicate calculations!</text>
+                    <text x="300" y="350" font-size="12" fill="#666" text-anchor="middle">fib(3) computed 2x, fib(2) computed 3x</text>
+                    
+                    <!-- Right side: With DP (Linear) -->
+                    <text x="900" y="25" font-size="18" font-weight="bold" fill="#27ae60" text-anchor="middle">With DP: O(n) - Compute Once, Reuse!</text>
+                    
+                    <!-- fib(5) with memo -->
+                    <circle cx="900" cy="60" r="25" fill="#27ae60" stroke="#229954" stroke-width="2"/>
+                    <text x="900" y="67" font-size="14" fill="white" font-weight="bold" text-anchor="middle">fib(5)</text>
+                    
+                    <!-- Memo table visualization -->
+                    <rect x="750" y="110" width="300" height="180" fill="#ecf9f2" stroke="#27ae60" stroke-width="2" rx="8"/>
+                    <text x="900" y="135" font-size="15" fill="#27ae60" font-weight="bold" text-anchor="middle">📝 Memoization Table</text>
+                    
+                    <!-- Table entries -->
+                    <rect x="770" y="150" width="80" height="30" fill="#2ecc71" rx="4"/>
+                    <text x="810" y="170" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(0) = 0</text>
+                    
+                    <rect x="860" y="150" width="80" height="30" fill="#2ecc71" rx="4"/>
+                    <text x="900" y="170" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(1) = 1</text>
+                    
+                    <rect x="950" y="150" width="80" height="30" fill="#2ecc71" rx="4"/>
+                    <text x="990" y="170" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(2) = 1</text>
+                    
+                    <rect x="770" y="190" width="80" height="30" fill="#2ecc71" rx="4"/>
+                    <text x="810" y="210" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(3) = 2</text>
+                    
+                    <rect x="860" y="190" width="80" height="30" fill="#2ecc71" rx="4"/>
+                    <text x="900" y="210" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(4) = 3</text>
+                    
+                    <rect x="950" y="190" width="80" height="30" fill="#2ecc71" rx="4"/>
+                    <text x="990" y="210" font-size="12" fill="white" font-weight="bold" text-anchor="middle">fib(5) = 5</text>
+                    
+                    <!-- Check marks -->
+                    <text x="810" y="245" font-size="24" fill="#27ae60">✓</text>
+                    <text x="900" y="245" font-size="24" fill="#27ae60">✓</text>
+                    <text x="990" y="245" font-size="24" fill="#27ae60">✓</text>
+                    
+                    <text x="900" y="270" font-size="12" fill="#27ae60" font-weight="bold" text-anchor="middle">Each value computed ONCE</text>
+                    
+                    <text x="900" y="330" font-size="13" fill="#27ae60" font-weight="bold" text-anchor="middle">✅ No duplicate work!</text>
+                    <text x="900" y="350" font-size="12" fill="#666" text-anchor="middle">Lookup in memo is O(1)</text>
+                    
+                    <!-- Comparison box at bottom -->
+                    <rect x="250" y="380" width="700" height="100" fill="#f8f9fa" stroke="#667eea" stroke-width="3" rx="10"/>
+                    <text x="600" y="410" font-size="16" fill="#667eea" font-weight="bold" text-anchor="middle">⚡ Performance Comparison</text>
+                    
+                    <text x="400" y="440" font-size="13" fill="#e74c3c" font-weight="bold" text-anchor="middle">Without DP: fib(40) ≈ 2 billion calls!</text>
+                    <text x="800" y="440" font-size="13" fill="#27ae60" font-weight="bold" text-anchor="middle">With DP: fib(40) = 40 calls!</text>
+                    
+                    <text x="400" y="465" font-size="12" fill="#e74c3c" text-anchor="middle">Time: ~1.5 seconds</text>
+                    <text x="800" y="465" font-size="12" fill="#27ae60" text-anchor="middle">Time: &lt;0.001 seconds</text>
+                </svg>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Fibonacci: All Three Approaches</div>
+                <pre><code><span class="comment"># Approach 1: Naive Recursion - O(2^n) TIME - VERY SLOW!</span>
+<span class="keyword">def</span> <span class="function">fib_naive</span>(n):
+    <span class="string">"""
+    Exponential time! Don't use for large n!
+    
+    Time: O(2^n) - each call spawns 2 more calls
+    Space: O(n) - recursion stack depth
+    """</span>
+    <span class="keyword">if</span> n <= <span class="number">1</span>:
+        <span class="keyword">return</span> n
+    <span class="keyword">return</span> <span class="function">fib_naive</span>(n-<span class="number">1</span>) + <span class="function">fib_naive</span>(n-<span class="number">2</span>)
+
+<span class="comment"># Approach 2: Top-Down DP (Memoization) - O(n) TIME!</span>
+<span class="keyword">def</span> <span class="function">fib_memo</span>(n, memo=<span class="keyword">None</span>):
+    <span class="string">"""
+    Much faster! Store computed values.
+    
+    Time: O(n) - compute each fib(i) only once
+    Space: O(n) - memo + recursion stack
+    """</span>
+    <span class="keyword">if</span> memo <span class="keyword">is</span> <span class="keyword">None</span>:
+        memo = {}
+    
+    <span class="keyword">if</span> n <span class="keyword">in</span> memo:
+        <span class="keyword">return</span> memo[n]
+    
+    <span class="keyword">if</span> n <= <span class="number">1</span>:
+        <span class="keyword">return</span> n
+    
+    memo[n] = <span class="function">fib_memo</span>(n-<span class="number">1</span>, memo) + <span class="function">fib_memo</span>(n-<span class="number">2</span>, memo)
+    <span class="keyword">return</span> memo[n]
+
+<span class="comment"># Approach 3: Bottom-Up DP (Tabulation) - O(n) TIME, BEST!</span>
+<span class="keyword">def</span> <span class="function">fib_dp</span>(n):
+    <span class="string">"""
+    Iterative, most efficient!
+    
+    Time: O(n)
+    Space: O(n) - can optimize to O(1)
+    """</span>
+    <span class="keyword">if</span> n <= <span class="number">1</span>:
+        <span class="keyword">return</span> n
+    
+    dp = [<span class="number">0</span>] * (n + <span class="number">1</span>)
+    dp[<span class="number">1</span>] = <span class="number">1</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">2</span>, n + <span class="number">1</span>):
+        dp[i] = dp[i-<span class="number">1</span>] + dp[i-<span class="number">2</span>]
+    
+    <span class="keyword">return</span> dp[n]
+
+<span class="comment"># Space-Optimized: O(1) space!</span>
+<span class="keyword">def</span> <span class="function">fib_optimized</span>(n):
+    <span class="string">"""Only need last two values!"""</span>
+    <span class="keyword">if</span> n <= <span class="number">1</span>:
+        <span class="keyword">return</span> n
+    
+    prev2, prev1 = <span class="number">0</span>, <span class="number">1</span>
+    
+    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">2</span>, n + <span class="number">1</span>):
+        current = prev1 + prev2
+        prev2, prev1 = prev1, current
+    
+    <span class="keyword">return</span> prev1
+
+<span class="comment"># Test all approaches</span>
+n = <span class="number">10</span>
+<span class="builtin">print</span>(<span class="string">f"fib({n}) = {fib_dp(n)}"</span>)  <span class="comment"># 55</span></code></pre>
+            </div>
+
+            <h3>Common DP Patterns</h3>
+
+            <h4>Pattern 1: Climbing Stairs / Count Ways</h4>
+            <div class="code-block">
+                <div class="code-header">Climbing Stairs Problem</div>
+                <pre><code><span class="keyword">def</span> <span class="function">climb_stairs</span>(n):
+    <span class="string">"""
+    You're climbing stairs. You can take 1 or 2 steps at a time.
+    How many distinct ways can you climb to the top?
+    
+    Example: n = 3
+    Ways: (1,1,1), (1,2), (2,1)
+    Output: 3
+    
+    Key insight: Same as Fibonacci!
+    To reach step n, you either:
+    - Come from step n-1 (take 1 step)
+    - Come from step n-2 (take 2 steps)
+    
+    dp[n] = dp[n-1] + dp[n-2]
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> n <= <span class="number">2</span>:
+        <span class="keyword">return</span> n
+    
+    prev2, prev1 = <span class="number">1</span>, <span class="number">2</span>
+    
+    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">3</span>, n + <span class="number">1</span>):
+        current = prev1 + prev2
+        prev2, prev1 = prev1, current
+    
+    <span class="keyword">return</span> prev1
+
+<span class="comment"># Test</span>
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="number">6</span>):
+    <span class="builtin">print</span>(<span class="string">f"stairs({i}) = {climb_stairs(i)}"</span>)
+<span class="comment"># Output: 1, 2, 3, 5, 8 (Fibonacci!)</span></code></pre>
+            </div>
+
+            <h4>Pattern 2: Coin Change (Unbounded Knapsack)</h4>
+            <div class="code-block">
+                <div class="code-header">Coin Change - Minimum Coins</div>
+                <pre><code><span class="keyword">def</span> <span class="function">coin_change</span>(coins, amount):
+    <span class="string">"""
+    Find minimum number of coins to make amount.
+    
+    Example: coins = [1,2,5], amount = 11
+    Output: 3 (5+5+1)
+    
+    DP Equation:
+    dp[i] = min number of coins to make amount i
+    dp[i] = min(dp[i], dp[i - coin] + 1) for each coin
+    
+    Time: O(amount * len(coins))
+    Space: O(amount)
+    """</span>
+    <span class="comment"># Initialize DP array</span>
+    dp = [<span class="builtin">float</span>(<span class="string">'inf'</span>)] * (amount + <span class="number">1</span>)
+    dp[<span class="number">0</span>] = <span class="number">0</span>  <span class="comment"># Base case: 0 coins for amount 0</span>
+    
+    <span class="comment"># For each amount from 1 to target</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, amount + <span class="number">1</span>):
+        <span class="comment"># Try each coin</span>
+        <span class="keyword">for</span> coin <span class="keyword">in</span> coins:
+            <span class="keyword">if</span> i >= coin:
+                dp[i] = <span class="builtin">min</span>(dp[i], dp[i - coin] + <span class="number">1</span>)
+    
+    <span class="keyword">return</span> dp[amount] <span class="keyword">if</span> dp[amount] != <span class="builtin">float</span>(<span class="string">'inf'</span>) <span class="keyword">else</span> -<span class="number">1</span>
+
+<span class="comment"># Test</span>
+coins = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">5</span>]
+amount = <span class="number">11</span>
+<span class="builtin">print</span>(<span class="string">f"Minimum coins for {amount}: {coin_change(coins, amount)}"</span>)  <span class="comment"># 3</span></code></pre>
+            </div>
+
+            <h4>Pattern 3: Longest Common Subsequence (LCS)</h4>
+            <div class="code-block">
+                <div class="code-header">Longest Common Subsequence</div>
+                <pre><code><span class="keyword">def</span> <span class="function">longest_common_subsequence</span>(text1, text2):
+    <span class="string">"""
+    Find length of longest common subsequence.
+    
+    Example: text1 = "abcde", text2 = "ace"
+    Output: 3 (LCS is "ace")
+    
+    DP Table:
+    - If characters match: dp[i][j] = dp[i-1][j-1] + 1
+    - If don't match: dp[i][j] = max(dp[i-1][j], dp[i][j-1])
+    
+    Time: O(m * n), Space: O(m * n)
+    """</span>
+    m, n = <span class="builtin">len</span>(text1), <span class="builtin">len</span>(text2)
+    
+    <span class="comment"># Create DP table</span>
+    dp = [[<span class="number">0</span>] * (n + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(m + <span class="number">1</span>)]
+    
+    <span class="comment"># Fill DP table</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, m + <span class="number">1</span>):
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):
+            <span class="keyword">if</span> text1[i-<span class="number">1</span>] == text2[j-<span class="number">1</span>]:
+                <span class="comment"># Characters match!</span>
+                dp[i][j] = dp[i-<span class="number">1</span>][j-<span class="number">1</span>] + <span class="number">1</span>
+            <span class="keyword">else</span>:
+                <span class="comment"># Take max of skipping from either string</span>
+                dp[i][j] = <span class="builtin">max</span>(dp[i-<span class="number">1</span>][j], dp[i][j-<span class="number">1</span>])
+    
+    <span class="keyword">return</span> dp[m][n]
+
+<span class="comment"># Test</span>
+text1 = <span class="string">"abcde"</span>
+text2 = <span class="string">"ace"</span>
+<span class="builtin">print</span>(<span class="string">f"LCS length: {longest_common_subsequence(text1, text2)}"</span>)  <span class="comment"># 3</span></code></pre>
+            </div>
+
+            <div class="visual-diagram">
+                <strong>LCS DP Table Visualization:</strong>
+                <pre>
+text1 = "abc", text2 = "ac"
+
+    ""  a  c
+""   0  0  0
+a    0  1  1
+b    0  1  1
+c    0  1  2
+
+LCS = "ac", length = 2
+                </pre>
+            </div>
+
+            <h4>Pattern 4: 0/1 Knapsack</h4>
+            <div class="code-block">
+                <div class="code-header">0/1 Knapsack Problem</div>
+                <pre><code><span class="keyword">def</span> <span class="function">knapsack</span>(weights, values, capacity):
+    <span class="string">"""
+    Maximum value you can carry in a knapsack of given capacity.
+    Each item can be taken 0 or 1 times (not fractional).
+    
+    Example:
+    weights = [1, 2, 3]
+    values = [6, 10, 12]
+    capacity = 5
+    Output: 22 (take items 2 and 3)
+    
+    DP Equation:
+    dp[i][w] = max value using first i items with capacity w
+    
+    For each item, either:
+    - Don't take it: dp[i-1][w]
+    - Take it (if fits): values[i-1] + dp[i-1][w - weights[i-1]]
+    
+    Time: O(n * capacity), Space: O(n * capacity)
+    """</span>
+    n = <span class="builtin">len</span>(weights)
+    
+    <span class="comment"># Create DP table</span>
+    dp = [[<span class="number">0</span>] * (capacity + <span class="number">1</span>) <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(n + <span class="number">1</span>)]
+    
+    <span class="comment"># Fill DP table</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, n + <span class="number">1</span>):
+        <span class="keyword">for</span> w <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, capacity + <span class="number">1</span>):
+            <span class="comment"># Option 1: Don't take item i</span>
+            dont_take = dp[i-<span class="number">1</span>][w]
+            
+            <span class="comment"># Option 2: Take item i (if it fits)</span>
+            take = <span class="number">0</span>
+            <span class="keyword">if</span> weights[i-<span class="number">1</span>] <= w:
+                take = values[i-<span class="number">1</span>] + dp[i-<span class="number">1</span>][w - weights[i-<span class="number">1</span>]]
+            
+            dp[i][w] = <span class="builtin">max</span>(dont_take, take)
+    
+    <span class="keyword">return</span> dp[n][capacity]
+
+<span class="comment"># Test</span>
+weights = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+values = [<span class="number">6</span>, <span class="number">10</span>, <span class="number">12</span>]
+capacity = <span class="number">5</span>
+<span class="builtin">print</span>(<span class="string">f"Max value: {knapsack(weights, values, capacity)}"</span>)  <span class="comment"># 22</span></code></pre>
+            </div>
+
+            <h4>Pattern 5: House Robber (Max Non-Adjacent Sum)</h4>
+            <div class="code-block">
+                <div class="code-header">House Robber Problem</div>
+                <pre><code><span class="keyword">def</span> <span class="function">rob</span>(nums):
+    <span class="string">"""
+    You're a robber planning to rob houses along a street.
+    Can't rob two adjacent houses (alarm will trigger).
+    Maximize the amount of money you can rob.
+    
+    Example: nums = [2,7,9,3,1]
+    Output: 12 (rob houses 0, 2, and 4)
+    
+    DP Equation:
+    dp[i] = max money robbing up to house i
+    dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+    
+    Either skip this house, or rob it + skip previous
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> nums:
+        <span class="keyword">return</span> <span class="number">0</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(nums) == <span class="number">1</span>:
+        <span class="keyword">return</span> nums[<span class="number">0</span>]
+    
+    <span class="comment"># Space-optimized: only need last 2 values</span>
+    prev2 = nums[<span class="number">0</span>]
+    prev1 = <span class="builtin">max</span>(nums[<span class="number">0</span>], nums[<span class="number">1</span>])
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">2</span>, <span class="builtin">len</span>(nums)):
+        current = <span class="builtin">max</span>(prev1, nums[i] + prev2)
+        prev2, prev1 = prev1, current
+    
+    <span class="keyword">return</span> prev1
+
+<span class="comment"># Test</span>
+houses = [<span class="number">2</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">3</span>, <span class="number">1</span>]
+<span class="builtin">print</span>(<span class="string">f"Max money: ${rob(houses)}"</span>)  <span class="comment"># $12</span></code></pre>
+            </div>
+
+            <h4>Pattern 6: Longest Increasing Subsequence (LIS)</h4>
+            <div class="code-block">
+                <div class="code-header">Longest Increasing Subsequence</div>
+                <pre><code><span class="keyword">def</span> <span class="function">length_of_LIS</span>(nums):
+    <span class="string">"""
+    Find length of longest strictly increasing subsequence.
+    
+    Example: nums = [10,9,2,5,3,7,101,18]
+    Output: 4 (subsequence [2,3,7,101])
+    
+    DP Approach:
+    dp[i] = length of LIS ending at index i
+    
+    For each i, check all j < i:
+    If nums[j] < nums[i], we can extend that subsequence:
+    dp[i] = max(dp[i], dp[j] + 1)
+    
+    Time: O(n²), Space: O(n)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> nums:
+        <span class="keyword">return</span> <span class="number">0</span>
+    
+    n = <span class="builtin">len</span>(nums)
+    dp = [<span class="number">1</span>] * n  <span class="comment"># Each element is at least length 1</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, n):
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(i):
+            <span class="keyword">if</span> nums[j] < nums[i]:
+                dp[i] = <span class="builtin">max</span>(dp[i], dp[j] + <span class="number">1</span>)
+    
+    <span class="keyword">return</span> <span class="builtin">max</span>(dp)
+
+<span class="comment"># Test</span>
+nums = [<span class="number">10</span>, <span class="number">9</span>, <span class="number">2</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">7</span>, <span class="number">101</span>, <span class="number">18</span>]
+<span class="builtin">print</span>(<span class="string">f"Longest increasing subsequence: {length_of_LIS(nums)}"</span>)  <span class="comment"># 4</span></code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>DP Problem-Solving Strategy:</strong>
+                <ol style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Identify:</strong> Can I break this into subproblems? Are subproblems overlapping?</li>
+                    <li><strong>Define state:</strong> What does dp[i] represent?</li>
+                    <li><strong>Find recurrence:</strong> How does dp[i] relate to previous states?</li>
+                    <li><strong>Base cases:</strong> What are the smallest subproblems?</li>
+                    <li><strong>Order:</strong> In what order should I solve subproblems?</li>
+                    <li><strong>Answer:</strong> Where is the final answer in the DP table?</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <strong>Common DP Mistakes:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>❌ Not initializing base cases correctly</li>
+                    <li>❌ Wrong iteration order (solving subproblems before their dependencies)</li>
+                    <li>❌ Off-by-one errors in indices</li>
+                    <li>❌ Not considering all possible transitions</li>
+                    <li>✅ Always test with small examples first!</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Climbing Stairs
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> You are climbing a staircase with n steps. You can climb 1 or 2 steps at a time. How many distinct ways can you climb to the top?</p>
+                <p><strong>Input:</strong> <code>n = 3</code></p>
+                <p><strong>Output:</strong> <code>3</code></p>
+                <p><strong>Explanation:</strong> 1+1+1, 1+2, 2+1</p>
+                <p><strong>Hint:</strong> This is Fibonacci! dp[i] = dp[i-1] + dp[i-2]</p>
+                <a href="https://leetcode.com/problems/climbing-stairs/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Coin Change
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find the fewest number of coins that you need to make up a given amount.</p>
+                <p><strong>Input:</strong> <code>coins = [1,2,5], amount = 11</code></p>
+                <p><strong>Output:</strong> <code>3</code> (11 = 5 + 5 + 1)</p>
+                <p><strong>Hint:</strong> dp[i] = min coins for amount i, try each coin</p>
+                <a href="https://leetcode.com/problems/coin-change/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Longest Increasing Subsequence
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find the length of the longest strictly increasing subsequence.</p>
+                <p><strong>Input:</strong> <code>nums = [10,9,2,5,3,7,101,18]</code></p>
+                <p><strong>Output:</strong> <code>4</code> (LIS: [2,3,7,101])</p>
+                <p><strong>Hint:</strong> dp[i] = LIS length ending at i</p>
+                <a href="https://leetcode.com/problems/longest-increasing-subsequence/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: House Robber
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Rob houses to maximize money, but can't rob two adjacent houses.</p>
+                <p><strong>Input:</strong> <code>nums = [2,7,9,3,1]</code></p>
+                <p><strong>Output:</strong> <code>12</code> (rob houses 0, 2, 4)</p>
+                <p><strong>Hint:</strong> dp[i] = max(dp[i-1], nums[i] + dp[i-2])</p>
+                <a href="https://leetcode.com/problems/house-robber/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Longest Common Subsequence
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given two strings, find the length of their longest common subsequence.</p>
+                <p><strong>Input:</strong> <code>text1 = "abcde", text2 = "ace"</code></p>
+                <p><strong>Output:</strong> <code>3</code> (LCS is "ace")</p>
+                <p><strong>Hint:</strong> 2D DP, if chars match: dp[i][j] = dp[i-1][j-1] + 1</p>
+                <a href="https://leetcode.com/problems/longest-common-subsequence/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for DP Section -->
+        
+            <textarea id="dp-editor" class="code-editor"># Dynamic Programming Examples
+
+# 1. Fibonacci (Bottom-Up DP)
+def fib_dp(n):
+    """Fibonacci with tabulation"""
+    if n <= 1:
+        return n
+    
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    
+    for i in range(2, n + 1):
+        dp[i] = dp[i-1] + dp[i-2]
+    
+    return dp[n]
+
+# 2. Climbing Stairs
+def climb_stairs(n):
+    """Count ways to climb n stairs (1 or 2 steps at a time)"""
+    if n <= 2:
+        return n
+    
+    prev2, prev1 = 1, 2
+    
+    for _ in range(3, n + 1):
+        current = prev1 + prev2
+        prev2, prev1 = prev1, current
+    
+    return prev1
+
+# 3. Coin Change (Minimum Coins)
+def coin_change(coins, amount):
+    """Find minimum coins to make amount"""
+    dp = [float('inf')] * (amount + 1)
+    dp[0] = 0
+    
+    for i in range(1, amount + 1):
+        for coin in coins:
+            if i >= coin:
+                dp[i] = min(dp[i], dp[i - coin] + 1)
+    
+    return dp[amount] if dp[amount] != float('inf') else -1
+
+# 4. House Robber
+def rob(nums):
+    """Max money robbing non-adjacent houses"""
+    if not nums:
+        return 0
+    if len(nums) == 1:
+        return nums[0]
+    
+    prev2 = nums[0]
+    prev1 = max(nums[0], nums[1])
+    
+    for i in range(2, len(nums)):
+        current = max(prev1, nums[i] + prev2)
+        prev2, prev1 = prev1, current
+    
+    return prev1
+
+# Test all functions
+print("=== Fibonacci ===")
+for i in range(1, 8):
+    print(f"fib({i}) = {fib_dp(i)}")
+
+print("\n=== Climbing Stairs ===")
+for i in range(1, 6):
+    print(f"stairs({i}) = {climb_stairs(i)}")
+
+print("\n=== Coin Change ===")
+coins = [1, 2, 5]
+for amount in [11, 7, 3]:
+    result = coin_change(coins, amount)
+    print(f"coins({amount}) = {result}")
+
+print("\n=== House Robber ===")
+houses = [2, 7, 9, 3, 1]
+print(f"houses {houses}")
+print(f"Max money: ${rob(houses)}")</textarea>
+            <div id="dp-output" class="output-container">
+                <div class="output-header">Output:</div>
+                <div id="dp-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 14: SORTING ALGORITHMS - COMPLETE -->
+    <div id="sorting" class="section">
+        <div class="card">
+            <h2>🔄 Sorting Algorithms - Organizing Data</h2>
+            
+            <h3>What is Sorting?</h3>
+            <p>Sorting is the process of arranging elements in a specific order (ascending or descending). It's one of the most fundamental operations in computer science!</p>
+            
+            <div class="info-box">
+                <strong>Why Learn Sorting?</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Interview Favorite:</strong> Sorting questions appear in 20% of interviews</li>
+                    <li><strong>Foundation:</strong> Many algorithms rely on sorted data</li>
+                    <li><strong>Real-world:</strong> Databases, file systems, search engines all use sorting</li>
+                    <li><strong>Algorithm Design:</strong> Understanding trade-offs between time/space</li>
+                </ul>
+            </div>
+
+            <h3>Sorting Algorithms Comparison</h3>
+            <table>
+                <tr>
+                    <th>Algorithm</th>
+                    <th>Best</th>
+                    <th>Average</th>
+                    <th>Worst</th>
+                    <th>Space</th>
+                    <th>Stable?</th>
+                </tr>
+                <tr>
+                    <td><strong>Bubble Sort</strong></td>
+                    <td>O(n)</td>
+                    <td>O(n²)</td>
+                    <td>O(n²)</td>
+                    <td>O(1)</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>Selection Sort</strong></td>
+                    <td>O(n²)</td>
+                    <td>O(n²)</td>
+                    <td>O(n²)</td>
+                    <td>O(1)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Insertion Sort</strong></td>
+                    <td>O(n)</td>
+                    <td>O(n²)</td>
+                    <td>O(n²)</td>
+                    <td>O(1)</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>Merge Sort</strong></td>
+                    <td>O(n log n)</td>
+                    <td>O(n log n)</td>
+                    <td>O(n log n)</td>
+                    <td>O(n)</td>
+                    <td>Yes</td>
+                </tr>
+                <tr>
+                    <td><strong>Quick Sort</strong></td>
+                    <td>O(n log n)</td>
+                    <td>O(n log n)</td>
+                    <td>O(n²)</td>
+                    <td>O(log n)</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td><strong>Heap Sort</strong></td>
+                    <td>O(n log n)</td>
+                    <td>O(n log n)</td>
+                    <td>O(n log n)</td>
+                    <td>O(1)</td>
+                    <td>No</td>
+                </tr>
+            </table>
+
+            <div class="tip-box">
+                <strong>Stability in Sorting:</strong>
+                <p style="margin-top: 10px; margin-bottom: 0;">A sorting algorithm is <strong>stable</strong> if it preserves the relative order of equal elements. Example: If two students have the same score, stable sort keeps them in their original order.</p>
+            </div>
+
+            <h3>Simple Sorting Algorithms (O(n²))</h3>
+
+            <h4>1. Bubble Sort</h4>
+            <p>Repeatedly swap adjacent elements if they're in wrong order. Like bubbles rising to the surface!</p>
+            
+            <div class="visual-diagram">
+                <strong>Bubble Sort Visualization:</strong>
+                <pre>
+Pass 1: [5, 2, 8, 1] → [2, 5, 1, 8] → [2, 1, 5, 8]
+Pass 2: [2, 1, 5, 8] → [1, 2, 5, 8]
+Pass 3: [1, 2, 5, 8] (sorted!)
+
+Each pass bubbles the largest element to the end
+                </pre>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h4 style="text-align: center; color: #667eea; margin-bottom: 20px;">📊 Sorting Algorithms Visual Comparison</h4>
+                <svg viewBox="0 0 1200 600" style="width: 100%; height: auto;">
+                    <!-- Title -->
+                    <text x="600" y="25" font-size="20" font-weight="bold" fill="#667eea" text-anchor="middle">Sorting [5, 2, 8, 1, 9] → [1, 2, 5, 8, 9]</text>
+                    
+                    <!-- Bubble Sort -->
+                    <rect x="50" y="50" width="300" height="160" fill="#ffe6e6" stroke="#e74c3c" stroke-width="2" rx="8"/>
+                    <text x="200" y="75" font-size="16" font-weight="bold" fill="#e74c3c" text-anchor="middle">Bubble Sort - O(n²)</text>
+                    
+                    <!-- Step 1 -->
+                    <rect x="70" y="90" width="30" height="30" fill="#e74c3c"/>
+                    <text x="85" y="110" font-size="14" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="105" y="90" width="30" height="30" fill="#e74c3c"/>
+                    <text x="120" y="110" font-size="14" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <text x="145" y="110" font-size="12" fill="#e74c3c">→ swap</text>
+                    
+                    <!-- Step 2 -->
+                    <rect x="70" y="130" width="30" height="30" fill="#95a5a6"/>
+                    <text x="85" y="150" font-size="14" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="105" y="130" width="30" height="30" fill="#e74c3c"/>
+                    <text x="120" y="150" font-size="14" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="140" y="130" width="30" height="30" fill="#e74c3c"/>
+                    <text x="155" y="150" font-size="14" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <text x="180" y="150" font-size="12" fill="#e74c3c">→ OK</text>
+                    
+                    <!-- Final -->
+                    <rect x="70" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="85" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="105" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="120" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="140" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="155" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="175" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="190" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="210" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="225" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Selection Sort -->
+                    <rect x="400" y="50" width="300" height="160" fill="#fff4e6" stroke="#f39c12" stroke-width="2" rx="8"/>
+                    <text x="550" y="75" font-size="16" font-weight="bold" fill="#f39c12" text-anchor="middle">Selection Sort - O(n²)</text>
+                    
+                    <!-- Step 1: Find min -->
+                    <rect x="420" y="90" width="30" height="30" fill="#f39c12"/>
+                    <text x="435" y="110" font-size="14" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="455" y="90" width="30" height="30" fill="#95a5a6"/>
+                    <text x="470" y="110" font-size="14" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="490" y="90" width="30" height="30" fill="#95a5a6"/>
+                    <text x="505" y="110" font-size="14" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="525" y="90" width="30" height="30" fill="#e67e22" stroke="#c0392b" stroke-width="2"/>
+                    <text x="540" y="110" font-size="14" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <text x="565" y="110" font-size="12" fill="#f39c12">← min!</text>
+                    
+                    <!-- Step 2: Swap -->
+                    <rect x="420" y="130" width="30" height="30" fill="#2ecc71"/>
+                    <text x="435" y="150" font-size="14" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="455" y="130" width="30" height="30" fill="#f39c12"/>
+                    <text x="470" y="150" font-size="14" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <text x="495" y="150" font-size="12" fill="#f39c12">→ find next min</text>
+                    
+                    <!-- Final -->
+                    <rect x="420" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="435" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="455" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="470" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="490" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="505" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="525" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="540" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="560" y="170" width="30" height="30" fill="#2ecc71"/>
+                    <text x="575" y="190" font-size="14" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Merge Sort -->
+                    <rect x="50" y="240" width="300" height="180" fill="#e6f7ff" stroke="#3498db" stroke-width="2" rx="8"/>
+                    <text x="200" y="265" font-size="16" font-weight="bold" fill="#3498db" text-anchor="middle">Merge Sort - O(n log n)</text>
+                    
+                    <!-- Divide phase -->
+                    <text x="70" y="290" font-size="12" fill="#3498db" font-weight="bold">1. DIVIDE:</text>
+                    <rect x="70" y="295" width="30" height="25" fill="#3498db"/>
+                    <text x="85" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="105" y="295" width="30" height="25" fill="#3498db"/>
+                    <text x="120" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="140" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="155" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="175" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="190" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="210" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="225" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Arrow down -->
+                    <line x1="150" y1="325" x2="150" y2="340" stroke="#3498db" stroke-width="2" marker-end="url(#arrowblue)"/>
+                    
+                    <!-- Conquer phase -->
+                    <text x="70" y="360" font-size="12" fill="#3498db" font-weight="bold">2. CONQUER (Sort halves):</text>
+                    <rect x="70" y="365" width="25" height="25" fill="#2ecc71"/>
+                    <text x="82.5" y="382" font-size="12" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="100" y="365" width="25" height="25" fill="#2ecc71"/>
+                    <text x="112.5" y="382" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    
+                    <rect x="160" y="365" width="25" height="25" fill="#2ecc71"/>
+                    <text x="172.5" y="382" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="190" y="365" width="25" height="25" fill="#2ecc71"/>
+                    <text x="202.5" y="382" font-size="12" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="220" y="365" width="25" height="25" fill="#2ecc71"/>
+                    <text x="232.5" y="382" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Final merge -->
+                    <text x="70" y="410" font-size="12" fill="#3498db" font-weight="bold">3. MERGE:</text>
+                    <rect x="100" y="395" width="25" height="25" fill="#27ae60"/>
+                    <text x="112.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="130" y="395" width="25" height="25" fill="#27ae60"/>
+                    <text x="142.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="160" y="395" width="25" height="25" fill="#27ae60"/>
+                    <text x="172.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="190" y="395" width="25" height="25" fill="#27ae60"/>
+                    <text x="202.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="220" y="395" width="25" height="25" fill="#27ae60"/>
+                    <text x="232.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Quick Sort -->
+                    <rect x="400" y="240" width="300" height="180" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="8"/>
+                    <text x="550" y="265" font-size="16" font-weight="bold" fill="#9c27b0" text-anchor="middle">Quick Sort - O(n log n) avg</text>
+                    
+                    <!-- Choose pivot -->
+                    <text x="420" y="290" font-size="12" fill="#9c27b0" font-weight="bold">1. Choose PIVOT (9):</text>
+                    <rect x="420" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="435" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="455" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="470" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="490" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="505" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="525" y="295" width="30" height="25" fill="#95a5a6"/>
+                    <text x="540" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="560" y="295" width="30" height="25" fill="#9c27b0" stroke="#6a1b9a" stroke-width="2"/>
+                    <text x="575" y="312" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Partition -->
+                    <text x="420" y="345" font-size="12" fill="#9c27b0" font-weight="bold">2. PARTITION (< pivot | pivot | > pivot):</text>
+                    <rect x="420" y="350" width="25" height="25" fill="#e91e63"/>
+                    <text x="432.5" y="367" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="450" y="350" width="25" height="25" fill="#e91e63"/>
+                    <text x="462.5" y="367" font-size="12" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="480" y="350" width="25" height="25" fill="#e91e63"/>
+                    <text x="492.5" y="367" font-size="12" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="510" y="350" width="25" height="25" fill="#e91e63"/>
+                    <text x="522.5" y="367" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    
+                    <rect x="550" y="350" width="25" height="25" fill="#9c27b0"/>
+                    <text x="562.5" y="367" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Sorted result -->
+                    <text x="420" y="395" font-size="12" fill="#9c27b0" font-weight="bold">3. Recursively sort left part:</text>
+                    <rect x="450" y="395" width="25" height="25" fill="#2ecc71"/>
+                    <text x="462.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="480" y="395" width="25" height="25" fill="#2ecc71"/>
+                    <text x="492.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">2</text>
+                    <rect x="510" y="395" width="25" height="25" fill="#2ecc71"/>
+                    <text x="522.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="540" y="395" width="25" height="25" fill="#2ecc71"/>
+                    <text x="552.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">8</text>
+                    <rect x="570" y="395" width="25" height="25" fill="#2ecc71"/>
+                    <text x="582.5" y="412" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <!-- Arrow marker definition -->
+                    <defs>
+                        <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                            <path d="M 0 0 L 10 5 L 0 10 z" fill="#3498db"/>
+                        </marker>
+                    </defs>
+                    
+                    <!-- Summary comparison box -->
+                    <rect x="100" y="460" width="1000" height="120" fill="#f8f9fa" stroke="#667eea" stroke-width="3" rx="10"/>
+                    <text x="600" y="490" font-size="18" fill="#667eea" font-weight="bold" text-anchor="middle">🎯 When to Use Which Algorithm?</text>
+                    
+                    <text x="150" y="520" font-size="13" fill="#e74c3c" font-weight="bold">Bubble/Selection: Small arrays (n&lt;50), educational</text>
+                    <text x="150" y="540" font-size="13" fill="#3498db" font-weight="bold">Merge Sort: Stable sort needed, external sorting, O(n log n) guaranteed</text>
+                    <text x="150" y="560" font-size="13" fill="#9c27b0" font-weight="bold">Quick Sort: Best average case, in-place sorting, most practical</text>
+                </svg>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Bubble Sort Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">bubble_sort</span>(arr):
+    <span class="string">"""
+    Bubble Sort: Compare adjacent elements, swap if wrong order.
+    
+    How it works:
+    - Compare each pair of adjacent elements
+    - Swap if they're in wrong order
+    - Repeat until no swaps needed
+    
+    Time: O(n²) average/worst, O(n) best (already sorted)
+    Space: O(1) - sorts in place
+    Stable: Yes
+    
+    Good for: Small arrays, nearly sorted arrays
+    """</span>
+    n = <span class="builtin">len</span>(arr)
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n):
+        swapped = <span class="keyword">False</span>
+        
+        <span class="comment"># Last i elements already in place</span>
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">0</span>, n - i - <span class="number">1</span>):
+            <span class="keyword">if</span> arr[j] > arr[j + <span class="number">1</span>]:
+                <span class="comment"># Swap adjacent elements</span>
+                arr[j], arr[j + <span class="number">1</span>] = arr[j + <span class="number">1</span>], arr[j]
+                swapped = <span class="keyword">True</span>
+        
+        <span class="comment"># If no swaps, array is sorted</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> swapped:
+            <span class="keyword">break</span>
+    
+    <span class="keyword">return</span> arr
+
+<span class="comment"># Test</span>
+arr = [<span class="number">64</span>, <span class="number">34</span>, <span class="number">25</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">11</span>, <span class="number">90</span>]
+<span class="builtin">print</span>(<span class="string">f"Original: {arr}"</span>)
+<span class="builtin">print</span>(<span class="string">f"Sorted: {bubble_sort(arr.copy())}"</span>)</code></pre>
+            </div>
+
+            <h4>2. Selection Sort</h4>
+            <p>Find minimum element and place it at beginning. Repeat for remaining array.</p>
+
+            <div class="code-block">
+                <div class="code-header">Selection Sort Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">selection_sort</span>(arr):
+    <span class="string">"""
+    Selection Sort: Find minimum, place at start, repeat.
+    
+    How it works:
+    - Find minimum element in unsorted portion
+    - Swap it with first unsorted element
+    - Move boundary of sorted portion
+    
+    Time: O(n²) - always, even if sorted
+    Space: O(1)
+    Stable: No
+    
+    Good for: Small arrays, when memory writes are expensive
+    """</span>
+    n = <span class="builtin">len</span>(arr)
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n):
+        <span class="comment"># Find minimum in unsorted portion</span>
+        min_idx = i
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(i + <span class="number">1</span>, n):
+            <span class="keyword">if</span> arr[j] < arr[min_idx]:
+                min_idx = j
+        
+        <span class="comment"># Swap minimum with first unsorted element</span>
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    
+    <span class="keyword">return</span> arr
+
+<span class="comment"># Test</span>
+arr = [<span class="number">64</span>, <span class="number">25</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">11</span>]
+<span class="builtin">print</span>(<span class="string">f"Sorted: {selection_sort(arr)}"</span>)</code></pre>
+            </div>
+
+            <h4>3. Insertion Sort</h4>
+            <p>Build sorted array one element at a time, like sorting playing cards in your hand!</p>
+
+            <div class="code-block">
+                <div class="code-header">Insertion Sort Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">insertion_sort</span>(arr):
+    <span class="string">"""
+    Insertion Sort: Insert each element into its correct position.
+    
+    How it works:
+    - Assume first element is sorted
+    - Take next element, insert it in correct position
+    - Shift elements right to make space
+    
+    Time: O(n²) average/worst, O(n) best (already sorted)
+    Space: O(1)
+    Stable: Yes
+    
+    Good for: Small arrays, nearly sorted arrays, online sorting
+    """</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="builtin">len</span>(arr)):
+        key = arr[i]
+        j = i - <span class="number">1</span>
+        
+        <span class="comment"># Shift elements greater than key to the right</span>
+        <span class="keyword">while</span> j >= <span class="number">0</span> <span class="keyword">and</span> arr[j] > key:
+            arr[j + <span class="number">1</span>] = arr[j]
+            j -= <span class="number">1</span>
+        
+        <span class="comment"># Insert key in correct position</span>
+        arr[j + <span class="number">1</span>] = key
+    
+    <span class="keyword">return</span> arr
+
+<span class="comment"># Test</span>
+arr = [<span class="number">12</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">5</span>, <span class="number">6</span>]
+<span class="builtin">print</span>(<span class="string">f"Sorted: {insertion_sort(arr)}"</span>)</code></pre>
+            </div>
+
+            <h3>Efficient Sorting Algorithms (O(n log n))</h3>
+
+            <h4>4. Merge Sort (MOST IMPORTANT!)</h4>
+            <p>Divide and conquer! Split array in half, sort each half, merge them.</p>
+
+            <div class="visual-diagram">
+                <strong>Merge Sort Visualization:</strong>
+                <pre>
+        [38, 27, 43, 3]
+           /        \
+    [38, 27]      [43, 3]    ← Split
+      /   \        /    \
+   [38]  [27]   [43]   [3]   ← Base case
+      \   /        \    /
+    [27, 38]      [3, 43]    ← Merge
+           \        /
+        [3, 27, 38, 43]      ← Final merge
+                </pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Merge Sort Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">merge_sort</span>(arr):
+    <span class="string">"""
+    Merge Sort: Divide, conquer, merge!
+    
+    How it works:
+    1. Divide array into two halves
+    2. Recursively sort each half
+    3. Merge the sorted halves
+    
+    Time: O(n log n) - always!
+    Space: O(n) - temporary arrays for merging
+    Stable: Yes
+    
+    Good for: Linked lists, external sorting, guaranteed O(n log n)
+    """</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(arr) <= <span class="number">1</span>:
+        <span class="keyword">return</span> arr
+    
+    <span class="comment"># Divide</span>
+    mid = <span class="builtin">len</span>(arr) // <span class="number">2</span>
+    left = <span class="function">merge_sort</span>(arr[:mid])
+    right = <span class="function">merge_sort</span>(arr[mid:])
+    
+    <span class="comment"># Merge</span>
+    <span class="keyword">return</span> <span class="function">merge</span>(left, right)
+
+<span class="keyword">def</span> <span class="function">merge</span>(left, right):
+    <span class="string">"""Merge two sorted arrays into one sorted array"""</span>
+    result = []
+    i = j = <span class="number">0</span>
+    
+    <span class="comment"># Compare elements from left and right</span>
+    <span class="keyword">while</span> i < <span class="builtin">len</span>(left) <span class="keyword">and</span> j < <span class="builtin">len</span>(right):
+        <span class="keyword">if</span> left[i] <= right[j]:
+            result.<span class="function">append</span>(left[i])
+            i += <span class="number">1</span>
+        <span class="keyword">else</span>:
+            result.<span class="function">append</span>(right[j])
+            j += <span class="number">1</span>
+    
+    <span class="comment"># Add remaining elements</span>
+    result.<span class="function">extend</span>(left[i:])
+    result.<span class="function">extend</span>(right[j:])
+    
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+arr = [<span class="number">38</span>, <span class="number">27</span>, <span class="number">43</span>, <span class="number">3</span>, <span class="number">9</span>, <span class="number">82</span>, <span class="number">10</span>]
+<span class="builtin">print</span>(<span class="string">f"Sorted: {merge_sort(arr)}"</span>)</code></pre>
+            </div>
+
+            <h4>5. Quick Sort (MOST COMMON!)</h4>
+            <p>Pick a pivot, partition array around it, recursively sort partitions.</p>
+
+            <div class="visual-diagram">
+                <strong>Quick Sort Visualization:</strong>
+                <pre>
+[3, 6, 8, 10, 1, 2, 1]  pivot=1
+ ↓ partition around 1
+[1, 1] + [3, 6, 8, 10, 2]
+         ↓ partition around 2
+[1, 1] + [2] + [3, 6, 8, 10]
+                ↓ continue...
+[1, 1, 2, 3, 6, 8, 10]
+                </pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Quick Sort Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">quick_sort</span>(arr):
+    <span class="string">"""
+    Quick Sort: Pick pivot, partition, recurse!
+    
+    How it works:
+    1. Pick a pivot element
+    2. Partition: elements < pivot go left, >= go right
+    3. Recursively sort left and right partitions
+    
+    Time: O(n log n) average, O(n²) worst (rare)
+    Space: O(log n) for recursion
+    Stable: No
+    
+    Good for: General purpose, often fastest in practice
+    """</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(arr) <= <span class="number">1</span>:
+        <span class="keyword">return</span> arr
+    
+    <span class="comment"># Pick pivot (middle element for better average case)</span>
+    pivot = arr[<span class="builtin">len</span>(arr) // <span class="number">2</span>]
+    
+    <span class="comment"># Partition into three parts</span>
+    left = [x <span class="keyword">for</span> x <span class="keyword">in</span> arr <span class="keyword">if</span> x < pivot]
+    middle = [x <span class="keyword">for</span> x <span class="keyword">in</span> arr <span class="keyword">if</span> x == pivot]
+    right = [x <span class="keyword">for</span> x <span class="keyword">in</span> arr <span class="keyword">if</span> x > pivot]
+    
+    <span class="comment"># Recursively sort and combine</span>
+    <span class="keyword">return</span> <span class="function">quick_sort</span>(left) + middle + <span class="function">quick_sort</span>(right)
+
+<span class="comment"># In-place version (more efficient)</span>
+<span class="keyword">def</span> <span class="function">quick_sort_inplace</span>(arr, low=<span class="number">0</span>, high=<span class="keyword">None</span>):
+    <span class="string">"""Quick sort that modifies array in place"""</span>
+    <span class="keyword">if</span> high <span class="keyword">is</span> <span class="keyword">None</span>:
+        high = <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">if</span> low < high:
+        <span class="comment"># Partition and get pivot index</span>
+        pi = <span class="function">partition</span>(arr, low, high)
+        
+        <span class="comment"># Sort left and right of pivot</span>
+        <span class="function">quick_sort_inplace</span>(arr, low, pi - <span class="number">1</span>)
+        <span class="function">quick_sort_inplace</span>(arr, pi + <span class="number">1</span>, high)
+    
+    <span class="keyword">return</span> arr
+
+<span class="keyword">def</span> <span class="function">partition</span>(arr, low, high):
+    <span class="string">"""Partition array and return pivot index"""</span>
+    pivot = arr[high]
+    i = low - <span class="number">1</span>
+    
+    <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(low, high):
+        <span class="keyword">if</span> arr[j] <= pivot:
+            i += <span class="number">1</span>
+            arr[i], arr[j] = arr[j], arr[i]
+    
+    arr[i + <span class="number">1</span>], arr[high] = arr[high], arr[i + <span class="number">1</span>]
+    <span class="keyword">return</span> i + <span class="number">1</span>
+
+<span class="comment"># Test</span>
+arr = [<span class="number">10</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">5</span>]
+<span class="builtin">print</span>(<span class="string">f"Sorted: {quick_sort(arr)}"</span>)</code></pre>
+            </div>
+
+            <h4>6. Heap Sort</h4>
+            <p>Build a max heap, repeatedly extract maximum to build sorted array.</p>
+
+            <div class="code-block">
+                <div class="code-header">Heap Sort Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">heap_sort</span>(arr):
+    <span class="string">"""
+    Heap Sort: Build max heap, extract max repeatedly.
+    
+    How it works:
+    1. Build a max heap from array
+    2. Swap root (max) with last element
+    3. Reduce heap size, heapify root
+    4. Repeat until sorted
+    
+    Time: O(n log n) - always!
+    Space: O(1) - sorts in place
+    Stable: No
+    
+    Good for: When O(n log n) worst case needed with O(1) space
+    """</span>
+    n = <span class="builtin">len</span>(arr)
+    
+    <span class="comment"># Build max heap</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n // <span class="number">2</span> - <span class="number">1</span>, -<span class="number">1</span>, -<span class="number">1</span>):
+        <span class="function">heapify</span>(arr, n, i)
+    
+    <span class="comment"># Extract elements from heap one by one</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n - <span class="number">1</span>, <span class="number">0</span>, -<span class="number">1</span>):
+        <span class="comment"># Swap root (max) with last element</span>
+        arr[<span class="number">0</span>], arr[i] = arr[i], arr[<span class="number">0</span>]
+        
+        <span class="comment"># Heapify reduced heap</span>
+        <span class="function">heapify</span>(arr, i, <span class="number">0</span>)
+    
+    <span class="keyword">return</span> arr
+
+<span class="keyword">def</span> <span class="function">heapify</span>(arr, n, i):
+    <span class="string">"""Maintain max heap property"""</span>
+    largest = i
+    left = <span class="number">2</span> * i + <span class="number">1</span>
+    right = <span class="number">2</span> * i + <span class="number">2</span>
+    
+    <span class="keyword">if</span> left < n <span class="keyword">and</span> arr[left] > arr[largest]:
+        largest = left
+    
+    <span class="keyword">if</span> right < n <span class="keyword">and</span> arr[right] > arr[largest]:
+        largest = right
+    
+    <span class="keyword">if</span> largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        <span class="function">heapify</span>(arr, n, largest)
+
+<span class="comment"># Test</span>
+arr = [<span class="number">12</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]
+<span class="builtin">print</span>(<span class="string">f"Sorted: {heap_sort(arr)}"</span>)</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Which Sorting Algorithm to Use?</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Quick Sort:</strong> General purpose, fastest in practice</li>
+                    <li><strong>Merge Sort:</strong> When stability needed or sorting linked lists</li>
+                    <li><strong>Heap Sort:</strong> When need O(n log n) worst case with O(1) space</li>
+                    <li><strong>Insertion Sort:</strong> Small arrays (< 10 elements) or nearly sorted</li>
+                    <li><strong>Python's sorted():</strong> Timsort (hybrid merge+insertion), use it!</li>
+                </ul>
+            </div>
+
+            <h3>Special Sorting Algorithms</h3>
+
+            <h4>Counting Sort (Linear Time for Integers!)</h4>
+            <div class="code-block">
+                <div class="code-header">Counting Sort - O(n + k)</div>
+                <pre><code><span class="keyword">def</span> <span class="function">counting_sort</span>(arr):
+    <span class="string">"""
+    Counting Sort: Count occurrences, build sorted array.
+    
+    Works only for non-negative integers with small range!
+    
+    Time: O(n + k) where k is range of values
+    Space: O(k)
+    Stable: Yes
+    
+    Good for: Sorting integers with small range
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> arr:
+        <span class="keyword">return</span> arr
+    
+    <span class="comment"># Find range</span>
+    max_val = <span class="builtin">max</span>(arr)
+    min_val = <span class="builtin">min</span>(arr)
+    range_size = max_val - min_val + <span class="number">1</span>
+    
+    <span class="comment"># Count occurrences</span>
+    count = [<span class="number">0</span>] * range_size
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:
+        count[num - min_val] += <span class="number">1</span>
+    
+    <span class="comment"># Build sorted array</span>
+    result = []
+    <span class="keyword">for</span> i, freq <span class="keyword">in</span> <span class="builtin">enumerate</span>(count):
+        result.<span class="function">extend</span>([i + min_val] * freq)
+    
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+arr = [<span class="number">4</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">3</span>, <span class="number">3</span>, <span class="number">1</span>]
+<span class="builtin">print</span>(<span class="string">f"Sorted: {counting_sort(arr)}"</span>)</code></pre>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Sort Colors
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array with 0s, 1s, and 2s, sort it in-place in one pass.</p>
+                <p><strong>Input:</strong> <code>nums = [2,0,2,1,1,0]</code></p>
+                <p><strong>Output:</strong> <code>[0,0,1,1,2,2]</code></p>
+                <p><strong>Hint:</strong> Dutch National Flag problem - use 3 pointers</p>
+                <a href="https://leetcode.com/problems/sort-colors/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Merge Sorted Array
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Merge two sorted arrays into the first array (which has enough space).</p>
+                <p><strong>Input:</strong> <code>nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3</code></p>
+                <p><strong>Output:</strong> <code>[1,2,2,3,5,6]</code></p>
+                <p><strong>Hint:</strong> Start from the end to avoid overwriting</p>
+                <a href="https://leetcode.com/problems/merge-sorted-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Sort an Array
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Sort an array of integers.</p>
+                <p><strong>Hint:</strong> Implement merge sort or quick sort</p>
+                <a href="https://leetcode.com/problems/sort-an-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Kth Largest Element in Array
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find kth largest element (use Quickselect for O(n) average)</p>
+                <p><strong>Hint:</strong> Use partition from quicksort, only recurse on one side</p>
+                <a href="https://leetcode.com/problems/kth-largest-element-in-an-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Sort List
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Sort a linked list in O(n log n) time and O(1) space.</p>
+                <p><strong>Hint:</strong> Use merge sort (best for linked lists)</p>
+                <a href="https://leetcode.com/problems/sort-list/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Sorting Section -->
+        
+            <textarea id="sorting-editor" class="code-editor"># Sorting Algorithm Implementations
+
+# 1. Merge Sort (O(n log n) - Best for general use)
+def merge_sort(arr):
+    """Divide, conquer, merge!"""
+    if len(arr) <= 1:
+        return arr
+    
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+    
+    return merge(left, right)
+
+def merge(left, right):
+    result = []
+    i = j = 0
+    
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            result.append(left[i])
+            i += 1
+        else:
+            result.append(right[j])
+            j += 1
+    
+    result.extend(left[i:])
+    result.extend(right[j:])
+    return result
+
+# 2. Quick Sort (O(n log n) average - Fast in practice)
+def quick_sort(arr):
+    """Pick pivot, partition, recurse"""
+    if len(arr) <= 1:
+        return arr
+    
+    pivot = arr[len(arr) // 2]
+    left = [x for x in arr if x < pivot]
+    middle = [x for x in arr if x == pivot]
+    right = [x for x in arr if x > pivot]
+    
+    return quick_sort(left) + middle + quick_sort(right)
+
+# 3. Insertion Sort (O(n²) - Good for small/nearly sorted)
+def insertion_sort(arr):
+    """Insert each element into correct position"""
+    for i in range(1, len(arr)):
+        key = arr[i]
+        j = i - 1
+        
+        while j >= 0 and arr[j] > key:
+            arr[j + 1] = arr[j]
+            j -= 1
+        
+        arr[j + 1] = key
+    
+    return arr
+
+# Test all algorithms
+test_array = [64, 34, 25, 12, 22, 11, 90]
+
+print("Original array:", test_array)
+print("\n=== Merge Sort ===")
+print("Sorted:", merge_sort(test_array.copy()))
+
+print("\n=== Quick Sort ===")
+print("Sorted:", quick_sort(test_array.copy()))
+
+print("\n=== Insertion Sort ===")
+print("Sorted:", insertion_sort(test_array.copy()))
+
+# Performance comparison
+import time
+
+large_array = list(range(1000, 0, -1))  # Worst case
+
+start = time.time()
+merge_sort(large_array.copy())
+print(f"\nMerge Sort (1000 elements): {time.time() - start:.4f}s")
+
+start = time.time()
+quick_sort(large_array.copy())
+print(f"Quick Sort (1000 elements): {time.time() - start:.4f}s")</textarea>
+            <div id="sorting-output" class="output-container">
+                <div class="output-header">Output:</div>
+                <div id="sorting-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 15: SEARCHING ALGORITHMS - COMPLETE -->
+    <div id="searching" class="section">
+        <div class="card">
+            <h2>🔍 Searching Algorithms - Finding Elements</h2>
+            
+            <h3>What is Searching?</h3>
+            <p>Searching is the process of finding a target element in a collection of data. It's one of the most common operations in programming!</p>
+
+            <div class="info-box">
+                <strong>Types of Searching:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Linear Search:</strong> Check every element - O(n)</li>
+                    <li><strong>Binary Search:</strong> Divide and conquer on sorted data - O(log n)</li>
+                    <li><strong>Hash-based:</strong> Direct access using hash function - O(1)</li>
+                </ul>
+            </div>
+
+            <h3>1. Linear Search</h3>
+            <p>Check every element one by one until you find the target (or reach the end).</p>
+
+            <div class="code-block">
+                <div class="code-header">Linear Search Implementation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">linear_search</span>(arr, target):
+    <span class="string">"""
+    Linear Search: Check each element sequentially.
+    
+    Time: O(n) - worst case check all elements
+    Space: O(1)
+    
+    Good for: Unsorted arrays, small arrays
+    """</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(arr)):
+        <span class="keyword">if</span> arr[i] == target:
+            <span class="keyword">return</span> i  <span class="comment"># Found at index i</span>
+    
+    <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># Not found</span>
+
+<span class="comment"># Test</span>
+arr = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>]
+target = <span class="number">30</span>
+result = <span class="function">linear_search</span>(arr, target)
+<span class="builtin">print</span>(<span class="string">f"Found {target} at index {result}"</span>)  <span class="comment"># 2</span></code></pre>
+            </div>
+
+            <h3>2. Binary Search (VERY IMPORTANT!)</h3>
+            <p><strong>Most important searching algorithm!</strong> Works on <strong>sorted</strong> arrays by repeatedly dividing search space in half.</p>
+
+            <div class="visual-diagram">
+                <strong>Binary Search Visualization:</strong>
+                <pre>
+Array: [1, 3, 5, 7, 9, 11, 13, 15]
+Target: 7
+
+Step 1: Check middle (9) → 7 < 9, search left half
+        [1, 3, 5, 7] | [9, 11, 13, 15]
+        
+Step 2: Check middle (3) → 7 > 3, search right half
+        [5, 7]
+        
+Step 3: Check middle (5) → 7 > 5, search right half
+        [7]
+        
+Step 4: Found! Return index 3
+
+Each step eliminates half the array!
+                </pre>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h4 style="text-align: center; color: #667eea; margin-bottom: 20px;">📊 Binary Search vs Linear Search</h4>
+                <svg viewBox="0 0 1200 550" style="width: 100%; height: auto;">
+                    <!-- Title -->
+                    <text x="600" y="25" font-size="20" font-weight="bold" fill="#667eea" text-anchor="middle">Searching for 7 in [1, 3, 5, 7, 9, 11, 13, 15]</text>
+                    
+                    <!-- Linear Search Section -->
+                    <rect x="50" y="50" width="500" height="200" fill="#ffe6e6" stroke="#e74c3c" stroke-width="2" rx="8"/>
+                    <text x="300" y="80" font-size="18" font-weight="bold" fill="#e74c3c" text-anchor="middle">Linear Search - O(n)</text>
+                    <text x="300" y="105" font-size="14" fill="#666" text-anchor="middle">Check Every Element</text>
+                    
+                    <!-- Linear search steps -->
+                    <rect x="70" y="120" width="40" height="35" fill="#e74c3c"/>
+                    <text x="90" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <text x="90" y="167" font-size="10" fill="#e74c3c" font-weight="bold" text-anchor="middle">Step 1</text>
+                    
+                    <rect x="120" y="120" width="40" height="35" fill="#e74c3c"/>
+                    <text x="140" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">3</text>
+                    <text x="140" y="167" font-size="10" fill="#e74c3c" font-weight="bold" text-anchor="middle">Step 2</text>
+                    
+                    <rect x="170" y="120" width="40" height="35" fill="#e74c3c"/>
+                    <text x="190" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <text x="190" y="167" font-size="10" fill="#e74c3c" font-weight="bold" text-anchor="middle">Step 3</text>
+                    
+                    <rect x="220" y="120" width="40" height="35" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="240" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">7</text>
+                    <text x="240" y="167" font-size="10" fill="#2ecc71" font-weight="bold" text-anchor="middle">Found!</text>
+                    
+                    <rect x="270" y="120" width="40" height="35" fill="#95a5a6"/>
+                    <text x="290" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    
+                    <rect x="320" y="120" width="40" height="35" fill="#95a5a6"/>
+                    <text x="340" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">11</text>
+                    
+                    <rect x="370" y="120" width="40" height="35" fill="#95a5a6"/>
+                    <text x="390" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">13</text>
+                    
+                    <rect x="420" y="120" width="40" height="35" fill="#95a5a6"/>
+                    <text x="440" y="142" font-size="14" fill="white" font-weight="bold" text-anchor="middle">15</text>
+                    
+                    <text x="300" y="200" font-size="13" fill="#e74c3c" font-weight="bold" text-anchor="middle">✗ Checked 4 elements (50% of array)</text>
+                    <text x="300" y="225" font-size="12" fill="#666" text-anchor="middle">For array of 1 million: ~500,000 checks!</text>
+                    
+                    <!-- Binary Search Section -->
+                    <rect x="650" y="50" width="500" height="450" fill="#e6f7ff" stroke="#3498db" stroke-width="2" rx="8"/>
+                    <text x="900" y="80" font-size="18" font-weight="bold" fill="#3498db" text-anchor="middle">Binary Search - O(log n)</text>
+                    <text x="900" y="105" font-size="14" fill="#666" text-anchor="middle">Divide & Conquer</text>
+                    
+                    <!-- Step 1: Initial array -->
+                    <text x="670" y="135" font-size="13" fill="#3498db" font-weight="bold">Step 1: Check middle (9)</text>
+                    <rect x="690" y="140" width="35" height="30" fill="#95a5a6"/>
+                    <text x="707.5" y="160" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="730" y="140" width="35" height="30" fill="#95a5a6"/>
+                    <text x="747.5" y="160" font-size="12" fill="white" font-weight="bold" text-anchor="middle">3</text>
+                    <rect x="770" y="140" width="35" height="30" fill="#95a5a6"/>
+                    <text x="787.5" y="160" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="810" y="140" width="35" height="30" fill="#95a5a6"/>
+                    <text x="827.5" y="160" font-size="12" fill="white" font-weight="bold" text-anchor="middle">7</text>
+                    <rect x="850" y="140" width="35" height="30" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="867.5" y="160" font-size="12" fill="white" font-weight="bold" text-anchor="middle">9</text>
+                    <text x="897" y="160" font-size="11" fill="#f39c12" font-weight="bold">← mid</text>
+                    <rect x="930" y="140" width="35" height="30" fill="#ddd"/>
+                    <text x="947.5" y="160" font-size="12" fill="#999" font-weight="bold" text-anchor="middle">11</text>
+                    <rect x="970" y="140" width="35" height="30" fill="#ddd"/>
+                    <text x="987.5" y="160" font-size="12" fill="#999" font-weight="bold" text-anchor="middle">13</text>
+                    <rect x="1010" y="140" width="35" height="30" fill="#ddd"/>
+                    <text x="1027.5" y="160" font-size="12" fill="#999" font-weight="bold" text-anchor="middle">15</text>
+                    <text x="850" y="190" font-size="11" fill="#3498db" text-anchor="middle">7 < 9 → Search LEFT half</text>
+                    
+                    <!-- Step 2: Left half -->
+                    <text x="670" y="225" font-size="13" fill="#3498db" font-weight="bold">Step 2: Check middle (3)</text>
+                    <rect x="730" y="230" width="35" height="30" fill="#95a5a6"/>
+                    <text x="747.5" y="250" font-size="12" fill="white" font-weight="bold" text-anchor="middle">1</text>
+                    <rect x="770" y="230" width="35" height="30" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="787.5" y="250" font-size="12" fill="white" font-weight="bold" text-anchor="middle">3</text>
+                    <text x="817" y="250" font-size="11" fill="#f39c12" font-weight="bold">← mid</text>
+                    <rect x="850" y="230" width="35" height="30" fill="#95a5a6"/>
+                    <text x="867.5" y="250" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <rect x="890" y="230" width="35" height="30" fill="#95a5a6"/>
+                    <text x="907.5" y="250" font-size="12" fill="white" font-weight="bold" text-anchor="middle">7</text>
+                    <text x="800" y="280" font-size="11" fill="#3498db" text-anchor="middle">7 > 3 → Search RIGHT half</text>
+                    
+                    <!-- Step 3: Right half of left half -->
+                    <text x="670" y="315" font-size="13" fill="#3498db" font-weight="bold">Step 3: Check middle (5)</text>
+                    <rect x="850" y="320" width="35" height="30" fill="#f39c12" stroke="#e67e22" stroke-width="2"/>
+                    <text x="867.5" y="340" font-size="12" fill="white" font-weight="bold" text-anchor="middle">5</text>
+                    <text x="897" y="340" font-size="11" fill="#f39c12" font-weight="bold">← mid</text>
+                    <rect x="890" y="320" width="35" height="30" fill="#95a5a6"/>
+                    <text x="907.5" y="340" font-size="12" fill="white" font-weight="bold" text-anchor="middle">7</text>
+                    <text x="870" y="370" font-size="11" fill="#3498db" text-anchor="middle">7 > 5 → Search RIGHT</text>
+                    
+                    <!-- Step 4: Found -->
+                    <text x="670" y="405" font-size="13" fill="#27ae60" font-weight="bold">Step 4: Found!</text>
+                    <rect x="850" y="410" width="35" height="30" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="867.5" y="430" font-size="12" fill="white" font-weight="bold" text-anchor="middle">7</text>
+                    <text x="897" y="430" font-size="11" fill="#27ae60" font-weight="bold">✓ FOUND!</text>
+                    
+                    <text x="900" y="470" font-size="13" fill="#27ae60" font-weight="bold" text-anchor="middle">✓ Only 4 comparisons (same as linear)</text>
+                    <text x="900" y="490" font-size="12" fill="#666" text-anchor="middle">BUT for 1 million elements: Only ~20 checks!</text>
+                    
+                    <!-- Comparison -->
+                    <rect x="150" y="300" width="400" height="170" fill="#f8f9fa" stroke="#667eea" stroke-width="3" rx="10"/>
+                    <text x="350" y="330" font-size="17" fill="#667eea" font-weight="bold" text-anchor="middle">⚡ Performance Comparison</text>
+                    
+                    <text x="180" y="365" font-size="13" fill="#333" font-weight="bold">Array Size</text>
+                    <text x="310" y="365" font-size="13" fill="#e74c3c" font-weight="bold" text-anchor="middle">Linear O(n)</text>
+                    <text x="450" y="365" font-size="13" fill="#3498db" font-weight="bold" text-anchor="middle">Binary O(log n)</text>
+                    
+                    <line x1="170" y1="375" x2="530" y2="375" stroke="#ddd" stroke-width="1"/>
+                    
+                    <text x="180" y="395" font-size="12" fill="#333">100 elements</text>
+                    <text x="310" y="395" font-size="12" fill="#e74c3c" text-anchor="middle">~50 checks</text>
+                    <text x="450" y="395" font-size="12" fill="#3498db" text-anchor="middle">~7 checks</text>
+                    
+                    <text x="180" y="420" font-size="12" fill="#333">1,000,000</text>
+                    <text x="310" y="420" font-size="12" fill="#e74c3c" text-anchor="middle">~500,000</text>
+                    <text x="450" y="420" font-size="12" fill="#3498db" text-anchor="middle">~20</text>
+                    
+                    <text x="180" y="445" font-size="12" fill="#333">1,000,000,000</text>
+                    <text x="310" y="445" font-size="12" fill="#e74c3c" text-anchor="middle">~500 million!</text>
+                    <text x="450" y="445" font-size="12" fill="#3498db" text-anchor="middle">~30!</text>
+                    
+                </svg>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Binary Search - Iterative & Recursive</div>
+                <pre><code><span class="comment"># Iterative Binary Search (Preferred)</span>
+<span class="keyword">def</span> <span class="function">binary_search</span>(arr, target):
+    <span class="string">"""
+    Binary Search: Divide search space in half each time.
+    
+    IMPORTANT: Array must be SORTED!
+    
+    Time: O(log n) - each step halves the search space
+    Space: O(1)
+    
+    How it works:
+    1. Find middle element
+    2. If target == middle: found!
+    3. If target < middle: search left half
+    4. If target > middle: search right half
+    """</span>
+    left = <span class="number">0</span>
+    right = <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left <= right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="keyword">if</span> arr[mid] == target:
+            <span class="keyword">return</span> mid  <span class="comment"># Found!</span>
+        <span class="keyword">elif</span> arr[mid] < target:
+            left = mid + <span class="number">1</span>  <span class="comment"># Search right half</span>
+        <span class="keyword">else</span>:
+            right = mid - <span class="number">1</span>  <span class="comment"># Search left half</span>
+    
+    <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># Not found</span>
+
+<span class="comment"># Recursive Binary Search</span>
+<span class="keyword">def</span> <span class="function">binary_search_recursive</span>(arr, target, left=<span class="number">0</span>, right=<span class="keyword">None</span>):
+    <span class="string">"""
+    Binary search using recursion.
+    
+    Time: O(log n)
+    Space: O(log n) - recursion stack
+    """</span>
+    <span class="keyword">if</span> right <span class="keyword">is</span> <span class="keyword">None</span>:
+        right = <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">if</span> left > right:
+        <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># Not found</span>
+    
+    mid = (left + right) // <span class="number">2</span>
+    
+    <span class="keyword">if</span> arr[mid] == target:
+        <span class="keyword">return</span> mid
+    <span class="keyword">elif</span> arr[mid] < target:
+        <span class="keyword">return</span> <span class="function">binary_search_recursive</span>(arr, target, mid + <span class="number">1</span>, right)
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="function">binary_search_recursive</span>(arr, target, left, mid - <span class="number">1</span>)
+
+<span class="comment"># Test</span>
+arr = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">15</span>]
+target = <span class="number">7</span>
+<span class="builtin">print</span>(<span class="string">f"Found {target} at index {binary_search(arr, target)}"</span>)  <span class="comment"># 3</span></code></pre>
+            </div>
+
+            <h3>Binary Search Variations</h3>
+
+            <h4>Find First/Last Occurrence</h4>
+            <div class="code-block">
+                <div class="code-header">Binary Search - First and Last Position</div>
+                <pre><code><span class="keyword">def</span> <span class="function">find_first_occurrence</span>(arr, target):
+    <span class="string">"""
+    Find first (leftmost) occurrence of target.
+    
+    Example: arr = [1,2,2,2,3], target = 2
+    Output: 1 (not 2 or 3!)
+    """</span>
+    left, right = <span class="number">0</span>, <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    result = -<span class="number">1</span>
+    
+    <span class="keyword">while</span> left <= right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="keyword">if</span> arr[mid] == target:
+            result = mid  <span class="comment"># Found, but keep searching left</span>
+            right = mid - <span class="number">1</span>
+        <span class="keyword">elif</span> arr[mid] < target:
+            left = mid + <span class="number">1</span>
+        <span class="keyword">else</span>:
+            right = mid - <span class="number">1</span>
+    
+    <span class="keyword">return</span> result
+
+<span class="keyword">def</span> <span class="function">find_last_occurrence</span>(arr, target):
+    <span class="string">"""
+    Find last (rightmost) occurrence of target.
+    
+    Example: arr = [1,2,2,2,3], target = 2
+    Output: 3
+    """</span>
+    left, right = <span class="number">0</span>, <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    result = -<span class="number">1</span>
+    
+    <span class="keyword">while</span> left <= right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="keyword">if</span> arr[mid] == target:
+            result = mid  <span class="comment"># Found, but keep searching right</span>
+            left = mid + <span class="number">1</span>
+        <span class="keyword">elif</span> arr[mid] < target:
+            left = mid + <span class="number">1</span>
+        <span class="keyword">else</span>:
+            right = mid - <span class="number">1</span>
+    
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>]
+target = <span class="number">2</span>
+first = <span class="function">find_first_occurrence</span>(arr, target)
+last = <span class="function">find_last_occurrence</span>(arr, target)
+<span class="builtin">print</span>(<span class="string">f"First occurrence of {target}: index {first}"</span>)  <span class="comment"># 1</span>
+<span class="builtin">print</span>(<span class="string">f"Last occurrence of {target}: index {last}"</span>)   <span class="comment"># 4</span>
+<span class="builtin">print</span>(<span class="string">f"Total occurrences: {last - first + 1}"</span>)       <span class="comment"># 4</span></code></pre>
+            </div>
+
+            <h4>Search in Rotated Sorted Array</h4>
+            <div class="code-block">
+                <div class="code-header">Binary Search in Rotated Array</div>
+                <pre><code><span class="keyword">def</span> <span class="function">search_rotated</span>(arr, target):
+    <span class="string">"""
+    Search in rotated sorted array.
+    
+    Example: [4,5,6,7,0,1,2], target = 0
+    Array was sorted [0,1,2,4,5,6,7], then rotated.
+    
+    Key insight: One half is always sorted!
+    - Check which half is sorted
+    - If target in sorted half, search there
+    - Otherwise, search other half
+    
+    Time: O(log n), Space: O(1)
+    """</span>
+    left, right = <span class="number">0</span>, <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left <= right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="keyword">if</span> arr[mid] == target:
+            <span class="keyword">return</span> mid
+        
+        <span class="comment"># Check which half is sorted</span>
+        <span class="keyword">if</span> arr[left] <= arr[mid]:
+            <span class="comment"># Left half is sorted</span>
+            <span class="keyword">if</span> arr[left] <= target < arr[mid]:
+                right = mid - <span class="number">1</span>  <span class="comment"># Target in left half</span>
+            <span class="keyword">else</span>:
+                left = mid + <span class="number">1</span>   <span class="comment"># Target in right half</span>
+        <span class="keyword">else</span>:
+            <span class="comment"># Right half is sorted</span>
+            <span class="keyword">if</span> arr[mid] < target <= arr[right]:
+                left = mid + <span class="number">1</span>   <span class="comment"># Target in right half</span>
+            <span class="keyword">else</span>:
+                right = mid - <span class="number">1</span>  <span class="comment"># Target in left half</span>
+    
+    <span class="keyword">return</span> -<span class="number">1</span>
+
+<span class="comment"># Test</span>
+arr = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>]
+target = <span class="number">0</span>
+<span class="builtin">print</span>(<span class="string">f"Found {target} at index {search_rotated(arr, target)}"</span>)  <span class="comment"># 4</span></code></pre>
+            </div>
+
+            <h4>Find Peak Element</h4>
+            <div class="code-block">
+                <div class="code-header">Find Peak Element Using Binary Search</div>
+                <pre><code><span class="keyword">def</span> <span class="function">find_peak_element</span>(arr):
+    <span class="string">"""
+    Find a peak element (element greater than neighbors).
+    
+    Example: [1,2,3,1] → peak is at index 2 (element 3)
+    
+    Binary search approach:
+    - If mid > mid+1: peak is in left half (including mid)
+    - If mid < mid+1: peak is in right half
+    
+    Time: O(log n), Space: O(1)
+    """</span>
+    left, right = <span class="number">0</span>, <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left < right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="keyword">if</span> arr[mid] > arr[mid + <span class="number">1</span>]:
+            <span class="comment"># Peak is in left half (including mid)</span>
+            right = mid
+        <span class="keyword">else</span>:
+            <span class="comment"># Peak is in right half</span>
+            left = mid + <span class="number">1</span>
+    
+    <span class="keyword">return</span> left
+
+<span class="comment"># Test</span>
+arr = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">1</span>]
+peak_idx = <span class="function">find_peak_element</span>(arr)
+<span class="builtin">print</span>(<span class="string">f"Peak element {arr[peak_idx]} at index {peak_idx}"</span>)  <span class="comment"># 3 at index 2</span></code></pre>
+            </div>
+
+            <h4>Search in 2D Matrix</h4>
+            <div class="code-block">
+                <div class="code-header">Binary Search in 2D Sorted Matrix</div>
+                <pre><code><span class="keyword">def</span> <span class="function">search_matrix</span>(matrix, target):
+    <span class="string">"""
+    Search in 2D matrix where:
+    - Each row is sorted
+    - First element of each row > last element of previous row
+    
+    Treat as 1D sorted array!
+    
+    Example:
+    [1,  3,  5,  7]
+    [10, 11, 16, 20]
+    [23, 30, 34, 60]
+    
+    Time: O(log(m*n)), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> matrix <span class="keyword">or</span> <span class="keyword">not</span> matrix[<span class="number">0</span>]:
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    
+    rows = <span class="builtin">len</span>(matrix)
+    cols = <span class="builtin">len</span>(matrix[<span class="number">0</span>])
+    
+    left, right = <span class="number">0</span>, rows * cols - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left <= right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="comment"># Convert 1D index to 2D coordinates</span>
+        row = mid // cols
+        col = mid % cols
+        mid_value = matrix[row][col]
+        
+        <span class="keyword">if</span> mid_value == target:
+            <span class="keyword">return</span> <span class="keyword">True</span>
+        <span class="keyword">elif</span> mid_value < target:
+            left = mid + <span class="number">1</span>
+        <span class="keyword">else</span>:
+            right = mid - <span class="number">1</span>
+    
+    <span class="keyword">return</span> <span class="keyword">False</span>
+
+<span class="comment"># Test</span>
+matrix = [
+    [<span class="number">1</span>,  <span class="number">3</span>,  <span class="number">5</span>,  <span class="number">7</span>],
+    [<span class="number">10</span>, <span class="number">11</span>, <span class="number">16</span>, <span class="number">20</span>],
+    [<span class="number">23</span>, <span class="number">30</span>, <span class="number">34</span>, <span class="number">60</span>]
+]
+<span class="builtin">print</span>(<span class="function">search_matrix</span>(matrix, <span class="number">3</span>))   <span class="comment"># True</span>
+<span class="builtin">print</span>(<span class="function">search_matrix</span>(matrix, <span class="number">13</span>))  <span class="comment"># False</span></code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Binary Search Tips:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ <strong>Always works on SORTED data</strong></li>
+                    <li>✅ <strong>Watch for integer overflow:</strong> Use <code>mid = left + (right - left) // 2</code></li>
+                    <li>✅ <strong>Inclusive/exclusive bounds:</strong> Be careful with <code><=</code> vs <code><</code></li>
+                    <li>✅ <strong>Think about invariants:</strong> What's always true about left and right?</li>
+                    <li>✅ <strong>Test edge cases:</strong> Empty array, single element, target not present</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>Common Binary Search Mistakes:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>❌ Forgetting array must be sorted</li>
+                    <li>❌ Using <code>while left < right</code> when you need <code>left <= right</code></li>
+                    <li>❌ Not updating left/right correctly (infinite loop!)</li>
+                    <li>❌ Off-by-one errors with <code>mid + 1</code> or <code>mid - 1</code></li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Binary Search
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Implement binary search to find target in sorted array.</p>
+                <p><strong>Input:</strong> <code>nums = [-1,0,3,5,9,12], target = 9</code></p>
+                <p><strong>Output:</strong> <code>4</code></p>
+                <p><strong>Hint:</strong> Classic binary search implementation</p>
+                <a href="https://leetcode.com/problems/binary-search/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Search Insert Position
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Find index where target should be inserted in sorted array.</p>
+                <p><strong>Input:</strong> <code>nums = [1,3,5,6], target = 5</code></p>
+                <p><strong>Output:</strong> <code>2</code></p>
+                <p><strong>Hint:</strong> Binary search, return left pointer if not found</p>
+                <a href="https://leetcode.com/problems/search-insert-position/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Find First and Last Position
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find starting and ending position of target in sorted array.</p>
+                <p><strong>Input:</strong> <code>nums = [5,7,7,8,8,10], target = 8</code></p>
+                <p><strong>Output:</strong> <code>[3,4]</code></p>
+                <p><strong>Hint:</strong> Two binary searches - one for first, one for last</p>
+                <a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Search in Rotated Sorted Array
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Search target in rotated sorted array.</p>
+                <p><strong>Input:</strong> <code>nums = [4,5,6,7,0,1,2], target = 0</code></p>
+                <p><strong>Output:</strong> <code>4</code></p>
+                <p><strong>Hint:</strong> One half is always sorted, check which half contains target</p>
+                <a href="https://leetcode.com/problems/search-in-rotated-sorted-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Find Peak Element
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find a peak element (greater than neighbors).</p>
+                <p><strong>Input:</strong> <code>nums = [1,2,3,1]</code></p>
+                <p><strong>Output:</strong> <code>2</code> (index of element 3)</p>
+                <p><strong>Hint:</strong> Binary search - if mid < mid+1, peak is on right</p>
+                <a href="https://leetcode.com/problems/find-peak-element/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Searching Section -->
+        
+            <textarea id="searching-editor" class="code-editor"># Searching Algorithm Implementations
+
+# 1. Linear Search (O(n) - For unsorted arrays)
+def linear_search(arr, target):
+    """Check each element sequentially"""
+    for i in range(len(arr)):
+        if arr[i] == target:
+            return i
+    return -1
+
+# 2. Binary Search (O(log n) - For sorted arrays)
+def binary_search(arr, target):
+    """Divide search space in half each time"""
+    left, right = 0, len(arr) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        
+        if arr[mid] == target:
+            return mid
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return -1
+
+# 3. Find First Occurrence (Binary Search Variation)
+def find_first(arr, target):
+    """Find first occurrence of target"""
+    left, right = 0, len(arr) - 1
+    result = -1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        
+        if arr[mid] == target:
+            result = mid
+            right = mid - 1  # Keep searching left
+        elif arr[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    
+    return result
+
+# 4. Search in Rotated Array
+def search_rotated(arr, target):
+    """Search in rotated sorted array"""
+    left, right = 0, len(arr) - 1
+    
+    while left <= right:
+        mid = (left + right) // 2
+        
+        if arr[mid] == target:
+            return mid
+        
+        # Check which half is sorted
+        if arr[left] <= arr[mid]:
+            # Left half is sorted
+            if arr[left] <= target < arr[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            # Right half is sorted
+            if arr[mid] < target <= arr[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    
+    return -1
+
+# Test all algorithms
+print("=== Linear Search ===")
+arr_unsorted = [10, 30, 20, 50, 40]
+print(f"Array: {arr_unsorted}")
+print(f"Find 20: index {linear_search(arr_unsorted, 20)}")
+
+print("\n=== Binary Search ===")
+arr_sorted = [1, 3, 5, 7, 9, 11, 13, 15]
+print(f"Array: {arr_sorted}")
+print(f"Find 7: index {binary_search(arr_sorted, 7)}")
+
+print("\n=== Find First Occurrence ===")
+arr_duplicates = [1, 2, 2, 2, 3, 4]
+print(f"Array: {arr_duplicates}")
+print(f"First 2: index {find_first(arr_duplicates, 2)}")
+
+print("\n=== Search Rotated Array ===")
+arr_rotated = [4, 5, 6, 7, 0, 1, 2]
+print(f"Array: {arr_rotated}")
+print(f"Find 0: index {search_rotated(arr_rotated, 0)}")
+print(f"Find 5: index {search_rotated(arr_rotated, 5)}")</textarea>
+            <div id="searching-output" class="output-container">
+                <div class="output-header">Output:</div>
+                <div id="searching-content"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }
+    
+    function runCode(id) {
+        const code = document.getElementById(id + '-editor').value;
+        const out = document.getElementById(id + '-output');
+        const content = document.getElementById(id + '-content');
+        out.classList.add('show');
+        let output = '';
+        try {
+            const log = (...args) => output += args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ') + '\n';
+            new Function('console', 'print', code)({log}, log);
+            content.textContent = output || '✓ Code executed successfully (no output)';
+        } catch(e) { 
+            content.textContent = '❌ Error: ' + e.message + '\n\nStack trace:\n' + e.stack; 
+        }
+    }
+    
+    function clearCode(id) {
+        document.getElementById(id + '-editor').value = '';
+        document.getElementById(id + '-output').classList.remove('show');
+    }
+</script>
+</body>
+</html>

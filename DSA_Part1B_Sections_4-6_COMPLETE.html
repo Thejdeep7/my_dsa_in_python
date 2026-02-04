@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Learning Journey - Part 1B (Sections 4-6)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.8; color: #1a1a1a; background: #f8f9fa; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 3em; margin-bottom: 20px; font-weight: 700; }
+        .hero p { font-size: 1.3em; opacity: 0.95; max-width: 700px; margin: 0 auto 20px; }
+        .part-navigation { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .part-nav-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3); }
+        .part-nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .part-nav-btn.active { background: white; color: #667eea; border-color: white; }
+        .nav-sticky { position: relative; background: white; border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .nav-btn { padding: 14px 20px; background: #f1f3f5; border: none; color: #495057; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-size: 0.95em; text-align: left; border: 2px solid transparent; }
+        .nav-btn:hover { background: #e9ecef; transform: translateY(-2px); }
+        .nav-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: white; border-radius: 16px; padding: 40px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .card h2 { color: #667eea; font-size: 2.2em; margin-bottom: 15px; font-weight: 700; }
+        .card h3 { color: #495057; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; font-weight: 600; padding-bottom: 10px; border-bottom: 2px solid #e9ecef; }
+        .card h4 { color: #764ba2; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; font-weight: 600; }
+        .card p { color: #495057; margin-bottom: 15px; font-size: 1.05em; }
+        .card ul, .card ol { margin-left: 30px; margin-bottom: 20px; color: #495057; }
+        .card li { margin-bottom: 10px; line-height: 1.7; }
+        .code-block { background: #1e1e1e; border-radius: 12px; overflow: hidden; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .code-header { background: #2d2d2d; padding: 12px 20px; color: #9cdcfe; font-size: 0.9em; font-weight: 600; border-bottom: 1px solid #404040; }
+        pre { padding: 25px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6; margin: 0; }
+        code { color: #d4d4d4; }
+        .comment { color: #6a9955; font-style: italic; }
+        .keyword { color: #569cd6; font-weight: 600; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .class { color: #4ec9b0; }
+        .builtin { color: #9cdcfe; }
+        .info-box { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 5px solid #2196f3; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .info-box strong { color: #1565c0; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .tip-box { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 5px solid #4caf50; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .tip-box strong { color: #2e7d32; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .warning-box { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 5px solid #ff9800; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .warning-box strong { color: #e65100; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .example-box { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 5px solid #9c27b0; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .example-box strong { color: #6a1b9a; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .complexity { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+        .complexity span { padding: 8px 16px; background: #e8f5e9; color: #2e7d32; border-radius: 20px; font-size: 0.9em; font-weight: 600; border: 2px solid #4caf50; }
+        .complexity span.medium { background: #fff3e0; color: #e65100; border-color: #ff9800; }
+        .complexity span.bad { background: #ffebee; color: #c62828; border-color: #f44336; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e9ecef; color: #495057; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8f9fa; }
+        .compiler-container { background: white; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .compiler-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .compiler-title { font-size: 1.4em; color: #667eea; font-weight: 600; }
+        .compiler-controls { display: flex; gap: 10px; }
+        .run-btn, .clear-btn { border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .run-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .clear-btn { background: #f1f3f5; color: #495057; }
+        .run-btn:hover, .clear-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .code-editor { width: 100%; min-height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 14px; padding: 20px; border: 2px solid #e9ecef; border-radius: 10px; background: #1e1e1e; color: #d4d4d4; resize: vertical; }
+        .output-container { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; border: 2px solid #e9ecef; min-height: 100px; font-family: 'JetBrains Mono', monospace; font-size: 14px; white-space: pre-wrap; display: none; }
+        .output-container.show { display: block; }
+        .output-header { font-weight: 600; color: #667eea; margin-bottom: 10px; }
+        .leetcode-problem { background: linear-gradient(135deg, #fff9e6 0%, #ffedd5 100%); border-left: 5px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 8px; }
+        .leetcode-problem .problem-title { color: #d97706; font-size: 1.2em; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .difficulty { padding: 4px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .difficulty.easy { background: #d1fae5; color: #065f46; }
+        .difficulty.medium { background: #fef3c7; color: #92400e; }
+        .difficulty.hard { background: #fee2e2; color: #991b1b; }
+                .leetcode-problem p strong { color: #0c0a09; font-weight: 700; }
+        .leetcode-problem code { background: #fef3c7; color: #1c1917; padding: 3px 8px; border-radius: 4px; font-weight: 600; border: 1px solid #fbbf24; }
+        .problem-link { display: inline-block; margin-top: 10px; padding: 8px 20px; background: #f59e0b; color: white; text-decoration: none; border-radius: 20px; font-size: 0.9em; font-weight: 600; transition: all 0.3s ease; }
+        .problem-link:hover { background: #d97706; transform: translateY(-2px); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2em; } .nav-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🚀 Complete DSA in Python</h1>
+        <p>Part 1B: Strings, Linked Lists & Stacks | Master Every Pattern</p>
+        <div class="part-navigation">
+            <a href="index.html" class="part-nav-btn">Part 1A: Sec 1-3</a>
+            <span class="part-nav-btn active">Part 1B: Sec 4-6</span>
+            <a href="DSA_Part1C_Sections_7-9_COMPLETE.html" class="part-nav-btn">Part 1C: Sec 7-9</a>
+            <a href="DSA_Part2A_Sections_10-12_COMPLETE.html" class="part-nav-btn">Part 2A: Sec 10-12</a>
+            <a href="DSA_Part2B_Sections_13-15_COMPLETE.html" class="part-nav-btn">Part 2B: Sec 13-15</a>
+            <a href="DSA_Part2C_Sections_16-18_COMPLETE.html" class="part-nav-btn">Part 2C: Sec 16-18</a>
+        </div>
+    </div>
+    
+    <div class="nav-sticky">
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="showSection('strings')">4. 🔤 Strings</button>
+            <button class="nav-btn" onclick="showSection('linked-lists')">5. 🔗 Linked Lists</button>
+            <button class="nav-btn" onclick="showSection('stacks')">6. 📚 Stacks</button>
+        </div>
+    </div>
+
+    <!-- SECTION 4: STRINGS - COMPLETE -->
+    <div id="strings" class="section active">
+        <div class="card">
+            <h2>🔤 Strings - Working with Text</h2>
+            
+            <h3>What are Strings?</h3>
+            <p>A string is a sequence of characters. In Python, strings are <strong>immutable</strong> - once created, you cannot change them! Every "modification" creates a new string.</p>
+            
+            <p><strong>Important:</strong> In Python, strings are treated like arrays of characters, so many array techniques work on strings too!</p>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <strong>📊 String Memory & Immutability Visualization</strong>
+                <svg viewBox="0 0 800 300" style="width: 100%; max-width: 800px; margin-top: 15px;">
+                    <!-- Original String -->
+                    <text x="50" y="30" font-size="14" fill="#1565c0" font-weight="bold">Original: s = "HELLO"</text>
+                    <rect x="50" y="40" width="50" height="40" fill="#bbdefb" stroke="#2196f3" stroke-width="2"/>
+                    <rect x="100" y="40" width="50" height="40" fill="#bbdefb" stroke="#2196f3" stroke-width="2"/>
+                    <rect x="150" y="40" width="50" height="40" fill="#bbdefb" stroke="#2196f3" stroke-width="2"/>
+                    <rect x="200" y="40" width="50" height="40" fill="#bbdefb" stroke="#2196f3" stroke-width="2"/>
+                    <rect x="250" y="40" width="50" height="40" fill="#bbdefb" stroke="#2196f3" stroke-width="2"/>
+                    <text x="75" y="67" font-size="20" text-anchor="middle" fill="#1565c0" font-weight="bold">H</text>
+                    <text x="125" y="67" font-size="20" text-anchor="middle" fill="#1565c0" font-weight="bold">E</text>
+                    <text x="175" y="67" font-size="20" text-anchor="middle" fill="#1565c0" font-weight="bold">L</text>
+                    <text x="225" y="67" font-size="20" text-anchor="middle" fill="#1565c0" font-weight="bold">L</text>
+                    <text x="275" y="67" font-size="20" text-anchor="middle" fill="#1565c0" font-weight="bold">O</text>
+                    <text x="150" y="95" font-size="12" text-anchor="middle" fill="#666" font-style="italic">Memory: 0x1000</text>
+                    
+                    <!-- Arrow -->
+                    <path d="M 150 120 L 150 140" stroke="#ff9800" stroke-width="3" fill="none" marker-end="url(#arrowhead)"/>
+                    <text x="200" y="135" font-size="14" fill="#e65100" font-weight="bold">s = s.upper() creates NEW string!</text>
+                    
+                    <!-- Modified String -->
+                    <text x="50" y="170" font-size="14" fill="#2e7d32" font-weight="bold">New String: s = "HELLO"</text>
+                    <rect x="50" y="180" width="50" height="40" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+                    <rect x="100" y="180" width="50" height="40" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+                    <rect x="150" y="180" width="50" height="40" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+                    <rect x="200" y="180" width="50" height="40" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+                    <rect x="250" y="180" width="50" height="40" fill="#c8e6c9" stroke="#4caf50" stroke-width="2"/>
+                    <text x="75" y="207" font-size="20" text-anchor="middle" fill="#2e7d32" font-weight="bold">H</text>
+                    <text x="125" y="207" font-size="20" text-anchor="middle" fill="#2e7d32" font-weight="bold">E</text>
+                    <text x="175" y="207" font-size="20" text-anchor="middle" fill="#2e7d32" font-weight="bold">L</text>
+                    <text x="225" y="207" font-size="20" text-anchor="middle" fill="#2e7d32" font-weight="bold">L</text>
+                    <text x="275" y="207" font-size="20" text-anchor="middle" fill="#2e7d32" font-weight="bold">O</text>
+                    <text x="150" y="235" font-size="12" text-anchor="middle" fill="#666" font-style="italic">Memory: 0x2000 (different location!)</text>
+                    
+                    <!-- Key Insight -->
+                    <rect x="400" y="80" width="350" height="140" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="10"/>
+                    <text x="575" y="105" font-size="16" text-anchor="middle" fill="#e65100" font-weight="bold">🔑 Key Insight</text>
+                    <text x="420" y="130" font-size="13" fill="#666">• Strings are IMMUTABLE</text>
+                    <text x="420" y="150" font-size="13" fill="#666">• Every change = new string</text>
+                    <text x="420" y="170" font-size="13" fill="#666">• Original string unchanged</text>
+                    <text x="420" y="190" font-size="13" fill="#666">• Use list for modifications</text>
+                    <text x="420" y="210" font-size="13" fill="#666">• Join for building strings</text>
+                    
+                    <defs>
+                        <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+                            <polygon points="0 0, 10 5, 0 10" fill="#ff9800" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="warning-box">
+                <strong>Critical Concept - String Immutability:</strong>
+                <p style="margin-top: 10px; margin-bottom: 0;">Never build strings with <code>+=</code> in a loop! It creates a new string each time, leading to O(n²) complexity.</p>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>❌ <strong>Bad:</strong> <code>s = ""; for char in text: s += char</code> → O(n²)</li>
+                    <li>✅ <strong>Good:</strong> <code>s = "".join(list_of_chars)</code> → O(n)</li>
+                </ul>
+            </div>
+
+            <h3>String Basics in Python</h3>
+            <div class="code-block">
+                <div class="code-header">String Operations and Methods</div>
+                <pre><code><span class="comment"># Creating strings</span>
+s1 = <span class="string">"Hello"</span>
+s2 = <span class="string">'World'</span>
+s3 = <span class="string">"""Multi
+line
+string"""</span>
+
+<span class="comment"># Accessing characters (like arrays!)</span>
+first = s1[<span class="number">0</span>]        <span class="comment"># 'H'</span>
+last = s1[-<span class="number">1</span>]        <span class="comment"># 'o'</span>
+
+<span class="comment"># Slicing [start:end:step]</span>
+substring = s1[<span class="number">1</span>:<span class="number">4</span>]   <span class="comment"># "ell" (index 1,2,3)</span>
+reverse = s1[::-<span class="number">1</span>]     <span class="comment"># "olleH" (reverse string!)</span>
+
+<span class="comment"># Common methods</span>
+upper = s1.<span class="function">upper</span>()         <span class="comment"># "HELLO"</span>
+lower = s1.<span class="function">lower</span>()         <span class="comment"># "hello"</span>
+stripped = <span class="string">"  hi  "</span>.<span class="function">strip</span>()  <span class="comment"># "hi" (remove whitespace)</span>
+split_words = <span class="string">"a b c"</span>.<span class="function">split</span>()  <span class="comment"># ['a', 'b', 'c']</span>
+
+<span class="comment"># Checking</span>
+has_hello = <span class="string">"hello"</span> <span class="keyword">in</span> <span class="string">"hello world"</span>  <span class="comment"># True</span>
+starts = s1.<span class="function">startswith</span>(<span class="string">"He"</span>)         <span class="comment"># True</span>
+ends = s1.<span class="function">endswith</span>(<span class="string">"lo"</span>)           <span class="comment"># True</span>
+is_digit = <span class="string">"123"</span>.<span class="function">isdigit</span>()           <span class="comment"># True</span>
+is_alpha = <span class="string">"abc"</span>.<span class="function">isalpha</span>()           <span class="comment"># True</span>
+
+<span class="comment"># Joining and splitting</span>
+words = [<span class="string">"Hello"</span>, <span class="string">"World"</span>]
+joined = <span class="string">" "</span>.<span class="function">join</span>(words)  <span class="comment"># "Hello World"</span>
+split = joined.<span class="function">split</span>()     <span class="comment"># ["Hello", "World"]</span>
+
+<span class="comment"># Finding</span>
+index = s1.<span class="function">find</span>(<span class="string">"l"</span>)      <span class="comment"># 2 (first occurrence)</span>
+rindex = s1.<span class="function">rfind</span>(<span class="string">"l"</span>)     <span class="comment"># 3 (last occurrence)</span>
+count = s1.<span class="function">count</span>(<span class="string">"l"</span>)      <span class="comment"># 2 (occurrences)</span>
+
+<span class="comment"># Replacing</span>
+replaced = s1.<span class="function">replace</span>(<span class="string">"l"</span>, <span class="string">"L"</span>)  <span class="comment"># "HeLLo"</span></code></pre>
+            </div>
+
+            <h3>Essential String Patterns</h3>
+            
+            <h4>Pattern 1: Palindrome Check</h4>
+            <p>A palindrome reads the same forwards and backwards.</p>
+            
+            <div class="code-block">
+                <div class="code-header">Check if String is Palindrome</div>
+                <pre><code><span class="keyword">def</span> <span class="function">is_palindrome</span>(s):
+    <span class="string">"""
+    Check if string is a palindrome.
+    
+    Example: "racecar" → True
+             "hello" → False
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="comment"># Method 1: Two pointers</span>
+    left, right = <span class="number">0</span>, <span class="builtin">len</span>(s) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left < right:
+        <span class="keyword">if</span> s[left] != s[right]:
+            <span class="keyword">return</span> <span class="keyword">False</span>
+        left += <span class="number">1</span>
+        right -= <span class="number">1</span>
+    
+    <span class="keyword">return</span> <span class="keyword">True</span>
+
+<span class="keyword">def</span> <span class="function">is_palindrome_pythonic</span>(s):
+    <span class="string">"""Method 2: Python way - simple but creates new string"""</span>
+    <span class="keyword">return</span> s == s[::-<span class="number">1</span>]
+
+<span class="comment"># Advanced: Ignore non-alphanumeric characters</span>
+<span class="keyword">def</span> <span class="function">is_valid_palindrome</span>(s):
+    <span class="string">"""
+    Check palindrome ignoring spaces and punctuation.
+    
+    Example: "A man, a plan, a canal: Panama" → True
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    left, right = <span class="number">0</span>, <span class="builtin">len</span>(s) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left < right:
+        <span class="comment"># Skip non-alphanumeric from left</span>
+        <span class="keyword">while</span> left < right <span class="keyword">and</span> <span class="keyword">not</span> s[left].<span class="function">isalnum</span>():
+            left += <span class="number">1</span>
+        
+        <span class="comment"># Skip non-alphanumeric from right</span>
+        <span class="keyword">while</span> left < right <span class="keyword">and</span> <span class="keyword">not</span> s[right].<span class="function">isalnum</span>():
+            right -= <span class="number">1</span>
+        
+        <span class="comment"># Compare (case-insensitive)</span>
+        <span class="keyword">if</span> s[left].<span class="function">lower</span>() != s[right].<span class="function">lower</span>():
+            <span class="keyword">return</span> <span class="keyword">False</span>
+        
+        left += <span class="number">1</span>
+        right -= <span class="number">1</span>
+    
+    <span class="keyword">return</span> <span class="keyword">True</span>
+
+<span class="comment"># Examples:</span>
+<span class="builtin">print</span>(<span class="function">is_palindrome</span>(<span class="string">"racecar"</span>))  <span class="comment"># True</span>
+<span class="builtin">print</span>(<span class="function">is_palindrome</span>(<span class="string">"hello"</span>))     <span class="comment"># False</span>
+<span class="builtin">print</span>(<span class="function">is_valid_palindrome</span>(<span class="string">"A man, a plan, a canal: Panama"</span>))  <span class="comment"># True</span></code></pre>
+            </div>
+
+            <h4>Pattern 2: Anagram Check</h4>
+            <p>Two strings are anagrams if they contain the same characters in different order.</p>
+            
+            <div class="code-block">
+                <div class="code-header">Check if Two Strings are Anagrams</div>
+                <pre><code><span class="keyword">def</span> <span class="function">is_anagram</span>(s1, s2):
+    <span class="string">"""
+    Check if two strings are anagrams.
+    
+    Example: "listen" and "silent" → True
+             "hello" and "world" → False
+    
+    Time: O(n), Space: O(1) - at most 26 letters
+    """</span>
+    <span class="comment"># Quick check: different lengths can't be anagrams</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(s1) != <span class="builtin">len</span>(s2):
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    
+    <span class="comment"># Method 1: Count characters using dictionary</span>
+    char_count = {}
+    
+    <span class="comment"># Count characters in first string</span>
+    <span class="keyword">for</span> char <span class="keyword">in</span> s1:
+        char_count[char] = char_count.<span class="function">get</span>(char, <span class="number">0</span>) + <span class="number">1</span>
+    
+    <span class="comment"># Subtract characters from second string</span>
+    <span class="keyword">for</span> char <span class="keyword">in</span> s2:
+        <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> char_count:
+            <span class="keyword">return</span> <span class="keyword">False</span>
+        char_count[char] -= <span class="number">1</span>
+        <span class="keyword">if</span> char_count[char] < <span class="number">0</span>:
+            <span class="keyword">return</span> <span class="keyword">False</span>
+    
+    <span class="keyword">return</span> <span class="keyword">True</span>
+
+<span class="keyword">def</span> <span class="function">is_anagram_sorted</span>(s1, s2):
+    <span class="string">"""
+    Method 2: Sort and compare
+    Time: O(n log n) - due to sorting
+    Space: O(n) - for sorted strings
+    """</span>
+    <span class="keyword">return</span> <span class="builtin">sorted</span>(s1) == <span class="builtin">sorted</span>(s2)
+
+<span class="comment"># Examples:</span>
+<span class="builtin">print</span>(<span class="function">is_anagram</span>(<span class="string">"listen"</span>, <span class="string">"silent"</span>))  <span class="comment"># True</span>
+<span class="builtin">print</span>(<span class="function">is_anagram</span>(<span class="string">"hello"</span>, <span class="string">"world"</span>))    <span class="comment"># False</span>
+<span class="builtin">print</span>(<span class="function">is_anagram_sorted</span>(<span class="string">"anagram"</span>, <span class="string">"nagaram"</span>))  <span class="comment"># True</span></code></pre>
+            </div>
+
+            <h4>Pattern 3: Longest Substring Without Repeating Characters</h4>
+            <div class="code-block">
+                <div class="code-header">Sliding Window on Strings</div>
+                <pre><code><span class="keyword">def</span> <span class="function">length_of_longest_substring</span>(s):
+    <span class="string">"""
+    Find length of longest substring with all unique characters.
+    
+    Example: "abcabcbb" → 3 (substring "abc")
+             "bbbbb" → 1 (substring "b")
+             "pwwkew" → 3 (substring "wke")
+    
+    Uses sliding window technique.
+    Time: O(n), Space: O(min(n, m)) where m is charset size
+    """</span>
+    char_set = <span class="builtin">set</span>()
+    left = <span class="number">0</span>
+    max_length = <span class="number">0</span>
+    
+    <span class="keyword">for</span> right <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(s)):
+        <span class="comment"># Shrink window while we have duplicates</span>
+        <span class="keyword">while</span> s[right] <span class="keyword">in</span> char_set:
+            char_set.<span class="function">remove</span>(s[left])
+            left += <span class="number">1</span>
+        
+        <span class="comment"># Add current character</span>
+        char_set.<span class="function">add</span>(s[right])
+        
+        <span class="comment"># Update max length</span>
+        max_length = <span class="builtin">max</span>(max_length, right - left + <span class="number">1</span>)
+    
+    <span class="keyword">return</span> max_length
+
+<span class="comment"># Optimized version with last seen index</span>
+<span class="keyword">def</span> <span class="function">length_of_longest_substring_optimized</span>(s):
+    <span class="string">"""
+    Optimized: Jump directly past duplicate instead of 
+    moving left pointer one by one.
+    """</span>
+    last_seen = {}  <span class="comment"># char → last index we saw it</span>
+    left = <span class="number">0</span>
+    max_length = <span class="number">0</span>
+    
+    <span class="keyword">for</span> right <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(s)):
+        char = s[right]
+        
+        <span class="comment"># If we've seen this char and it's in our window</span>
+        <span class="keyword">if</span> char <span class="keyword">in</span> last_seen <span class="keyword">and</span> last_seen[char] >= left:
+            <span class="comment"># Jump past the previous occurrence</span>
+            left = last_seen[char] + <span class="number">1</span>
+        
+        <span class="comment"># Update last seen position</span>
+        last_seen[char] = right
+        
+        <span class="comment"># Update max length</span>
+        max_length = <span class="builtin">max</span>(max_length, right - left + <span class="number">1</span>)
+    
+    <span class="keyword">return</span> max_length
+
+<span class="comment"># Examples:</span>
+<span class="builtin">print</span>(<span class="function">length_of_longest_substring</span>(<span class="string">"abcabcbb"</span>))  <span class="comment"># 3</span>
+<span class="builtin">print</span>(<span class="function">length_of_longest_substring</span>(<span class="string">"bbbbb"</span>))     <span class="comment"># 1</span>
+<span class="builtin">print</span>(<span class="function">length_of_longest_substring</span>(<span class="string">"pwwkew"</span>))    <span class="comment"># 3</span></code></pre>
+            </div>
+
+            <h4>Pattern 4: String Reversal and Rotation</h4>
+            <div class="code-block">
+                <div class="code-header">Reverse Words and Check Rotation</div>
+                <pre><code><span class="keyword">def</span> <span class="function">reverse_words</span>(s):
+    <span class="string">"""
+    Reverse words in a string.
+    
+    Example: "the sky is blue" → "blue is sky the"
+    
+    Time: O(n), Space: O(n)
+    """</span>
+    <span class="comment"># Split, reverse list, join</span>
+    words = s.<span class="function">split</span>()
+    <span class="keyword">return</span> <span class="string">" "</span>.<span class="function">join</span>(words[::-<span class="number">1</span>])
+
+<span class="keyword">def</span> <span class="function">is_rotation</span>(s1, s2):
+    <span class="string">"""
+    Check if s2 is a rotation of s1.
+    
+    Example: "waterbottle" and "erbottlewat" → True
+    
+    Clever trick: s2 is rotation of s1 if s2 is substring of s1+s1
+    
+    Think about it:
+    s1 = "waterbottle"
+    s1+s1 = "waterbottlewaterbottle"
+    s2 = "erbottlewat" (yes, it's in there!)
+    
+    Time: O(n), Space: O(n)
+    """</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(s1) != <span class="builtin">len</span>(s2):
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    
+    <span class="keyword">return</span> s2 <span class="keyword">in</span> (s1 + s1)
+
+<span class="comment"># Examples:</span>
+<span class="builtin">print</span>(<span class="function">reverse_words</span>(<span class="string">"the sky is blue"</span>))  <span class="comment"># "blue is sky the"</span>
+<span class="builtin">print</span>(<span class="function">is_rotation</span>(<span class="string">"waterbottle"</span>, <span class="string">"erbottlewat"</span>))  <span class="comment"># True</span>
+<span class="builtin">print</span>(<span class="function">is_rotation</span>(<span class="string">"hello"</span>, <span class="string">"world"</span>))  <span class="comment"># False</span></code></pre>
+            </div>
+
+            <h3>Character Frequency and Pattern Matching</h3>
+            <div class="code-block">
+                <div class="code-header">First Non-Repeating Character</div>
+                <pre><code><span class="keyword">def</span> <span class="function">first_unique_char</span>(s):
+    <span class="string">"""
+    Find first non-repeating character in string.
+    
+    Example: "leetcode" → 0 (index of 'l')
+             "loveleetcode" → 2 (index of 'v')
+    
+    Time: O(n), Space: O(1) - at most 26 letters
+    """</span>
+    <span class="comment"># Count all characters</span>
+    char_count = {}
+    <span class="keyword">for</span> char <span class="keyword">in</span> s:
+        char_count[char] = char_count.<span class="function">get</span>(char, <span class="number">0</span>) + <span class="number">1</span>
+    
+    <span class="comment"># Find first with count = 1</span>
+    <span class="keyword">for</span> i, char <span class="keyword">in</span> <span class="builtin">enumerate</span>(s):
+        <span class="keyword">if</span> char_count[char] == <span class="number">1</span>:
+            <span class="keyword">return</span> i
+    
+    <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># No unique character</span>
+
+<span class="comment"># Example:</span>
+s = <span class="string">"leetcode"</span>
+index = <span class="function">first_unique_char</span>(s)
+<span class="builtin">print</span>(<span class="string">f"First unique character at index: {index}"</span>)  <span class="comment"># 0</span>
+<span class="builtin">print</span>(<span class="string">f"Character: {s[index]}"</span>)  <span class="comment"># 'l'</span></code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>String Interview Tips:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ <strong>Two pointers</strong> works great for palindromes and reversals</li>
+                    <li>✅ <strong>Sliding window</strong> for substring problems</li>
+                    <li>✅ <strong>Hash maps</strong> for character frequency problems</li>
+                    <li>✅ <strong>Ask about case sensitivity</strong> and special characters</li>
+                    <li>✅ <strong>Remember:</strong> <code>s[::-1]</code> reverses, <code>s.lower()</code> for case-insensitive</li>
+                    <li>⚠️ <strong>Never</strong> use <code>+=</code> in loops to build strings!</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Longest Palindromic Substring
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given a string s, return the longest palindromic substring in s.</p>
+                <p><strong>Input:</strong> <code>s = "babad"</code></p>
+                <p><strong>Output:</strong> <code>"bab"</code> or <code>"aba"</code></p>
+                <p><strong>Explanation:</strong> Both are valid palindromic substrings.</p>
+                <p><strong>Hint:</strong> Expand around center - check all possible centers</p>
+                <a href="https://leetcode.com/problems/longest-palindromic-substring/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Group Anagrams
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array of strings strs, group the anagrams together.</p>
+                <p><strong>Input:</strong> <code>strs = ["eat","tea","tan","ate","nat","bat"]</code></p>
+                <p><strong>Output:</strong> <code>[["bat"],["nat","tan"],["ate","eat","tea"]]</code></p>
+                <p><strong>Hint:</strong> Use sorted string as hash key</p>
+                <a href="https://leetcode.com/problems/group-anagrams/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: String Compression
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Implement string compression using counts of repeated characters.</p>
+                <p><strong>Input:</strong> <code>chars = ["a","a","b","b","c","c","c"]</code></p>
+                <p><strong>Output:</strong> <code>6, chars = ["a","2","b","2","c","3"]</code></p>
+                <p><strong>Hint:</strong> Use two pointers to track read and write positions</p>
+                <a href="https://leetcode.com/problems/string-compression/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Valid Parentheses
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given a string s containing just characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.</p>
+                <p><strong>Input:</strong> <code>s = "()[]{}"</code></p>
+                <p><strong>Output:</strong> <code>true</code></p>
+                <p><strong>Hint:</strong> Use a stack to track opening brackets</p>
+                <a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Minimum Window Substring
+                    <span class="difficulty hard">HARD</span>
+                </div>
+                <p><strong>Problem:</strong> Given two strings s and t, return the minimum window substring of s such that every character in t is included in the window.</p>
+                <p><strong>Input:</strong> <code>s = "ADOBECODEBANC", t = "ABC"</code></p>
+                <p><strong>Output:</strong> <code>"BANC"</code></p>
+                <p><strong>Hint:</strong> Use sliding window with hash map</p>
+                <a href="https://leetcode.com/problems/minimum-window-substring/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </div>
+
+    <!-- SECTION 5: LINKED LISTS - COMPLETE -->
+    <div id="linked-lists" class="section">
+        <div class="card">
+            <h2>🔗 Linked Lists - Dynamic Data Structures</h2>
+            
+            <h3>What is a Linked List?</h3>
+            <p>A linked list is a linear data structure where elements are stored in nodes. Each node contains:</p>
+            <ul>
+                <li><strong>Data:</strong> The actual value you want to store</li>
+                <li><strong>Next:</strong> Reference (pointer) to the next node</li>
+            </ul>
+            
+            <p><strong>Key difference from arrays:</strong> Elements are NOT stored in contiguous memory. They can be scattered anywhere in memory, connected by pointers!</p>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <strong>📊 Linked List Structure Visualization</strong>
+                <svg viewBox="0 0 850 400" style="width: 100%; max-width: 850px; margin-top: 15px;">
+                    <!-- Head label -->
+                    <text x="50" y="30" font-size="16" fill="#667eea" font-weight="bold">head →</text>
+                    
+                    <!-- Node 1 -->
+                    <rect x="120" y="50" width="100" height="80" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="8"/>
+                    <text x="170" y="75" font-size="12" text-anchor="middle" fill="#666">Node 1</text>
+                    <line x1="120" y1="90" x2="220" y2="90" stroke="#2196f3" stroke-width="1"/>
+                    <text x="145" y="110" font-size="14" fill="#1565c0">data: 10</text>
+                    <text x="145" y="128" font-size="12" fill="#666">next:</text>
+                    <!-- Arrow from node 1 to 2 -->
+                    <path d="M 220 90 L 290 90" stroke="#ff9800" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+                    
+                    <!-- Node 2 -->
+                    <rect x="290" y="50" width="100" height="80" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="8"/>
+                    <text x="340" y="75" font-size="12" text-anchor="middle" fill="#666">Node 2</text>
+                    <line x1="290" y1="90" x2="390" y2="90" stroke="#4caf50" stroke-width="1"/>
+                    <text x="315" y="110" font-size="14" fill="#2e7d32">data: 20</text>
+                    <text x="315" y="128" font-size="12" fill="#666">next:</text>
+                    <!-- Arrow from node 2 to 3 -->
+                    <path d="M 390 90 L 460 90" stroke="#ff9800" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+                    
+                    <!-- Node 3 -->
+                    <rect x="460" y="50" width="100" height="80" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="8"/>
+                    <text x="510" y="75" font-size="12" text-anchor="middle" fill="#666">Node 3</text>
+                    <line x1="460" y1="90" x2="560" y2="90" stroke="#ff9800" stroke-width="1"/>
+                    <text x="485" y="110" font-size="14" fill="#e65100">data: 30</text>
+                    <text x="485" y="128" font-size="12" fill="#666">next:</text>
+                    <!-- Arrow to None -->
+                    <path d="M 560 90 L 630 90" stroke="#999" stroke-width="3" fill="none" marker-end="url(#arrow)"/>
+                    <text x="650" y="95" font-size="16" fill="#999" font-weight="bold">None</text>
+                    
+                    <!-- Memory addresses -->
+                    <text x="170" y="155" font-size="11" text-anchor="middle" fill="#999" font-style="italic">0x1A2B</text>
+                    <text x="340" y="155" font-size="11" text-anchor="middle" fill="#999" font-style="italic">0x5C7D</text>
+                    <text x="510" y="155" font-size="11" text-anchor="middle" fill="#999" font-style="italic">0x9E3F</text>
+                    
+                    <!-- Array comparison below -->
+                    <text x="50" y="220" font-size="14" fill="#666" font-weight="bold">Compare with Array (contiguous memory):</text>
+                    <rect x="120" y="230" width="60" height="50" fill="#ffebee" stroke="#f44336" stroke-width="2"/>
+                    <rect x="180" y="230" width="60" height="50" fill="#ffebee" stroke="#f44336" stroke-width="2"/>
+                    <rect x="240" y="230" width="60" height="50" fill="#ffebee" stroke="#f44336" stroke-width="2"/>
+                    <text x="150" y="262" font-size="16" text-anchor="middle" fill="#c62828" font-weight="bold">10</text>
+                    <text x="210" y="262" font-size="16" text-anchor="middle" fill="#c62828" font-weight="bold">20</text>
+                    <text x="270" y="262" font-size="16" text-anchor="middle" fill="#c62828" font-weight="bold">30</text>
+                    <text x="190" y="300" font-size="11" text-anchor="middle" fill="#999" font-style="italic">Contiguous: 0x1000, 0x1004, 0x1008</text>
+                    
+                    <!-- Key differences -->
+                    <rect x="420" y="210" width="400" height="170" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="10"/>
+                    <text x="620" y="235" font-size="15" text-anchor="middle" fill="#6a1b9a" font-weight="bold">🔑 Key Differences</text>
+                    <text x="440" y="260" font-size="12" fill="#666" font-weight="bold">Linked List:</text>
+                    <text x="450" y="278" font-size="11" fill="#666">• Nodes scattered in memory</text>
+                    <text x="450" y="293" font-size="11" fill="#666">• Connected via pointers</text>
+                    <text x="450" y="308" font-size="11" fill="#666">• O(1) insert at beginning</text>
+                    <text x="450" y="323" font-size="11" fill="#666">• O(n) access i-th element</text>
+                    
+                    <text x="440" y="348" font-size="12" fill="#666" font-weight="bold">Array:</text>
+                    <text x="450" y="366" font-size="11" fill="#666">• Contiguous memory</text>
+                    <text x="650" y="366" font-size="11" fill="#666">• O(1) access</text>
+                    
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ff9800" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <div class="info-box">
+                <strong>When to Use Linked Lists:</strong>
+                <ul style="margin-top: 10px;">
+                    <li>✅ Frequent insertions/deletions (especially at beginning)</li>
+                    <li>✅ Don't know size in advance</li>
+                    <li>✅ Implementing stacks, queues, or graphs</li>
+                    <li>❌ Need random access to elements</li>
+                    <li>❌ Need to search frequently</li>
+                </ul>
+            </div>
+
+            <h3>Linked List vs Array</h3>
+            <table>
+                <tr>
+                    <th>Operation</th>
+                    <th>Array</th>
+                    <th>Linked List</th>
+                </tr>
+                <tr>
+                    <td>Access i-th element</td>
+                    <td>O(1) ✅</td>
+                    <td>O(n) ❌</td>
+                </tr>
+                <tr>
+                    <td>Insert at beginning</td>
+                    <td>O(n) ❌</td>
+                    <td>O(1) ✅</td>
+                </tr>
+                <tr>
+                    <td>Insert at end</td>
+                    <td>O(1) ✅</td>
+                    <td>O(n) or O(1) with tail pointer</td>
+                </tr>
+                <tr>
+                    <td>Delete at beginning</td>
+                    <td>O(n) ❌</td>
+                    <td>O(1) ✅</td>
+                </tr>
+                <tr>
+                    <td>Search</td>
+                    <td>O(n)</td>
+                    <td>O(n)</td>
+                </tr>
+                <tr>
+                    <td>Memory</td>
+                    <td>Contiguous</td>
+                    <td>Scattered + pointer overhead</td>
+                </tr>
+            </table>
+
+            <h3>Singly Linked List Implementation</h3>
+            <div class="code-block">
+                <div class="code-header">Complete Singly Linked List</div>
+                <pre><code><span class="keyword">class</span> <span class="class">Node</span>:
+    <span class="string">"""
+    A single node in the linked list.
+    
+    Think of it as a train car:
+    - data: What the car is carrying
+    - next: Connection to the next car
+    """</span>
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>, data):
+        <span class="builtin">self</span>.data = data
+        <span class="builtin">self</span>.next = <span class="keyword">None</span>  <span class="comment"># Initially not connected to anything</span>
+
+<span class="keyword">class</span> <span class="class">LinkedList</span>:
+    <span class="string">"""Complete implementation of singly linked list"""</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>):
+        <span class="builtin">self</span>.head = <span class="keyword">None</span>  <span class="comment"># Start of the list</span>
+        <span class="builtin">self</span>.size = <span class="number">0</span>
+    
+    <span class="keyword">def</span> <span class="function">is_empty</span>(<span class="builtin">self</span>):
+        <span class="string">"""Check if list is empty"""</span>
+        <span class="keyword">return</span> <span class="builtin">self</span>.head <span class="keyword">is</span> <span class="keyword">None</span>
+    
+    <span class="keyword">def</span> <span class="function">prepend</span>(<span class="builtin">self</span>, data):
+        <span class="string">"""
+        Add node at beginning.
+        
+        Time: O(1) - just update head pointer!
+        """</span>
+        new_node = <span class="class">Node</span>(data)
+        new_node.next = <span class="builtin">self</span>.head  <span class="comment"># New node points to current head</span>
+        <span class="builtin">self</span>.head = new_node        <span class="comment"># Update head to new node</span>
+        <span class="builtin">self</span>.size += <span class="number">1</span>
+    
+    <span class="keyword">def</span> <span class="function">append</span>(<span class="builtin">self</span>, data):
+        <span class="string">"""
+        Add node at end.
+        
+        Time: O(n) - must traverse entire list
+        """</span>
+        new_node = <span class="class">Node</span>(data)
+        
+        <span class="comment"># Special case: empty list</span>
+        <span class="keyword">if</span> <span class="builtin">self</span>.<span class="function">is_empty</span>():
+            <span class="builtin">self</span>.head = new_node
+            <span class="builtin">self</span>.size += <span class="number">1</span>
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Traverse to last node</span>
+        current = <span class="builtin">self</span>.head
+        <span class="keyword">while</span> current.next:
+            current = current.next
+        
+        <span class="comment"># Add new node</span>
+        current.next = new_node
+        <span class="builtin">self</span>.size += <span class="number">1</span>
+    
+    <span class="keyword">def</span> <span class="function">insert_after</span>(<span class="builtin">self</span>, prev_data, data):
+        <span class="string">"""Insert new node after node with prev_data"""</span>
+        current = <span class="builtin">self</span>.head
+        
+        <span class="comment"># Find the node</span>
+        <span class="keyword">while</span> current:
+            <span class="keyword">if</span> current.data == prev_data:
+                new_node = <span class="class">Node</span>(data)
+                new_node.next = current.next
+                current.next = new_node
+                <span class="builtin">self</span>.size += <span class="number">1</span>
+                <span class="keyword">return</span>
+            current = current.next
+        
+        <span class="builtin">print</span>(<span class="string">f"Node with data {prev_data} not found"</span>)
+    
+    <span class="keyword">def</span> <span class="function">delete</span>(<span class="builtin">self</span>, data):
+        <span class="string">"""
+        Delete first node with given data.
+        
+        Time: O(n) - might need to traverse entire list
+        """</span>
+        <span class="comment"># Special case: delete head</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> <span class="builtin">self</span>.<span class="function">is_empty</span>() <span class="keyword">and</span> <span class="builtin">self</span>.head.data == data:
+            <span class="builtin">self</span>.head = <span class="builtin">self</span>.head.next
+            <span class="builtin">self</span>.size -= <span class="number">1</span>
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Find node before the one to delete</span>
+        current = <span class="builtin">self</span>.head
+        <span class="keyword">while</span> current <span class="keyword">and</span> current.next:
+            <span class="keyword">if</span> current.next.data == data:
+                current.next = current.next.next  <span class="comment"># Skip the node</span>
+                <span class="builtin">self</span>.size -= <span class="number">1</span>
+                <span class="keyword">return</span>
+            current = current.next
+        
+        <span class="builtin">print</span>(<span class="string">f"Node with data {data} not found"</span>)
+    
+    <span class="keyword">def</span> <span class="function">search</span>(<span class="builtin">self</span>, data):
+        <span class="string">"""Find if data exists in list. Time: O(n)"""</span>
+        current = <span class="builtin">self</span>.head
+        <span class="keyword">while</span> current:
+            <span class="keyword">if</span> current.data == data:
+                <span class="keyword">return</span> <span class="keyword">True</span>
+            current = current.next
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    
+    <span class="keyword">def</span> <span class="function">display</span>(<span class="builtin">self</span>):
+        <span class="string">"""Print the list"""</span>
+        current = <span class="builtin">self</span>.head
+        elements = []
+        <span class="keyword">while</span> current:
+            elements.<span class="function">append</span>(<span class="builtin">str</span>(current.data))
+            current = current.next
+        <span class="builtin">print</span>(<span class="string">" -> "</span>.<span class="function">join</span>(elements) + <span class="string">" -> None"</span>)
+
+<span class="comment"># Example usage:</span>
+ll = <span class="class">LinkedList</span>()
+ll.<span class="function">append</span>(<span class="number">1</span>)
+ll.<span class="function">append</span>(<span class="number">2</span>)
+ll.<span class="function">append</span>(<span class="number">3</span>)
+ll.<span class="function">prepend</span>(<span class="number">0</span>)
+ll.<span class="function">display</span>()  <span class="comment"># 0 -> 1 -> 2 -> 3 -> None</span></code></pre>
+            </div>
+
+            <h3>Essential Linked List Algorithms</h3>
+            
+            <h4>1. Reverse a Linked List</h4>
+            <p><strong>VERY IMPORTANT!</strong> This appears in ~70% of linked list interviews!</p>
+            
+            <div class="code-block">
+                <div class="code-header">Reverse Linked List (Iterative & Recursive)</div>
+                <pre><code><span class="keyword">def</span> <span class="function">reverse_iterative</span>(head):
+    <span class="string">"""
+    Reverse linked list iteratively.
+    
+    Before: 1 -> 2 -> 3 -> None
+    After:  3 -> 2 -> 1 -> None
+    
+    Approach: Three pointers (prev, current, next)
+    Time: O(n), Space: O(1)
+    """</span>
+    prev = <span class="keyword">None</span>
+    current = head
+    
+    <span class="keyword">while</span> current:
+        <span class="comment"># Save next node</span>
+        next_temp = current.next
+        
+        <span class="comment"># Reverse the link</span>
+        current.next = prev
+        
+        <span class="comment"># Move pointers forward</span>
+        prev = current
+        current = next_temp
+    
+    <span class="keyword">return</span> prev  <span class="comment"># New head</span>
+
+<span class="keyword">def</span> <span class="function">reverse_recursive</span>(head):
+    <span class="string">"""
+    Reverse linked list recursively.
+    
+    Time: O(n), Space: O(n) - due to recursion stack
+    """</span>
+    <span class="comment"># Base case</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> head <span class="keyword">or</span> <span class="keyword">not</span> head.next:
+        <span class="keyword">return</span> head
+    
+    <span class="comment"># Recursive case</span>
+    new_head = <span class="function">reverse_recursive</span>(head.next)
+    
+    <span class="comment"># Reverse the link</span>
+    head.next.next = head
+    head.next = <span class="keyword">None</span>
+    
+    <span class="keyword">return</span> new_head
+
+<span class="comment"># Visualizing the process:</span>
+<span class="comment"># Step 0: 1 -> 2 -> 3 -> None</span>
+<span class="comment">#         prev=None, curr=1</span>
+<span class="comment"># Step 1: None <- 1  2 -> 3 -> None</span>
+<span class="comment">#         prev=1, curr=2</span>
+<span class="comment"># Step 2: None <- 1 <- 2  3 -> None</span>
+<span class="comment">#         prev=2, curr=3</span>
+<span class="comment"># Step 3: None <- 1 <- 2 <- 3</span>
+<span class="comment">#         prev=3, curr=None</span>
+<span class="comment"># Return prev (which is 3, the new head)</span></code></pre>
+            </div>
+
+            <h4>2. Detect Cycle (Floyd's Algorithm)</h4>
+            <div class="code-block">
+                <div class="code-header">Detect Cycle in Linked List</div>
+                <pre><code><span class="keyword">def</span> <span class="function">has_cycle</span>(head):
+    <span class="string">"""
+    Detect if linked list has a cycle.
+    
+    Uses Floyd's Tortoise and Hare algorithm:
+    - Slow pointer moves 1 step
+    - Fast pointer moves 2 steps
+    - If they meet, there's a cycle!
+    
+    Why it works: In a cycle, fast pointer will eventually
+    "lap" the slow pointer.
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> head:
+        <span class="keyword">return</span> <span class="keyword">False</span>
+    
+    slow = head
+    fast = head
+    
+    <span class="keyword">while</span> fast <span class="keyword">and</span> fast.next:
+        slow = slow.next       <span class="comment"># Move 1 step</span>
+        fast = fast.next.next  <span class="comment"># Move 2 steps</span>
+        
+        <span class="keyword">if</span> slow == fast:
+            <span class="keyword">return</span> <span class="keyword">True</span>  <span class="comment"># Cycle detected!</span>
+    
+    <span class="keyword">return</span> <span class="keyword">False</span>  <span class="comment"># Reached end, no cycle</span>
+
+<span class="keyword">def</span> <span class="function">find_cycle_start</span>(head):
+    <span class="string">"""
+    Find where the cycle begins.
+    
+    After detecting cycle:
+    1. Keep slow where they met
+    2. Move another pointer from head
+    3. Move both 1 step at a time
+    4. Where they meet is the cycle start!
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> head:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    
+    slow = fast = head
+    
+    <span class="comment"># Phase 1: Detect cycle</span>
+    <span class="keyword">while</span> fast <span class="keyword">and</span> fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        <span class="keyword">if</span> slow == fast:
+            <span class="keyword">break</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="keyword">None</span>  <span class="comment"># No cycle</span>
+    
+    <span class="comment"># Phase 2: Find start of cycle</span>
+    slow = head
+    <span class="keyword">while</span> slow != fast:
+        slow = slow.next
+        fast = fast.next
+    
+    <span class="keyword">return</span> slow  <span class="comment"># Start of cycle</span></code></pre>
+            </div>
+
+            <h4>3. Find Middle of Linked List</h4>
+            <div class="code-block">
+                <div class="code-header">Find Middle Node</div>
+                <pre><code><span class="keyword">def</span> <span class="function">find_middle</span>(head):
+    <span class="string">"""
+    Find middle node of linked list.
+    
+    If even number of nodes, return second middle.
+    Example: 1->2->3->4->5 returns 3
+             1->2->3->4 returns 3
+    
+    Uses slow/fast pointer:
+    - When fast reaches end, slow is at middle!
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> head:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    
+    slow = head
+    fast = head
+    
+    <span class="keyword">while</span> fast <span class="keyword">and</span> fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    <span class="keyword">return</span> slow  <span class="comment"># Middle node</span></code></pre>
+            </div>
+
+            <h4>4. Merge Two Sorted Linked Lists</h4>
+            <div class="code-block">
+                <div class="code-header">Merge Sorted Lists</div>
+                <pre><code><span class="keyword">def</span> <span class="function">merge_sorted_lists</span>(l1, l2):
+    <span class="string">"""
+    Merge two sorted linked lists into one sorted list.
+    
+    Example:
+    l1: 1 -> 3 -> 5
+    l2: 2 -> 4 -> 6
+    Result: 1 -> 2 -> 3 -> 4 -> 5 -> 6
+    
+    Time: O(n + m), Space: O(1)
+    """</span>
+    <span class="comment"># Create dummy node to simplify code</span>
+    dummy = <span class="class">Node</span>(<span class="number">0</span>)
+    current = dummy
+    
+    <span class="keyword">while</span> l1 <span class="keyword">and</span> l2:
+        <span class="keyword">if</span> l1.data <= l2.data:
+            current.next = l1
+            l1 = l1.next
+        <span class="keyword">else</span>:
+            current.next = l2
+            l2 = l2.next
+        current = current.next
+    
+    <span class="comment"># Attach remaining nodes</span>
+    current.next = l1 <span class="keyword">if</span> l1 <span class="keyword">else</span> l2
+    
+    <span class="keyword">return</span> dummy.next  <span class="comment"># Skip dummy node</span></code></pre>
+            </div>
+
+            <h4>5. Remove N-th Node from End</h4>
+            <div class="code-block">
+                <div class="code-header">Remove N-th Node from End</div>
+                <pre><code><span class="keyword">def</span> <span class="function">remove_nth_from_end</span>(head, n):
+    <span class="string">"""
+    Remove n-th node from the end of list.
+    
+    Example: 1->2->3->4->5, n=2
+    Result: 1->2->3->5 (removed 4)
+    
+    Two pointer approach:
+    1. Move fast pointer n steps ahead
+    2. Move both pointers until fast reaches end
+    3. Now slow is at node before the one to delete!
+    
+    Time: O(L) where L is length, Space: O(1)
+    """</span>
+    dummy = <span class="class">Node</span>(<span class="number">0</span>)
+    dummy.next = head
+    fast = slow = dummy
+    
+    <span class="comment"># Move fast n+1 steps ahead</span>
+    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(n + <span class="number">1</span>):
+        fast = fast.next
+    
+    <span class="comment"># Move both until fast reaches end</span>
+    <span class="keyword">while</span> fast:
+        slow = slow.next
+        fast = fast.next
+    
+    <span class="comment"># Remove the node</span>
+    slow.next = slow.next.next
+    
+    <span class="keyword">return</span> dummy.next</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Linked List Interview Tips:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ <strong>Use dummy node</strong> to simplify edge cases (especially when head might change)</li>
+                    <li>✅ <strong>Draw it out!</strong> Visualize pointers on paper during interview</li>
+                    <li>✅ <strong>Slow/Fast pointers</strong> solve many problems (cycle, middle, nth from end)</li>
+                    <li>✅ <strong>Check for NULL</strong> before accessing .next</li>
+                    <li>✅ <strong>Practice reversing</strong> - it's in 70% of linked list questions!</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Reverse Linked List
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given the head of a singly linked list, reverse the list, and return the reversed list.</p>
+                <p><strong>Input:</strong> <code>head = [1,2,3,4,5]</code></p>
+                <p><strong>Output:</strong> <code>[5,4,3,2,1]</code></p>
+                <p><strong>Hint:</strong> Use three pointers: prev, current, next</p>
+                <a href="https://leetcode.com/problems/reverse-linked-list/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Linked List Cycle
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given head, determine if the linked list has a cycle in it.</p>
+                <p><strong>Input:</strong> <code>head = [3,2,0,-4], pos = 1</code> (tail connects to node index 1)</p>
+                <p><strong>Output:</strong> <code>true</code></p>
+                <p><strong>Hint:</strong> Use Floyd's Tortoise and Hare algorithm</p>
+                <a href="https://leetcode.com/problems/linked-list-cycle/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Merge Two Sorted Lists
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Merge two sorted linked lists and return it as a sorted list.</p>
+                <p><strong>Input:</strong> <code>l1 = [1,2,4], l2 = [1,3,4]</code></p>
+                <p><strong>Output:</strong> <code>[1,1,2,3,4,4]</code></p>
+                <p><strong>Hint:</strong> Use a dummy node to simplify edge cases</p>
+                <a href="https://leetcode.com/problems/merge-two-sorted-lists/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Palindrome Linked List
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given the head of a singly linked list, return true if it is a palindrome.</p>
+                <p><strong>Input:</strong> <code>head = [1,2,2,1]</code></p>
+                <p><strong>Output:</strong> <code>true</code></p>
+                <p><strong>Hint:</strong> Find middle, reverse second half, compare both halves</p>
+                <a href="https://leetcode.com/problems/palindrome-linked-list/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Remove Nth Node From End
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Remove the nth node from the end of the list and return its head.</p>
+                <p><strong>Input:</strong> <code>head = [1,2,3,4,5], n = 2</code></p>
+                <p><strong>Output:</strong> <code>[1,2,3,5]</code></p>
+                <p><strong>Hint:</strong> Use two pointers with n gap between them</p>
+                <a href="https://leetcode.com/problems/remove-nth-node-from-end-of-list/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Linked Lists Section -->
+        <div class="compiler-container">
+            <div class="compiler-header">
+                <div class="compiler-title">💻 Practice Linked List Problems - Test Your Solutions</div>
+                <div class="compiler-controls">
+                    <button class="run-btn" onclick="runCode('linked-lists')">▶ Run Code</button>
+                    <button class="clear-btn" onclick="clearCode('linked-lists')">🗑️ Clear</button>
+                </div>
+            </div>
+            <textarea id="linked-lists-editor" class="code-editor"># Reverse Linked List - Implementation
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+def reverse_linked_list(head):
+    """Reverse a linked list iteratively"""
+    prev = None
+    current = head
+    
+    while current:
+        # Save next node
+        next_temp = current.next
+        
+        # Reverse the link
+        current.next = prev
+        
+        # Move pointers forward
+        prev = current
+        current = next_temp
+    
+    return prev  # New head
+
+def display_list(head):
+    """Helper function to display list"""
+    elements = []
+    current = head
+    while current:
+        elements.append(str(current.data))
+        current = current.next
+    return " -> ".join(elements) + " -> None"
+
+# Create a linked list: 1 -> 2 -> 3 -> 4 -> 5
+head = Node(1)
+head.next = Node(2)
+head.next.next = Node(3)
+head.next.next.next = Node(4)
+head.next.next.next.next = Node(5)
+
+print("Original list:")
+print(display_list(head))
+
+# Reverse the list
+new_head = reverse_linked_list(head)
+
+print("\nReversed list:")
+print(display_list(new_head))</textarea>
+            <div id="linked-lists-output" class="output-container">
+                <div class="output-header">Output:</div>
+                <div id="linked-lists-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 6: STACKS - COMPLETE -->
+    <div id="stacks" class="section">
+        <div class="card">
+            <h2>📚 Stacks - Last In, First Out (LIFO)</h2>
+            
+            <h3>What is a Stack?</h3>
+            <p>A stack is a linear data structure that follows the <strong>Last In, First Out (LIFO)</strong> principle. Think of it like a stack of plates - you can only add or remove plates from the top!</p>
+            
+            <p><strong>Real-world analogies:</strong></p>
+            <ul>
+                <li>Stack of books - you add/remove from the top</li>
+                <li>Browser back button - most recent page first</li>
+                <li>Undo feature in editors - last action first</li>
+                <li>Function call stack in programming</li>
+            </ul>
+
+            <div class="info-box">
+                <strong>Core Stack Operations:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Push:</strong> Add element to top - O(1)</li>
+                    <li><strong>Pop:</strong> Remove element from top - O(1)</li>
+                    <li><strong>Peek/Top:</strong> View top element without removing - O(1)</li>
+                    <li><strong>isEmpty:</strong> Check if stack is empty - O(1)</li>
+                    <li><strong>Size:</strong> Get number of elements - O(1)</li>
+                </ul>
+            </div>
+
+            <div class="info-box" style="margin-top: 30px;">
+                <strong>📊 Stack LIFO Visualization</strong>
+                <svg viewBox="0 0 850 450" style="width: 100%; max-width: 850px; margin-top: 15px;">
+                    <!-- Empty Stack -->
+                    <text x="100" y="30" font-size="14" fill="#667eea" font-weight="bold">Step 1: Empty Stack</text>
+                    <rect x="80" y="350" width="80" height="50" fill="#f5f5f5" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="120" y="380" font-size="12" text-anchor="middle" fill="#999">Empty</text>
+                    <text x="120" y="415" font-size="11" text-anchor="middle" fill="#666">top = -1</text>
+                    
+                    <!-- After push(10) -->
+                    <text x="230" y="30" font-size="14" fill="#667eea" font-weight="bold">Step 2: push(10)</text>
+                    <rect x="210" y="300" width="80" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                    <text x="250" y="330" font-size="18" text-anchor="middle" fill="#1565c0" font-weight="bold">10</text>
+                    <rect x="210" y="350" width="80" height="50" fill="#f5f5f5" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="250" y="415" font-size="11" text-anchor="middle" fill="#666">top = 0</text>
+                    <path d="M 290 280 L 270 300" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="300" y="275" font-size="12" fill="#e65100">← top</text>
+                    
+                    <!-- After push(20) -->
+                    <text x="360" y="30" font-size="14" fill="#667eea" font-weight="bold">Step 3: push(20)</text>
+                    <rect x="340" y="250" width="80" height="50" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+                    <text x="380" y="280" font-size="18" text-anchor="middle" fill="#2e7d32" font-weight="bold">20</text>
+                    <rect x="340" y="300" width="80" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                    <text x="380" y="330" font-size="18" text-anchor="middle" fill="#1565c0" font-weight="bold">10</text>
+                    <rect x="340" y="350" width="80" height="50" fill="#f5f5f5" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="380" y="415" font-size="11" text-anchor="middle" fill="#666">top = 1</text>
+                    <path d="M 420 230 L 400 250" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="430" y="225" font-size="12" fill="#e65100">← top</text>
+                    
+                    <!-- After push(30) -->
+                    <text x="490" y="30" font-size="14" fill="#667eea" font-weight="bold">Step 4: push(30)</text>
+                    <rect x="470" y="200" width="80" height="50" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+                    <text x="510" y="230" font-size="18" text-anchor="middle" fill="#e65100" font-weight="bold">30</text>
+                    <rect x="470" y="250" width="80" height="50" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+                    <text x="510" y="280" font-size="18" text-anchor="middle" fill="#2e7d32" font-weight="bold">20</text>
+                    <rect x="470" y="300" width="80" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                    <text x="510" y="330" font-size="18" text-anchor="middle" fill="#1565c0" font-weight="bold">10</text>
+                    <rect x="470" y="350" width="80" height="50" fill="#f5f5f5" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="510" y="415" font-size="11" text-anchor="middle" fill="#666">top = 2</text>
+                    <path d="M 550 180 L 530 200" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="560" y="175" font-size="12" fill="#e65100">← top</text>
+                    
+                    <!-- After pop() -->
+                    <text x="620" y="30" font-size="14" fill="#667eea" font-weight="bold">Step 5: pop() → 30</text>
+                    <rect x="600" y="250" width="80" height="50" fill="#e8f5e9" stroke="#4caf50" stroke-width="2"/>
+                    <text x="640" y="280" font-size="18" text-anchor="middle" fill="#2e7d32" font-weight="bold">20</text>
+                    <rect x="600" y="300" width="80" height="50" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                    <text x="640" y="330" font-size="18" text-anchor="middle" fill="#1565c0" font-weight="bold">10</text>
+                    <rect x="600" y="350" width="80" height="50" fill="#f5f5f5" stroke="#999" stroke-width="2" stroke-dasharray="5,5"/>
+                    <text x="640" y="415" font-size="11" text-anchor="middle" fill="#666">top = 1</text>
+                    <path d="M 680 230 L 660 250" stroke="#ff9800" stroke-width="2" fill="none" marker-end="url(#arrow2)"/>
+                    <text x="690" y="225" font-size="12" fill="#e65100">← top</text>
+                    <!-- Popped element -->
+                    <rect x="710" y="150" width="60" height="40" fill="#ffebee" stroke="#f44336" stroke-width="2" stroke-dasharray="3,3"/>
+                    <text x="740" y="175" font-size="16" text-anchor="middle" fill="#c62828">30</text>
+                    <text x="740" y="130" font-size="11" fill="#c62828">Removed</text>
+                    
+                    <!-- LIFO principle box -->
+                    <rect x="50" y="430" width="750" height="15" fill="#f3e5f5" stroke="#9c27b0" stroke-width="1"/>
+                    <text x="425" y="441" font-size="12" text-anchor="middle" fill="#6a1b9a" font-weight="bold">
+                        🔑 LIFO: Last In (30), First Out (30 removed first!)
+                    </text>
+                    
+                    <defs>
+                        <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#ff9800" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+
+            <h3>Stack Implementation</h3>
+            <div class="code-block">
+                <div class="code-header">Stack Using List (Python)</div>
+                <pre><code><span class="keyword">class</span> <span class="class">Stack</span>:
+    <span class="string">"""
+    Simple stack implementation using Python list.
+    
+    All operations are O(1) time complexity!
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>):
+        <span class="builtin">self</span>.items = []
+    
+    <span class="keyword">def</span> <span class="function">push</span>(<span class="builtin">self</span>, item):
+        <span class="string">"""Add item to top of stack"""</span>
+        <span class="builtin">self</span>.items.<span class="function">append</span>(item)
+    
+    <span class="keyword">def</span> <span class="function">pop</span>(<span class="builtin">self</span>):
+        <span class="string">"""Remove and return top item"""</span>
+        <span class="keyword">if</span> <span class="builtin">self</span>.<span class="function">is_empty</span>():
+            <span class="keyword">raise</span> <span class="class">IndexError</span>(<span class="string">"Pop from empty stack"</span>)
+        <span class="keyword">return</span> <span class="builtin">self</span>.items.<span class="function">pop</span>()
+    
+    <span class="keyword">def</span> <span class="function">peek</span>(<span class="builtin">self</span>):
+        <span class="string">"""View top item without removing"""</span>
+        <span class="keyword">if</span> <span class="builtin">self</span>.<span class="function">is_empty</span>():
+            <span class="keyword">raise</span> <span class="class">IndexError</span>(<span class="string">"Peek from empty stack"</span>)
+        <span class="keyword">return</span> <span class="builtin">self</span>.items[-<span class="number">1</span>]
+    
+    <span class="keyword">def</span> <span class="function">is_empty</span>(<span class="builtin">self</span>):
+        <span class="string">"""Check if stack is empty"""</span>
+        <span class="keyword">return</span> <span class="builtin">len</span>(<span class="builtin">self</span>.items) == <span class="number">0</span>
+    
+    <span class="keyword">def</span> <span class="function">size</span>(<span class="builtin">self</span>):
+        <span class="string">"""Return number of items"""</span>
+        <span class="keyword">return</span> <span class="builtin">len</span>(<span class="builtin">self</span>.items)
+    
+    <span class="keyword">def</span> <span class="function">__str__</span>(<span class="builtin">self</span>):
+        <span class="string">"""String representation"""</span>
+        <span class="keyword">return</span> <span class="string">f"Stack: {self.items}"</span>
+
+<span class="comment"># Example usage:</span>
+stack = <span class="class">Stack</span>()
+stack.<span class="function">push</span>(<span class="number">1</span>)
+stack.<span class="function">push</span>(<span class="number">2</span>)
+stack.<span class="function">push</span>(<span class="number">3</span>)
+<span class="builtin">print</span>(stack)  <span class="comment"># Stack: [1, 2, 3]</span>
+<span class="builtin">print</span>(<span class="string">f"Top: {stack.peek()}"</span>)  <span class="comment"># Top: 3</span>
+<span class="builtin">print</span>(<span class="string">f"Popped: {stack.pop()}"</span>)  <span class="comment"># Popped: 3</span>
+<span class="builtin">print</span>(stack)  <span class="comment"># Stack: [1, 2]</span></code></pre>
+            </div>
+
+            <h3>Common Stack Problems</h3>
+            
+            <h4>1. Valid Parentheses</h4>
+            <p><strong>Classic Stack Problem!</strong> This appears very frequently in interviews.</p>
+            
+            <div class="code-block">
+                <div class="code-header">Valid Parentheses Checker</div>
+                <pre><code><span class="keyword">def</span> <span class="function">is_valid_parentheses</span>(s):
+    <span class="string">"""
+    Check if string has valid parentheses.
+    
+    Valid: "()[]{}", "({[]})"
+    Invalid: "([)]", "((("
+    
+    Strategy: Use stack to match closing brackets with opening ones.
+    - Push opening brackets onto stack
+    - For closing bracket, check if it matches top of stack
+    
+    Time: O(n), Space: O(n)
+    """</span>
+    stack = []
+    matching = {<span class="string">')'</span>: <span class="string">'('</span>, <span class="string">']'</span>: <span class="string">'['</span>, <span class="string">'}'</span>: <span class="string">'{'</span>}
+    
+    <span class="keyword">for</span> char <span class="keyword">in</span> s:
+        <span class="keyword">if</span> char <span class="keyword">in</span> <span class="string">'([{'</span>:
+            stack.<span class="function">append</span>(char)
+        <span class="keyword">elif</span> char <span class="keyword">in</span> <span class="string">')]}'</span>:
+            <span class="keyword">if</span> <span class="keyword">not</span> stack <span class="keyword">or</span> stack[-<span class="number">1</span>] != matching[char]:
+                <span class="keyword">return</span> <span class="keyword">False</span>
+            stack.<span class="function">pop</span>()
+    
+    <span class="keyword">return</span> <span class="builtin">len</span>(stack) == <span class="number">0</span>
+
+<span class="comment"># Test cases:</span>
+<span class="builtin">print</span>(<span class="function">is_valid_parentheses</span>(<span class="string">"()[]{}"</span>))    <span class="comment"># True</span>
+<span class="builtin">print</span>(<span class="function">is_valid_parentheses</span>(<span class="string">"([)]"</span>))      <span class="comment"># False</span>
+<span class="builtin">print</span>(<span class="function">is_valid_parentheses</span>(<span class="string">"({[]})"</span>))    <span class="comment"># True</span></code></pre>
+            </div>
+
+            <h4>2. Evaluate Postfix Expression</h4>
+            <div class="code-block">
+                <div class="code-header">Postfix Expression Evaluator</div>
+                <pre><code><span class="keyword">def</span> <span class="function">evaluate_postfix</span>(expression):
+    <span class="string">"""
+    Evaluate postfix (Reverse Polish Notation) expression.
+    
+    Example: "2 3 + 5 *" = (2 + 3) * 5 = 25
+    
+    Algorithm:
+    - For numbers: push onto stack
+    - For operators: pop two operands, apply operator, push result
+    
+    Time: O(n), Space: O(n)
+    """</span>
+    stack = []
+    operators = {<span class="string">'+'</span>, <span class="string">'-'</span>, <span class="string">'*'</span>, <span class="string">'/'</span>}
+    
+    <span class="keyword">for</span> token <span class="keyword">in</span> expression.<span class="function">split</span>():
+        <span class="keyword">if</span> token <span class="keyword">in</span> operators:
+            <span class="comment"># Pop two operands</span>
+            b = stack.<span class="function">pop</span>()
+            a = stack.<span class="function">pop</span>()
+            
+            <span class="comment"># Apply operator</span>
+            <span class="keyword">if</span> token == <span class="string">'+'</span>:
+                result = a + b
+            <span class="keyword">elif</span> token == <span class="string">'-'</span>:
+                result = a - b
+            <span class="keyword">elif</span> token == <span class="string">'*'</span>:
+                result = a * b
+            <span class="keyword">elif</span> token == <span class="string">'/'</span>:
+                result = a / b
+            
+            stack.<span class="function">append</span>(result)
+        <span class="keyword">else</span>:
+            <span class="comment"># It's a number</span>
+            stack.<span class="function">append</span>(<span class="builtin">float</span>(token))
+    
+    <span class="keyword">return</span> stack[<span class="number">0</span>]
+
+<span class="comment"># Test:</span>
+expr = <span class="string">"2 3 + 5 *"</span>
+<span class="builtin">print</span>(<span class="string">f"{expr} = {evaluate_postfix(expr)}"</span>)  <span class="comment"># 25.0</span></code></pre>
+            </div>
+
+            <h4>3. Next Greater Element</h4>
+            <div class="code-block">
+                <div class="code-header">Find Next Greater Element</div>
+                <pre><code><span class="keyword">def</span> <span class="function">next_greater_elements</span>(arr):
+    <span class="string">"""
+    For each element, find the next greater element.
+    If no greater element exists, use -1.
+    
+    Example: [4, 5, 2, 25]
+    Result:  [5, 25, 25, -1]
+    
+    Explanation:
+    - 4: next greater is 5
+    - 5: next greater is 25
+    - 2: next greater is 25
+    - 25: no greater element, so -1
+    
+    Time: O(n), Space: O(n)
+    """</span>
+    n = <span class="builtin">len</span>(arr)
+    result = [-<span class="number">1</span>] * n
+    stack = []  <span class="comment"># Stack stores indices</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n):
+        <span class="comment"># While stack not empty and current element is greater</span>
+        <span class="comment"># than element at index stored in stack</span>
+        <span class="keyword">while</span> stack <span class="keyword">and</span> arr[i] > arr[stack[-<span class="number">1</span>]]:
+            index = stack.<span class="function">pop</span>()
+            result[index] = arr[i]
+        
+        stack.<span class="function">append</span>(i)
+    
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test:</span>
+arr = [<span class="number">4</span>, <span class="number">5</span>, <span class="number">2</span>, <span class="number">25</span>]
+<span class="builtin">print</span>(<span class="string">f"Array: {arr}"</span>)
+<span class="builtin">print</span>(<span class="string">f"Next greater: {next_greater_elements(arr)}"</span>)
+<span class="comment"># Output: Next greater: [5, 25, 25, -1]</span></code></pre>
+            </div>
+
+            <h4>4. Stock Span Problem</h4>
+            <div class="code-block">
+                <div class="code-header">Calculate Stock Span</div>
+                <pre><code><span class="keyword">def</span> <span class="function">stock_span</span>(prices):
+    <span class="string">"""
+    Calculate span for stock prices.
+    Span = number of consecutive days before today where price <= today's price.
+    
+    Example: [100, 80, 60, 70, 60, 75, 85]
+    Result:  [1, 1, 1, 2, 1, 4, 6]
+    
+    Explanation:
+    - Day 0 (100): span = 1
+    - Day 3 (70): span = 2 (includes day 2: 60)
+    - Day 5 (75): span = 4 (includes days 2,3,4: 60,70,60)
+    - Day 6 (85): span = 6 (includes days 1-5: 80,60,70,60,75)
+    
+    Time: O(n), Space: O(n)
+    """</span>
+    n = <span class="builtin">len</span>(prices)
+    span = [<span class="number">0</span>] * n
+    stack = []  <span class="comment"># Stack stores indices</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(n):
+        <span class="comment"># Pop elements while stack not empty and</span>
+        <span class="comment"># top element is less than or equal to current price</span>
+        <span class="keyword">while</span> stack <span class="keyword">and</span> prices[stack[-<span class="number">1</span>]] <= prices[i]:
+            stack.<span class="function">pop</span>()
+        
+        <span class="comment"># Calculate span</span>
+        span[i] = i + <span class="number">1</span> <span class="keyword">if</span> <span class="keyword">not</span> stack <span class="keyword">else</span> i - stack[-<span class="number">1</span>]
+        
+        stack.<span class="function">append</span>(i)
+    
+    <span class="keyword">return</span> span
+
+<span class="comment"># Test:</span>
+prices = [<span class="number">100</span>, <span class="number">80</span>, <span class="number">60</span>, <span class="number">70</span>, <span class="number">60</span>, <span class="number">75</span>, <span class="number">85</span>]
+<span class="builtin">print</span>(<span class="string">f"Prices: {prices}"</span>)
+<span class="builtin">print</span>(<span class="string">f"Spans:  {stock_span(prices)}"</span>)
+<span class="comment"># Output: Spans: [1, 1, 1, 2, 1, 4, 6]</span></code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Stack Interview Tips:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ <strong>Use stack when:</strong> Need to track most recent items or match pairs</li>
+                    <li>✅ <strong>Common patterns:</strong> Parentheses matching, expression evaluation, next greater/smaller</li>
+                    <li>✅ <strong>Monotonic stack:</strong> Keep stack in increasing/decreasing order for next greater/smaller problems</li>
+                    <li>✅ <strong>Think recursion:</strong> Stack is used implicitly in recursive calls</li>
+                    <li>✅ <strong>Browser history, undo/redo:</strong> Classic stack applications</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Valid Parentheses
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given a string s containing just characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.</p>
+                <p><strong>Input:</strong> <code>s = "()[]{}"</code></p>
+                <p><strong>Output:</strong> <code>true</code></p>
+                <p><strong>Hint:</strong> Use stack to match opening brackets with closing ones</p>
+                <a href="https://leetcode.com/problems/valid-parentheses/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Min Stack
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Design a stack that supports push, pop, top, and retrieving the minimum element in constant time.</p>
+                <p><strong>Operations:</strong></p>
+                <ul>
+                    <li><code>push(val)</code> - Pushes element val onto the stack</li>
+                    <li><code>pop()</code> - Removes the element on the top</li>
+                    <li><code>top()</code> - Gets the top element</li>
+                    <li><code>getMin()</code> - Retrieves the minimum element</li>
+                </ul>
+                <p><strong>Hint:</strong> Use two stacks - one for values, one for minimums</p>
+                <a href="https://leetcode.com/problems/min-stack/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Daily Temperatures
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array of temperatures, return an array where each element is the number of days you have to wait until a warmer temperature.</p>
+                <p><strong>Input:</strong> <code>temperatures = [73,74,75,71,69,72,76,73]</code></p>
+                <p><strong>Output:</strong> <code>[1,1,4,2,1,1,0,0]</code></p>
+                <p><strong>Hint:</strong> Use monotonic decreasing stack</p>
+                <a href="https://leetcode.com/problems/daily-temperatures/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Evaluate Reverse Polish Notation
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Evaluate the value of an arithmetic expression in Reverse Polish Notation (postfix).</p>
+                <p><strong>Input:</strong> <code>tokens = ["2","1","+","3","*"]</code></p>
+                <p><strong>Output:</strong> <code>9</code></p>
+                <p><strong>Explanation:</strong> ((2 + 1) * 3) = 9</p>
+                <p><strong>Hint:</strong> Use stack - push numbers, pop for operators</p>
+                <a href="https://leetcode.com/problems/evaluate-reverse-polish-notation/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Largest Rectangle in Histogram
+                    <span class="difficulty hard">HARD</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array of integers heights representing the histogram's bar height, find the area of largest rectangle.</p>
+                <p><strong>Input:</strong> <code>heights = [2,1,5,6,2,3]</code></p>
+                <p><strong>Output:</strong> <code>10</code></p>
+                <p><strong>Hint:</strong> Use stack to track increasing heights</p>
+                <a href="https://leetcode.com/problems/largest-rectangle-in-histogram/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </div>
+
+</div>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }
+    
+    
+</script>
+</body>
+</html>

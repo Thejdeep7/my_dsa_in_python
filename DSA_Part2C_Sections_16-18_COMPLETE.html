@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Learning Journey - Part 2C (Sections 16-18) - FINAL</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.8; color: #1a1a1a; background: #f8f9fa; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 3em; margin-bottom: 20px; font-weight: 700; }
+        .hero p { font-size: 1.3em; opacity: 0.95; max-width: 700px; margin: 0 auto 20px; }
+        .celebration { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 40px; border-radius: 20px; text-align: center; margin: 40px 0; }
+        .celebration h2 { font-size: 2.5em; margin-bottom: 15px; }
+        .part-navigation { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .part-nav-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3); }
+        .part-nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .part-nav-btn.active { background: white; color: #667eea; border-color: white; }
+        .nav-sticky { position: relative; background: white; border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .nav-btn { padding: 14px 20px; background: #f1f3f5; border: none; color: #495057; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-size: 0.95em; text-align: left; border: 2px solid transparent; }
+        .nav-btn:hover { background: #e9ecef; transform: translateY(-2px); }
+        .nav-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: white; border-radius: 16px; padding: 40px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .card h2 { color: #667eea; font-size: 2.2em; margin-bottom: 15px; font-weight: 700; }
+        .card h3 { color: #495057; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; font-weight: 600; padding-bottom: 10px; border-bottom: 2px solid #e9ecef; }
+        .card h4 { color: #764ba2; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; font-weight: 600; }
+        .card p { color: #495057; margin-bottom: 15px; font-size: 1.05em; }
+        .card ul, .card ol { margin-left: 30px; margin-bottom: 20px; color: #495057; }
+        .card li { margin-bottom: 10px; line-height: 1.7; }
+        .code-block { background: #1e1e1e; border-radius: 12px; overflow: hidden; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .code-header { background: #2d2d2d; padding: 12px 20px; color: #9cdcfe; font-size: 0.9em; font-weight: 600; border-bottom: 1px solid #404040; }
+        pre { padding: 25px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6; margin: 0; }
+        code { color: #d4d4d4; }
+        .comment { color: #6a9955; font-style: italic; }
+        .keyword { color: #569cd6; font-weight: 600; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .class { color: #4ec9b0; }
+        .builtin { color: #9cdcfe; }
+        .info-box { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 5px solid #2196f3; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .info-box strong { color: #1565c0; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .tip-box { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 5px solid #4caf50; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .tip-box strong { color: #2e7d32; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .warning-box { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 5px solid #ff9800; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .warning-box strong { color: #e65100; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .example-box { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 5px solid #9c27b0; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .example-box strong { color: #6a1b9a; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .visual-diagram { background: #f8f9fa; border: 2px solid #dee2e6; border-radius: 12px; padding: 30px; margin: 25px 0; text-align: center; }
+        .visual-diagram pre { background: transparent; padding: 0; color: #495057; font-size: 16px; line-height: 2; }
+        .complexity { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+        .complexity span { padding: 8px 16px; background: #e8f5e9; color: #2e7d32; border-radius: 20px; font-size: 0.9em; font-weight: 600; border: 2px solid #4caf50; }
+        .complexity span.medium { background: #fff3e0; color: #e65100; border-color: #ff9800; }
+        .complexity span.bad { background: #ffebee; color: #c62828; border-color: #f44336; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e9ecef; color: #495057; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8f9fa; }
+        .compiler-container { background: white; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .compiler-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .compiler-title { font-size: 1.4em; color: #667eea; font-weight: 600; }
+        .compiler-controls { display: flex; gap: 10px; }
+        .run-btn, .clear-btn { border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .run-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .clear-btn { background: #f1f3f5; color: #495057; }
+        .run-btn:hover, .clear-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .code-editor { width: 100%; min-height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 14px; padding: 20px; border: 2px solid #e9ecef; border-radius: 10px; background: #1e1e1e; color: #d4d4d4; resize: vertical; }
+        .output-container { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; border: 2px solid #e9ecef; min-height: 100px; font-family: 'JetBrains Mono', monospace; font-size: 14px; white-space: pre-wrap; display: none; }
+        .output-container.show { display: block; }
+        .output-header { font-weight: 600; color: #667eea; margin-bottom: 10px; }
+        .leetcode-problem { background: linear-gradient(135deg, #fff9e6 0%, #ffedd5 100%); border-left: 5px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 8px; }
+        .leetcode-problem .problem-title { color: #d97706; font-size: 1.2em; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .difficulty { padding: 4px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .difficulty.easy { background: #d1fae5; color: #065f46; }
+        .difficulty.medium { background: #fef3c7; color: #92400e; }
+        .difficulty.hard { background: #fee2e2; color: #991b1b; }
+        .problem-link { display: inline-block; margin-top: 10px; padding: 8px 20px; background: #f59e0b; color: white; text-decoration: none; border-radius: 20px; font-size: 0.9em; font-weight: 600; transition: all 0.3s ease; }
+        .problem-link:hover { background: #d97706; transform: translateY(-2px); }
+        @media (max-width: 768px) { .hero h1 { font-size: 2em; } .nav-grid { grid-template-columns: 1fr; } }
+    
+        .leetcode-problem .problem-title { color: #78350f; font-size: 1.2em; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .leetcode-problem .problem-desc { color: #451a03; line-height: 1.8; margin-bottom: 12px; font-weight: 500; }
+        .leetcode-problem .io-section { margin-top: 15px; }
+        .leetcode-problem .io-label { color: #78350f; font-weight: 700; margin-bottom: 8px; display: block; font-size: 1.05em; }
+        .leetcode-problem .io-content { background: rgba(255, 255, 255, 0.8); padding: 12px 16px; border-radius: 6px; font-family: 'JetBrains Mono', monospace; color: #1c1917; border: 2px solid #f59e0b; font-weight: 500; }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🎓 Complete DSA in Python - FINALE</h1>
+        <p>Part 2C: Advanced Topics | Trie, Backtracking & Greedy Algorithms</p>
+        <div class="part-navigation">
+            <a href="index.html" class="part-nav-btn">Part 1A: Sec 1-3</a>
+            <a href="DSA_Part1B_Sections_4-6_COMPLETE.html" class="part-nav-btn">Part 1B: Sec 4-6</a>
+            <a href="DSA_Part1C_Sections_7-9_COMPLETE.html" class="part-nav-btn">Part 1C: Sec 7-9</a>
+            <a href="DSA_Part2A_Sections_10-12_COMPLETE.html" class="part-nav-btn">Part 2A: Sec 10-12</a>
+            <a href="DSA_Part2B_Sections_13-15_COMPLETE.html" class="part-nav-btn">Part 2B: Sec 13-15</a>
+            <span class="part-nav-btn active">Part 2C: Sec 16-18 (FINAL)</span>
+        </div>
+    </div>
+    
+    <div class="nav-sticky">
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="showSection('trie')">16. 🌲 Trie (Prefix Tree)</button>
+            <button class="nav-btn" onclick="showSection('backtracking')">17. 🔙 Backtracking</button>
+            <button class="nav-btn" onclick="showSection('greedy')">18. 💚 Greedy Algorithms</button>
+        </div>
+    </div>
+
+    <!-- SECTION 16: TRIE - COMPLETE -->
+    <div id="trie" class="section active">
+        <div class="card">
+            <h2>🌲 Trie (Prefix Tree) - Efficient String Storage</h2>
+            
+            
+            <p>A <strong>Trie</strong> (pronounced "try", derived from re<strong>trie</strong>val) is a specialized tree-based data structure designed for efficiently storing and retrieving strings. Unlike binary search trees that compare entire keys, a Trie stores strings character by character, where each node represents a single character in the string.</p>
+            
+            <p><strong>Why is it called a "Prefix Tree"?</strong> Because every node in a Trie implicitly represents a prefix of one or more complete words. This makes it exceptionally powerful for prefix-based operations like autocomplete, spell checking, and word searches.</p>
+
+            <div class="example-box">
+                <strong>💡 Real-World Example: Phone Contact Search</strong>
+                <p style="margin-top: 10px;">
+                    When you type "Joh" in your phone's contact search, it instantly shows "John", "Johnny", "Johnson" - that's a Trie in action! Each character you type narrows down the search by traversing one level deeper in the Trie, making searches blazing fast even with thousands of contacts.
+                </p>
+            </div>
+
+            <h4>How Does a Trie Actually Work?</h4>
+            <p>Let's break down the structure with a concrete example. Suppose we want to store these words: ["cat", "car", "card", "dog", "door"].</p>
+            
+            <div class="step-by-step">
+                <strong>📝 Building a Trie Step-by-Step:</strong>
+                <div class="step">
+                    <span class="step-number">Step 1:</span> Start with an empty root node
+                </div>
+                <div class="step">
+                    <span class="step-number">Step 2:</span> Insert "cat"<br>
+                    • Create nodes: root → 'c' → 'a' → 't'<br>
+                    • Mark 't' as end-of-word
+                </div>
+                <div class="step">
+                    <span class="step-number">Step 3:</span> Insert "car"<br>
+                    • Reuse existing: root → 'c' → 'a'<br>
+                    • Create new: 'r'<br>
+                    • Mark 'r' as end-of-word<br>
+                    <em>Notice: We share the "ca" prefix with "cat"!</em>
+                </div>
+                <div class="step">
+                    <span class="step-number">Step 4:</span> Insert "card"<br>
+                    • Reuse existing: root → 'c' → 'a' → 'r'<br>
+                    • Create new: 'd'<br>
+                    • Mark 'd' as end-of-word
+                </div>
+                <div class="step">
+                    <span class="step-number">Step 5:</span> Insert "dog" and "door"<br>
+                    • Create new branch from root for 'd' → 'o'<br>
+                    • Then branch to 'g' and 'o' → 'r'
+                </div>
+            </div>
+
+            <p><strong>Key Observations:</strong></p>
+            <ul>
+                <li><strong>Shared Prefixes:</strong> Words with common prefixes ("car" and "card") share nodes, saving memory</li>
+                <li><strong>End Markers:</strong> We need markers to distinguish complete words from mere prefixes</li>
+                <li><strong>Path = Word:</strong> Each complete word is represented by a path from root to an end-marker node</li>
+            </ul>
+
+            
+            <div class="info-box">
+                <strong>When to Use a Trie:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Autocomplete:</strong> Suggest words as you type</li>
+                    <li><strong>Spell checker:</strong> Find if word exists in dictionary</li>
+                    <li><strong>Prefix matching:</strong> Find all words with same prefix</li>
+                    <li><strong>Search engines:</strong> Quick word lookups</li>
+                    <li><strong>IP routing:</strong> Match longest prefix</li>
+                </ul>
+            </div>
+
+            <div class="visual-diagram">
+                <strong>Trie Structure - Storing ["cat", "car", "dog"]:</strong>
+                <pre>
+                root
+                /  \
+               c    d
+               |    |
+               a    o
+              / \   |
+             t   r  g
+            (*)  (*) (*)
+
+* = end of word marker
+
+"cat": root → c → a → t (*)
+"car": root → c → a → r (*)
+"dog": root → d → o → g (*)
+
+Notice: "ca" is shared between "cat" and "car"!
+                </pre>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h4 style="text-align: center; color: #667eea; margin-bottom: 20px;">📊 Trie Operations: Insert, Search & Autocomplete</h4>
+                <svg viewBox="0 0 1200 650" style="width: 100%; height: auto;">
+                    <!-- Title -->
+                    <text x="600" y="25" font-size="20" font-weight="bold" fill="#667eea" text-anchor="middle">Building a Trie with ["cat", "car", "card", "dog", "door"]</text>
+                    
+                    <!-- Step 1: Insert "cat" -->
+                    <rect x="50" y="50" width="350" height="180" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="8"/>
+                    <text x="225" y="75" font-size="16" font-weight="bold" fill="#4caf50" text-anchor="middle">Step 1: Insert "cat"</text>
+                    
+                    <!-- Root -->
+                    <circle cx="225" cy="100" r="20" fill="#9c27b0" stroke="#7b1fa2" stroke-width="2"/>
+                    <text x="225" y="106" font-size="12" fill="white" font-weight="bold" text-anchor="middle">root</text>
+                    
+                    <!-- c -->
+                    <line x1="225" y1="120" x2="225" y2="150" stroke="#4caf50" stroke-width="2"/>
+                    <circle cx="225" cy="160" r="18" fill="#4caf50"/>
+                    <text x="225" y="166" font-size="13" fill="white" font-weight="bold" text-anchor="middle">c</text>
+                    
+                    <!-- a -->
+                    <line x1="225" y1="178" x2="225" y2="205" stroke="#4caf50" stroke-width="2"/>
+                    <circle cx="225" cy="215" r="18" fill="#4caf50"/>
+                    <text x="225" y="221" font-size="13" fill="white" font-weight="bold" text-anchor="middle">a</text>
+                    
+                    <!-- t -->
+                    <line x1="225" y1="233" x2="225" y2="260" stroke="#4caf50" stroke-width="2"/>
+                    <circle cx="225" cy="270" r="18" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="225" y="276" font-size="13" fill="white" font-weight="bold" text-anchor="middle">t</text>
+                    <text x="225" y="295" font-size="11" fill="#2ecc71" font-weight="bold" text-anchor="middle">✓ word</text>
+                    
+                    <!-- Step 2: Insert "car" -->
+                    <rect x="450" y="50" width="350" height="180" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="8"/>
+                    <text x="625" y="75" font-size="16" font-weight="bold" fill="#ff9800" text-anchor="middle">Step 2: Insert "car"</text>
+                    
+                    <!-- Root -->
+                    <circle cx="625" cy="100" r="20" fill="#9c27b0" stroke="#7b1fa2" stroke-width="2"/>
+                    <text x="625" y="106" font-size="12" fill="white" font-weight="bold" text-anchor="middle">root</text>
+                    
+                    <!-- c -->
+                    <line x1="625" y1="120" x2="625" y2="150" stroke="#95a5a6" stroke-width="2"/>
+                    <circle cx="625" cy="160" r="18" fill="#95a5a6"/>
+                    <text x="625" y="166" font-size="13" fill="white" font-weight="bold" text-anchor="middle">c</text>
+                    <text x="655" y="166" font-size="10" fill="#999">exists</text>
+                    
+                    <!-- a -->
+                    <line x1="625" y1="178" x2="625" y2="205" stroke="#95a5a6" stroke-width="2"/>
+                    <circle cx="625" cy="215" r="18" fill="#95a5a6"/>
+                    <text x="625" y="221" font-size="13" fill="white" font-weight="bold" text-anchor="middle">a</text>
+                    <text x="655" y="221" font-size="10" fill="#999">exists</text>
+                    
+                    <!-- t and r branches -->
+                    <line x1="625" y1="233" x2="595" y2="260" stroke="#95a5a6" stroke-width="2"/>
+                    <circle cx="590" cy="270" r="18" fill="#95a5a6"/>
+                    <text x="590" y="276" font-size="13" fill="white" font-weight="bold" text-anchor="middle">t</text>
+                    
+                    <line x1="625" y1="233" x2="655" y2="260" stroke="#ff9800" stroke-width="2"/>
+                    <circle cx="660" cy="270" r="18" fill="#f57c00" stroke="#e65100" stroke-width="3"/>
+                    <text x="660" y="276" font-size="13" fill="white" font-weight="bold" text-anchor="middle">r</text>
+                    <text x="660" y="295" font-size="11" fill="#f57c00" font-weight="bold" text-anchor="middle">✓ word</text>
+                    
+                    <!-- Step 3: Final Trie with all words -->
+                    <rect x="50" y="280" width="750" height="340" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2" rx="8"/>
+                    <text x="425" y="310" font-size="16" font-weight="bold" fill="#9c27b0" text-anchor="middle">Complete Trie Structure</text>
+                    
+                    <!-- Root -->
+                    <circle cx="425" cy="340" r="22" fill="#9c27b0" stroke="#7b1fa2" stroke-width="2"/>
+                    <text x="425" y="347" font-size="13" fill="white" font-weight="bold" text-anchor="middle">root</text>
+                    
+                    <!-- First level: c and d -->
+                    <line x1="425" y1="362" x2="300" y2="400" stroke="#9c27b0" stroke-width="2"/>
+                    <line x1="425" y1="362" x2="550" y2="400" stroke="#9c27b0" stroke-width="2"/>
+                    
+                    <circle cx="300" cy="410" r="20" fill="#3498db"/>
+                    <text x="300" y="416" font-size="13" fill="white" font-weight="bold" text-anchor="middle">c</text>
+                    
+                    <circle cx="550" cy="410" r="20" fill="#3498db"/>
+                    <text x="550" y="416" font-size="13" fill="white" font-weight="bold" text-anchor="middle">d</text>
+                    
+                    <!-- Second level under 'c': a -->
+                    <line x1="300" y1="430" x2="300" y2="470" stroke="#3498db" stroke-width="2"/>
+                    <circle cx="300" cy="480" r="20" fill="#3498db"/>
+                    <text x="300" y="486" font-size="13" fill="white" font-weight="bold" text-anchor="middle">a</text>
+                    
+                    <!-- Second level under 'd': o -->
+                    <line x1="550" y1="430" x2="550" y2="470" stroke="#3498db" stroke-width="2"/>
+                    <circle cx="550" cy="480" r="20" fill="#3498db"/>
+                    <text x="550" y="486" font-size="13" fill="white" font-weight="bold" text-anchor="middle">o</text>
+                    
+                    <!-- Third level under 'a': t and r -->
+                    <line x1="300" y1="500" x2="250" y2="540" stroke="#3498db" stroke-width="2"/>
+                    <line x1="300" y1="500" x2="350" y2="540" stroke="#3498db" stroke-width="2"/>
+                    
+                    <circle cx="250" cy="550" r="20" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="250" y="556" font-size="13" fill="white" font-weight="bold" text-anchor="middle">t</text>
+                    <text x="250" y="580" font-size="10" fill="#2ecc71" font-weight="bold" text-anchor="middle">"cat"</text>
+                    
+                    <circle cx="350" cy="550" r="20" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="350" y="556" font-size="13" fill="white" font-weight="bold" text-anchor="middle">r</text>
+                    <text x="350" y="580" font-size="10" fill="#2ecc71" font-weight="bold" text-anchor="middle">"car"</text>
+                    
+                    <!-- Third level under 'o': g and o -->
+                    <line x1="550" y1="500" x2="500" y2="540" stroke="#3498db" stroke-width="2"/>
+                    <line x1="550" y1="500" x2="600" y2="540" stroke="#3498db" stroke-width="2"/>
+                    
+                    <circle cx="500" cy="550" r="20" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="500" y="556" font-size="13" fill="white" font-weight="bold" text-anchor="middle">g</text>
+                    <text x="500" y="580" font-size="10" fill="#2ecc71" font-weight="bold" text-anchor="middle">"dog"</text>
+                    
+                    <circle cx="600" cy="550" r="20" fill="#3498db"/>
+                    <text x="600" y="556" font-size="13" fill="white" font-weight="bold" text-anchor="middle">o</text>
+                    
+                    <!-- Fourth level under second 'o': r -->
+                    <line x1="600" y1="570" x2="600" y2="595" stroke="#3498db" stroke-width="2"/>
+                    <circle cx="600" cy="605" r="20" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="600" y="611" font-size="13" fill="white" font-weight="bold" text-anchor="middle">r</text>
+                    <text x="600" y="635" font-size="10" fill="#2ecc71" font-weight="bold" text-anchor="middle">"door"</text>
+                    
+                    <!-- Fourth level under 'r' (car): d -->
+                    <line x1="350" y1="570" x2="350" y2="595" stroke="#3498db" stroke-width="2"/>
+                    <circle cx="350" cy="605" r="20" fill="#2ecc71" stroke="#27ae60" stroke-width="3"/>
+                    <text x="350" y="611" font-size="13" fill="white" font-weight="bold" text-anchor="middle">d</text>
+                    <text x="350" y="635" font-size="10" fill="#2ecc71" font-weight="bold" text-anchor="middle">"card"</text>
+                    
+                    <!-- Operations demo on right -->
+                    <rect x="850" y="280" width="300" height="340" fill="#e3f2fd" stroke="#2196f3" stroke-width="2" rx="8"/>
+                    <text x="1000" y="310" font-size="16" font-weight="bold" fill="#2196f3" text-anchor="middle">Operations</text>
+                    
+                    <!-- Search operation -->
+                    <text x="870" y="340" font-size="13" fill="#2196f3" font-weight="bold">1. search("car")</text>
+                    <text x="880" y="365" font-size="11" fill="#666">• Start at root</text>
+                    <text x="880" y="385" font-size="11" fill="#666">• Follow c → a → r</text>
+                    <text x="880" y="405" font-size="11" fill="#666">• Check is_end = True</text>
+                    <rect x="880" y="415" width="80" height="25" fill="#2ecc71" rx="4"/>
+                    <text x="920" y="432" font-size="11" fill="white" font-weight="bold" text-anchor="middle">✓ FOUND</text>
+                    
+                    <!-- StartsWith operation -->
+                    <text x="870" y="465" font-size="13" fill="#2196f3" font-weight="bold">2. startsWith("ca")</text>
+                    <text x="880" y="490" font-size="11" fill="#666">• Follow c → a</text>
+                    <text x="880" y="510" font-size="11" fill="#666">• Node exists!</text>
+                    <rect x="880" y="520" width="80" height="25" fill="#2ecc71" rx="4"/>
+                    <text x="920" y="537" font-size="11" fill="white" font-weight="bold" text-anchor="middle">✓ TRUE</text>
+                    
+                    <!-- Autocomplete operation -->
+                    <text x="870" y="575" font-size="13" fill="#2196f3" font-weight="bold">3. autocomplete("ca")</text>
+                    <text x="880" y="600" font-size="11" fill="#666">• Find all words with "ca":</text>
+                    <rect x="880" y="610" width="200" height="60" fill="#fff9e6" stroke="#f39c12" stroke-width="1" rx="4"/>
+                    <text x="890" y="630" font-size="11" fill="#f39c12" font-weight="bold">→ "cat"</text>
+                    <text x="890" y="650" font-size="11" fill="#f39c12" font-weight="bold">→ "car"</text>
+                    <text x="890" y="670" font-size="11" fill="#f39c12" font-weight="bold">→ "card"</text>
+                    
+                </svg>
+            </div>
+
+            <h3>Trie Implementation</h3>
+            <div class="complexity">
+                <span>Insert: O(m)</span>
+                <span>Search: O(m)</span>
+                <span>StartsWith: O(m)</span>
+            </div>
+            <p style="font-size: 0.9em; color: #666; margin-top: -15px;">where m = length of word (NOT n = total words!)</p>
+
+            <h3>Trie Implementation</h3>
+            <div class="code-block">
+                <div class="code-header">Complete Trie Implementation</div>
+                <pre><code><span class="keyword">class</span> <span class="class">TrieNode</span>:
+    <span class="string">"""
+    A node in the Trie.
+    
+    Each node has:
+    - children: dict mapping character → TrieNode
+    - is_end: True if this completes a word
+    """</span>
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>):
+        <span class="builtin">self</span>.children = {}  <span class="comment"># char → TrieNode</span>
+        <span class="builtin">self</span>.is_end = <span class="keyword">False</span>  <span class="comment"># Marks end of word</span>
+
+<span class="keyword">class</span> <span class="class">Trie</span>:
+    <span class="string">"""
+    Trie (Prefix Tree) for efficient string operations.
+    
+    Perfect for: autocomplete, spell check, prefix matching
+    """</span>
+    
+    <span class="keyword">def</span> <span class="function">__init__</span>(<span class="builtin">self</span>):
+        <span class="builtin">self</span>.root = <span class="class">TrieNode</span>()
+    
+    <span class="keyword">def</span> <span class="function">insert</span>(<span class="builtin">self</span>, word):
+        <span class="string">"""
+        Insert word into trie.
+        
+        Time: O(m) where m = len(word)
+        Space: O(m) worst case (new branch)
+        """</span>
+        node = <span class="builtin">self</span>.root
+        
+        <span class="keyword">for</span> char <span class="keyword">in</span> word:
+            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.children:
+                node.children[char] = <span class="class">TrieNode</span>()
+            node = node.children[char]
+        
+        node.is_end = <span class="keyword">True</span>
+    
+    <span class="keyword">def</span> <span class="function">search</span>(<span class="builtin">self</span>, word):
+        <span class="string">"""
+        Return True if word exists in trie.
+        
+        Time: O(m)
+        """</span>
+        node = <span class="builtin">self</span>.root
+        
+        <span class="keyword">for</span> char <span class="keyword">in</span> word:
+            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.children:
+                <span class="keyword">return</span> <span class="keyword">False</span>
+            node = node.children[char]
+        
+        <span class="keyword">return</span> node.is_end
+    
+    <span class="keyword">def</span> <span class="function">starts_with</span>(<span class="builtin">self</span>, prefix):
+        <span class="string">"""
+        Return True if any word starts with prefix.
+        
+        Time: O(m)
+        """</span>
+        node = <span class="builtin">self</span>.root
+        
+        <span class="keyword">for</span> char <span class="keyword">in</span> prefix:
+            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.children:
+                <span class="keyword">return</span> <span class="keyword">False</span>
+            node = node.children[char]
+        
+        <span class="keyword">return</span> <span class="keyword">True</span>
+    
+    <span class="keyword">def</span> <span class="function">get_all_words_with_prefix</span>(<span class="builtin">self</span>, prefix):
+        <span class="string">"""
+        Get all words that start with prefix.
+        
+        Perfect for autocomplete!
+        """</span>
+        node = <span class="builtin">self</span>.root
+        
+        <span class="comment"># Navigate to prefix node</span>
+        <span class="keyword">for</span> char <span class="keyword">in</span> prefix:
+            <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.children:
+                <span class="keyword">return</span> []
+            node = node.children[char]
+        
+        <span class="comment"># Collect all words from this node</span>
+        words = []
+        <span class="builtin">self</span>.<span class="function">_collect_words</span>(node, prefix, words)
+        <span class="keyword">return</span> words
+    
+    <span class="keyword">def</span> <span class="function">_collect_words</span>(<span class="builtin">self</span>, node, current_word, words):
+        <span class="string">"""Helper: DFS to collect all words from node"""</span>
+        <span class="keyword">if</span> node.is_end:
+            words.<span class="function">append</span>(current_word)
+        
+        <span class="keyword">for</span> char, child <span class="keyword">in</span> node.children.<span class="function">items</span>():
+            <span class="builtin">self</span>.<span class="function">_collect_words</span>(child, current_word + char, words)
+
+<span class="comment"># Example usage:</span>
+trie = <span class="class">Trie</span>()
+
+<span class="comment"># Insert words</span>
+words = [<span class="string">"cat"</span>, <span class="string">"car"</span>, <span class="string">"card"</span>, <span class="string">"dog"</span>, <span class="string">"door"</span>]
+<span class="keyword">for</span> word <span class="keyword">in</span> words:
+    trie.<span class="function">insert</span>(word)
+
+<span class="comment"># Search</span>
+<span class="builtin">print</span>(trie.<span class="function">search</span>(<span class="string">"cat"</span>))    <span class="comment"># True</span>
+<span class="builtin">print</span>(trie.<span class="function">search</span>(<span class="string">"ca"</span>))     <span class="comment"># False (not a complete word)</span>
+
+<span class="comment"># Prefix check</span>
+<span class="builtin">print</span>(trie.<span class="function">starts_with</span>(<span class="string">"ca"</span>))  <span class="comment"># True</span>
+
+<span class="comment"># Autocomplete</span>
+<span class="builtin">print</span>(trie.<span class="function">get_all_words_with_prefix</span>(<span class="string">"car"</span>))  <span class="comment"># ["car", "card"]</span>
+<span class="builtin">print</span>(trie.<span class="function">get_all_words_with_prefix</span>(<span class="string">"do"</span>))   <span class="comment"># ["dog", "door"]</span></code></pre>
+            </div>
+
+            <h3>Common Trie Problems</h3>
+
+            <h4>Word Search II (Find All Words in Board)</h4>
+            <div class="code-block">
+                <div class="code-header">Find All Dictionary Words in 2D Board</div>
+                <pre><code><span class="keyword">def</span> <span class="function">find_words</span>(board, words):
+    <span class="string">"""
+    Find all words from dictionary that exist in board.
+    
+    Example:
+    board = [["o","a","a","n"],
+             ["e","t","a","e"],
+             ["i","h","k","r"],
+             ["i","f","l","v"]]
+    words = ["oath","pea","eat","rain"]
+    Output: ["oath","eat"]
+    
+    Strategy: Build Trie from words, then DFS on board!
+    
+    Time: O(m*n*4^L) where L = max word length
+    """</span>
+    <span class="comment"># Build trie from words</span>
+    trie = <span class="class">Trie</span>()
+    <span class="keyword">for</span> word <span class="keyword">in</span> words:
+        trie.<span class="function">insert</span>(word)
+    
+    result = <span class="builtin">set</span>()
+    rows, cols = <span class="builtin">len</span>(board), <span class="builtin">len</span>(board[<span class="number">0</span>])
+    
+    <span class="keyword">def</span> <span class="function">dfs</span>(r, c, node, path):
+        <span class="keyword">if</span> node.is_end:
+            result.<span class="function">add</span>(path)
+        
+        <span class="keyword">if</span> r < <span class="number">0</span> <span class="keyword">or</span> r >= rows <span class="keyword">or</span> c < <span class="number">0</span> <span class="keyword">or</span> c >= cols:
+            <span class="keyword">return</span>
+        
+        char = board[r][c]
+        <span class="keyword">if</span> char <span class="keyword">not</span> <span class="keyword">in</span> node.children:
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Mark visited</span>
+        board[r][c] = <span class="string">"#"</span>
+        
+        <span class="comment"># Explore all 4 directions</span>
+        <span class="keyword">for</span> dr, dc <span class="keyword">in</span> [(-<span class="number">1</span>,<span class="number">0</span>), (<span class="number">1</span>,<span class="number">0</span>), (<span class="number">0</span>,-<span class="number">1</span>), (<span class="number">0</span>,<span class="number">1</span>)]:
+            <span class="function">dfs</span>(r+dr, c+dc, node.children[char], path+char)
+        
+        <span class="comment"># Restore</span>
+        board[r][c] = char
+    
+    <span class="comment"># Try starting from each cell</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(rows):
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(cols):
+            <span class="function">dfs</span>(i, j, trie.root, <span class="string">""</span>)
+    
+    <span class="keyword">return</span> <span class="builtin">list</span>(result)</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Trie Interview Tips:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ <strong>Use Trie when:</strong> Multiple prefix queries, autocomplete, spell check</li>
+                    <li>✅ <strong>Space trade-off:</strong> Uses more space than hash set, but faster prefix queries</li>
+                    <li>✅ <strong>Optimization:</strong> Can compress common paths (radix tree)</li>
+                    <li>✅ <strong>Common mistake:</strong> Forgetting to mark is_end = True</li>
+                    <li>✅ <strong>Alternative:</strong> Hash set for exact match, Trie for prefix match</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Implement Trie
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Implement Trie with insert, search, and startsWith methods.</p>
+                <p><strong>Hint:</strong> Use TrieNode with children dict and is_end flag</p>
+                <a href="https://leetcode.com/problems/implement-trie-prefix-tree/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Word Search II
+                    <span class="difficulty hard">HARD</span>
+                </div>
+                <p><strong>Problem:</strong> Find all words from dictionary in 2D board.</p>
+                <p><strong>Hint:</strong> Build Trie from words, DFS with backtracking on board</p>
+                <a href="https://leetcode.com/problems/word-search-ii/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Design Add and Search Words
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Design data structure supporting add and search with '.' wildcard.</p>
+                <p><strong>Hint:</strong> Use Trie, handle '.' with DFS on all children</p>
+                <a href="https://leetcode.com/problems/design-add-and-search-words-data-structure/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Word Break
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Determine if string can be segmented into dictionary words.</p>
+                <p><strong>Hint:</strong> Can use Trie + DP or just DP with set</p>
+                <a href="https://leetcode.com/problems/word-break/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Concatenated Words
+                    <span class="difficulty hard">HARD</span>
+                </div>
+                <p><strong>Problem:</strong> Find all concatenated words (can be formed by other words in list).</p>
+                <p><strong>Hint:</strong> Build Trie, check if word can be formed by other words</p>
+                <a href="https://leetcode.com/problems/concatenated-words/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Trie Section -->
+        </div>
+            
+            
+                <div id="trie-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 17: BACKTRACKING - COMPLETE -->
+    <div id="backtracking" class="section">
+        <div class="card">
+            <h2>🔙 Backtracking - Exploring All Possibilities</h2>
+            
+            <h3>What is Backtracking?</h3>
+            <p>Backtracking is a systematic way to try all possible solutions by building candidates incrementally and <strong>abandoning them ("backtracking") when they can't lead to a valid solution</strong>.</p>
+            
+            <div class="info-box">
+                <strong>When to Use Backtracking:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Generate all combinations/permutations</strong></li>
+                    <li><strong>Solve puzzles:</strong> Sudoku, N-Queens, word search</li>
+                    <li><strong>Find all valid solutions</strong> to a constraint problem</li>
+                    <li><strong>Decision problems:</strong> Can we achieve this goal?</li>
+                    <li><strong>Keywords:</strong> "All possible", "Generate", "Find all"</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>Backtracking Template:</strong>
+                <pre style="background: #2d2d2d; padding: 15px; margin-top: 10px; color: #d4d4d4; border-radius: 8px;">
+def backtrack(path, choices):
+    if is_valid_solution(path):
+        result.append(path.copy())
+        return
+    
+    for choice in choices:
+        # Make choice
+        path.append(choice)
+        
+        # Recurse
+        backtrack(path, new_choices)
+        
+        # Undo choice (backtrack!)
+        path.pop()
+                </pre>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h4 style="text-align: center; color: #667eea; margin-bottom: 20px;">📊 Backtracking Decision Tree: Generating Subsets of [1, 2, 3]</h4>
+                <svg viewBox="0 0 1200 600" style="width: 100%; height: auto;">
+                    <!-- Title -->
+                    <text x="600" y="25" font-size="20" font-weight="bold" fill="#667eea" text-anchor="middle">Each Level: Include or Exclude Current Element</text>
+                    
+                    <!-- Root: Empty set -->
+                    <circle cx="600" cy="60" r="25" fill="#9c27b0" stroke="#7b1fa2" stroke-width="2"/>
+                    <text x="600" y="67" font-size="13" fill="white" font-weight="bold" text-anchor="middle">[]</text>
+                    <text x="600" y="95" font-size="11" fill="#9c27b0" font-weight="bold" text-anchor="middle">Start</text>
+                    
+                    <!-- Level 1: Element 1 -->
+                    <text x="50" y="135" font-size="13" fill="#666" font-weight="bold">Consider 1:</text>
+                    <line x1="600" y1="85" x2="450" y2="145" stroke="#e74c3c" stroke-width="2"/>
+                    <line x1="600" y1="85" x2="750" y2="145" stroke="#2ecc71" stroke-width="2"/>
+                    
+                    <text x="380" y="140" font-size="11" fill="#e74c3c" font-weight="bold">Exclude 1</text>
+                    <circle cx="450" cy="160" r="23" fill="#e74c3c"/>
+                    <text x="450" y="167" font-size="12" fill="white" font-weight="bold" text-anchor="middle">[]</text>
+                    
+                    <text x="780" y="140" font-size="11" fill="#2ecc71" font-weight="bold">Include 1</text>
+                    <circle cx="750" cy="160" r="23" fill="#2ecc71"/>
+                    <text x="750" y="167" font-size="12" fill="white" font-weight="bold" text-anchor="middle">[1]</text>
+                    
+                    <!-- Level 2: Element 2 -->
+                    <text x="50" y="225" font-size="13" fill="#666" font-weight="bold">Consider 2:</text>
+                    
+                    <!-- From [] -->
+                    <line x1="450" y1="183" x2="350" y2="243" stroke="#e74c3c" stroke-width="1.5"/>
+                    <line x1="450" y1="183" x2="550" y2="243" stroke="#2ecc71" stroke-width="1.5"/>
+                    
+                    <text x="300" y="238" font-size="10" fill="#e74c3c">Exclude</text>
+                    <circle cx="350" cy="258" r="21" fill="#e74c3c"/>
+                    <text x="350" y="264" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[]</text>
+                    
+                    <text x="580" y="238" font-size="10" fill="#2ecc71">Include</text>
+                    <circle cx="550" cy="258" r="21" fill="#2ecc71"/>
+                    <text x="550" y="264" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[2]</text>
+                    
+                    <!-- From [1] -->
+                    <line x1="750" y1="183" x2="650" y2="243" stroke="#e74c3c" stroke-width="1.5"/>
+                    <line x1="750" y1="183" x2="850" y2="243" stroke="#2ecc71" stroke-width="1.5"/>
+                    
+                    <text x="600" y="238" font-size="10" fill="#e74c3c">Exclude</text>
+                    <circle cx="650" cy="258" r="21" fill="#e74c3c"/>
+                    <text x="650" y="264" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1]</text>
+                    
+                    <text x="880" y="238" font-size="10" fill="#2ecc71">Include</text>
+                    <circle cx="850" cy="258" r="21" fill="#2ecc71"/>
+                    <text x="850" y="264" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1,2]</text>
+                    
+                    <!-- Level 3: Element 3 -->
+                    <text x="50" y="325" font-size="13" fill="#666" font-weight="bold">Consider 3:</text>
+                    
+                    <!-- From [] at level 2 -->
+                    <line x1="350" y1="279" x2="280" y2="339" stroke="#e74c3c" stroke-width="1.5"/>
+                    <line x1="350" y1="279" x2="420" y2="339" stroke="#2ecc71" stroke-width="1.5"/>
+                    
+                    <circle cx="280" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="280" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[]</text>
+                    
+                    <circle cx="420" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="420" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[3]</text>
+                    
+                    <!-- From [2] -->
+                    <line x1="550" y1="279" x2="480" y2="339" stroke="#e74c3c" stroke-width="1.5"/>
+                    <line x1="550" y1="279" x2="620" y2="339" stroke="#2ecc71" stroke-width="1.5"/>
+                    
+                    <circle cx="480" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="480" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[2]</text>
+                    
+                    <circle cx="620" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="620" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[2,3]</text>
+                    
+                    <!-- From [1] at level 2 -->
+                    <line x1="650" y1="279" x2="720" y2="339" stroke="#e74c3c" stroke-width="1.5"/>
+                    <line x1="650" y1="279" x2="780" y2="339" stroke="#2ecc71" stroke-width="1.5"/>
+                    
+                    <circle cx="720" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="720" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1]</text>
+                    
+                    <circle cx="780" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="780" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1,3]</text>
+                    
+                    <!-- From [1,2] -->
+                    <line x1="850" y1="279" x2="880" y2="339" stroke="#e74c3c" stroke-width="1.5"/>
+                    <line x1="850" y1="279" x2="1020" y2="339" stroke="#2ecc71" stroke-width="1.5"/>
+                    
+                    <circle cx="880" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="880" y="360" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1,2]</text>
+                    
+                    <circle cx="1020" cy="354" r="20" fill="#3498db" stroke="#2980b9" stroke-width="2"/>
+                    <text x="1020" y="360" font-size="10" fill="white" font-weight="bold" text-anchor="middle">[1,2,3]</text>
+                    
+                    <!-- Final results box -->
+                    <rect x="150" y="410" width="900" height="170" fill="#f8f9fa" stroke="#667eea" stroke-width="3" rx="10"/>
+                    <text x="600" y="440" font-size="17" fill="#667eea" font-weight="bold" text-anchor="middle">✨ All 8 Subsets Generated (2³ = 8)</text>
+                    
+                    <rect x="180" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="215" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[]</text>
+                    
+                    <rect x="260" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="295" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1]</text>
+                    
+                    <rect x="340" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="375" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[2]</text>
+                    
+                    <rect x="420" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="455" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[3]</text>
+                    
+                    <rect x="500" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="535" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1,2]</text>
+                    
+                    <rect x="580" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="615" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1,3]</text>
+                    
+                    <rect x="660" y="455" width="70" height="30" fill="#3498db" rx="4"/>
+                    <text x="695" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[2,3]</text>
+                    
+                    <rect x="740" y="455" width="90" height="30" fill="#3498db" rx="4"/>
+                    <text x="785" y="476" font-size="11" fill="white" font-weight="bold" text-anchor="middle">[1,2,3]</text>
+                    
+                    <!-- Key concept boxes -->
+                    <rect x="180" y="510" width="380" height="55" fill="#e8f5e9" stroke="#4caf50" stroke-width="2" rx="5"/>
+                    <text x="190" y="530" font-size="12" fill="#2e7d32" font-weight="bold">✓ Backtracking Pattern:</text>
+                    <text x="200" y="550" font-size="11" fill="#666">1. Make choice → 2. Recurse → 3. Undo choice</text>
+                    <text x="200" y="565" font-size="11" fill="#666">This explores ALL possibilities systematically!</text>
+                    
+                    <rect x="580" y="510" width="420" height="55" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="5"/>
+                    <text x="590" y="530" font-size="12" fill="#e65100" font-weight="bold">⚡ Time Complexity:</text>
+                    <text x="600" y="550" font-size="11" fill="#666">O(2ⁿ) - each element has 2 choices (include/exclude)</text>
+                    <text x="600" y="565" font-size="11" fill="#666">For n=10: 1,024 subsets. For n=20: 1,048,576!</text>
+                </svg>
+            </div>
+
+            <h3>Classic Backtracking Problems</h3>
+
+            <h4>1. Generate All Subsets (Power Set)</h4>
+            <div class="code-block">
+                <div class="code-header">Subsets - All Possible Combinations</div>
+                <pre><code><span class="keyword">def</span> <span class="function">subsets</span>(nums):
+    <span class="string">"""
+    Generate all possible subsets (power set).
+    
+    Example: [1,2,3]
+    Output: [[], [1], [2], [3], [1,2], [1,3], [2,3], [1,2,3]]
+    
+    For each element: include it OR exclude it
+    Total: 2^n subsets
+    
+    Time: O(2^n), Space: O(n) for recursion
+    """</span>
+    result = []
+    
+    <span class="keyword">def</span> <span class="function">backtrack</span>(start, path):
+        <span class="comment"># Add current subset</span>
+        result.<span class="function">append</span>(path[:])  <span class="comment"># Copy path!</span>
+        
+        <span class="comment"># Try adding each remaining element</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(start, <span class="builtin">len</span>(nums)):
+            path.<span class="function">append</span>(nums[i])        <span class="comment"># Include nums[i]</span>
+            <span class="function">backtrack</span>(i + <span class="number">1</span>, path)     <span class="comment"># Recurse</span>
+            path.<span class="function">pop</span>()                  <span class="comment"># Backtrack!</span>
+    
+    <span class="function">backtrack</span>(<span class="number">0</span>, [])
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+nums = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+<span class="builtin">print</span>(<span class="function">subsets</span>(nums))
+<span class="comment"># Output: [[], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3]]</span></code></pre>
+            </div>
+
+            <h4>2. Generate All Permutations</h4>
+            <div class="code-block">
+                <div class="code-header">Permutations - All Possible Orderings</div>
+                <pre><code><span class="keyword">def</span> <span class="function">permutations</span>(nums):
+    <span class="string">"""
+    Generate all permutations of nums.
+    
+    Example: [1,2,3]
+    Output: [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
+    
+    Total: n! permutations
+    
+    Time: O(n!), Space: O(n)
+    """</span>
+    result = []
+    
+    <span class="keyword">def</span> <span class="function">backtrack</span>(path, remaining):
+        <span class="comment"># Base case: used all numbers</span>
+        <span class="keyword">if</span> <span class="keyword">not</span> remaining:
+            result.<span class="function">append</span>(path[:])
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Try each remaining number</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(remaining)):
+            <span class="comment"># Choose remaining[i]</span>
+            path.<span class="function">append</span>(remaining[i])
+            
+            <span class="comment"># Recurse with remaining numbers</span>
+            <span class="function">backtrack</span>(path, remaining[:i] + remaining[i+<span class="number">1</span>:])
+            
+            <span class="comment"># Backtrack</span>
+            path.<span class="function">pop</span>()
+    
+    <span class="function">backtrack</span>([], nums)
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+nums = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+<span class="builtin">print</span>(<span class="string">f"Permutations of {nums}:"</span>)
+<span class="keyword">for</span> perm <span class="keyword">in</span> <span class="function">permutations</span>(nums):
+    <span class="builtin">print</span>(perm)</code></pre>
+            </div>
+
+            <h4>3. Combination Sum</h4>
+            <div class="code-block">
+                <div class="code-header">Find All Combinations that Sum to Target</div>
+                <pre><code><span class="keyword">def</span> <span class="function">combination_sum</span>(candidates, target):
+    <span class="string">"""
+    Find all combinations that sum to target.
+    Can reuse same number multiple times!
+    
+    Example: candidates = [2,3,6,7], target = 7
+    Output: [[2,2,3], [7]]
+    
+    Time: O(2^target), Space: O(target)
+    """</span>
+    result = []
+    
+    <span class="keyword">def</span> <span class="function">backtrack</span>(start, path, current_sum):
+        <span class="comment"># Base cases</span>
+        <span class="keyword">if</span> current_sum == target:
+            result.<span class="function">append</span>(path[:])
+            <span class="keyword">return</span>
+        
+        <span class="keyword">if</span> current_sum > target:
+            <span class="keyword">return</span>  <span class="comment"># Exceeded target, stop</span>
+        
+        <span class="comment"># Try each candidate</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(start, <span class="builtin">len</span>(candidates)):
+            path.<span class="function">append</span>(candidates[i])
+            <span class="comment"># Can reuse same element, so still start from i</span>
+            <span class="function">backtrack</span>(i, path, current_sum + candidates[i])
+            path.<span class="function">pop</span>()
+    
+    <span class="function">backtrack</span>(<span class="number">0</span>, [], <span class="number">0</span>)
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+candidates = [<span class="number">2</span>, <span class="number">3</span>, <span class="number">6</span>, <span class="number">7</span>]
+target = <span class="number">7</span>
+<span class="builtin">print</span>(<span class="string">f"Combinations that sum to {target}:"</span>)
+<span class="builtin">print</span>(<span class="function">combination_sum</span>(candidates, target))</code></pre>
+            </div>
+
+            <h4>4. N-Queens Problem</h4>
+            <div class="code-block">
+                <div class="code-header">Solve N-Queens Puzzle</div>
+                <pre><code><span class="keyword">def</span> <span class="function">solve_n_queens</span>(n):
+    <span class="string">"""
+    Place n queens on n×n chessboard so no two attack each other.
+    
+    Queens attack: same row, column, or diagonal
+    
+    Example n=4:
+    [".Q..",  (one valid solution)
+     "...Q",
+     "Q...",
+     "..Q."]
+    
+    Time: O(n!), Space: O(n²)
+    """</span>
+    result = []
+    board = [[<span class="string">"."</span>]*n <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="builtin">range</span>(n)]
+    
+    <span class="keyword">def</span> <span class="function">is_safe</span>(row, col):
+        <span class="comment"># Check column</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(row):
+            <span class="keyword">if</span> board[i][col] == <span class="string">"Q"</span>:
+                <span class="keyword">return</span> <span class="keyword">False</span>
+        
+        <span class="comment"># Check diagonal (top-left)</span>
+        i, j = row - <span class="number">1</span>, col - <span class="number">1</span>
+        <span class="keyword">while</span> i >= <span class="number">0</span> <span class="keyword">and</span> j >= <span class="number">0</span>:
+            <span class="keyword">if</span> board[i][j] == <span class="string">"Q"</span>:
+                <span class="keyword">return</span> <span class="keyword">False</span>
+            i, j = i - <span class="number">1</span>, j - <span class="number">1</span>
+        
+        <span class="comment"># Check diagonal (top-right)</span>
+        i, j = row - <span class="number">1</span>, col + <span class="number">1</span>
+        <span class="keyword">while</span> i >= <span class="number">0</span> <span class="keyword">and</span> j < n:
+            <span class="keyword">if</span> board[i][j] == <span class="string">"Q"</span>:
+                <span class="keyword">return</span> <span class="keyword">False</span>
+            i, j = i - <span class="number">1</span>, j + <span class="number">1</span>
+        
+        <span class="keyword">return</span> <span class="keyword">True</span>
+    
+    <span class="keyword">def</span> <span class="function">backtrack</span>(row):
+        <span class="comment"># Placed all queens!</span>
+        <span class="keyword">if</span> row == n:
+            result.<span class="function">append</span>([<span class="string">""</span>.<span class="function">join</span>(r) <span class="keyword">for</span> r <span class="keyword">in</span> board])
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Try placing queen in each column of current row</span>
+        <span class="keyword">for</span> col <span class="keyword">in</span> <span class="builtin">range</span>(n):
+            <span class="keyword">if</span> <span class="function">is_safe</span>(row, col):
+                board[row][col] = <span class="string">"Q"</span>      <span class="comment"># Place queen</span>
+                <span class="function">backtrack</span>(row + <span class="number">1</span>)       <span class="comment"># Move to next row</span>
+                board[row][col] = <span class="string">"."</span>      <span class="comment"># Backtrack!</span>
+    
+    <span class="function">backtrack</span>(<span class="number">0</span>)
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+solutions = <span class="function">solve_n_queens</span>(<span class="number">4</span>)
+<span class="builtin">print</span>(<span class="string">f"Found {len(solutions)} solutions for 4-Queens:"</span>)
+<span class="keyword">for</span> i, solution <span class="keyword">in</span> <span class="builtin">enumerate</span>(solutions):
+    <span class="builtin">print</span>(<span class="string">f"\nSolution {i+1}:"</span>)
+    <span class="keyword">for</span> row <span class="keyword">in</span> solution:
+        <span class="builtin">print</span>(row)</code></pre>
+            </div>
+
+            <h4>5. Generate Parentheses</h4>
+            <div class="code-block">
+                <div class="code-header">Generate All Valid Parentheses Combinations</div>
+                <pre><code><span class="keyword">def</span> <span class="function">generate_parentheses</span>(n):
+    <span class="string">"""
+    Generate all valid combinations of n pairs of parentheses.
+    
+    Example: n = 3
+    Output: ["((()))", "(()())", "(())()", "()(())", "()()()"]
+    
+    Rules:
+    - Can add '(' if open < n
+    - Can add ')' if close < open
+    
+    Time: O(4^n / sqrt(n)) - Catalan number
+    Space: O(n)
+    """</span>
+    result = []
+    
+    <span class="keyword">def</span> <span class="function">backtrack</span>(path, open_count, close_count):
+        <span class="comment"># Generated valid combination</span>
+        <span class="keyword">if</span> <span class="builtin">len</span>(path) == <span class="number">2</span> * n:
+            result.<span class="function">append</span>(path)
+            <span class="keyword">return</span>
+        
+        <span class="comment"># Add '(' if we can</span>
+        <span class="keyword">if</span> open_count < n:
+            <span class="function">backtrack</span>(path + <span class="string">"("</span>, open_count + <span class="number">1</span>, close_count)
+        
+        <span class="comment"># Add ')' if it maintains validity</span>
+        <span class="keyword">if</span> close_count < open_count:
+            <span class="function">backtrack</span>(path + <span class="string">")"</span>, open_count, close_count + <span class="number">1</span>)
+    
+    <span class="function">backtrack</span>(<span class="string">""</span>, <span class="number">0</span>, <span class="number">0</span>)
+    <span class="keyword">return</span> result
+
+<span class="comment"># Test</span>
+n = <span class="number">3</span>
+<span class="builtin">print</span>(<span class="string">f"Valid parentheses for n={n}:"</span>)
+<span class="keyword">for</span> combo <span class="keyword">in</span> <span class="function">generate_parentheses</span>(n):
+    <span class="builtin">print</span>(combo)</code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Backtracking Problem-Solving Strategy:</strong>
+                <ol style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Base case:</strong> When is solution complete?</li>
+                    <li><strong>Choices:</strong> What can I add to current path?</li>
+                    <li><strong>Constraints:</strong> What makes a choice invalid?</li>
+                    <li><strong>Make choice:</strong> Add to path</li>
+                    <li><strong>Recurse:</strong> Continue building solution</li>
+                    <li><strong>Undo choice:</strong> Backtrack for next iteration</li>
+                </ol>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Subsets
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Generate all possible subsets (power set).</p>
+                <p><strong>Input:</strong> <code>nums = [1,2,3]</code></p>
+                <p><strong>Output:</strong> <code>[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]</code></p>
+                <p><strong>Hint:</strong> For each element, include it or exclude it</p>
+                <a href="https://leetcode.com/problems/subsets/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Permutations
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Generate all permutations of distinct integers.</p>
+                <p><strong>Input:</strong> <code>nums = [1,2,3]</code></p>
+                <p><strong>Output:</strong> <code>[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]</code></p>
+                <p><strong>Hint:</strong> Try each number in each position, track used numbers</p>
+                <a href="https://leetcode.com/problems/permutations/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Combination Sum
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find all combinations that sum to target (can reuse numbers).</p>
+                <p><strong>Input:</strong> <code>candidates = [2,3,6,7], target = 7</code></p>
+                <p><strong>Output:</strong> <code>[[2,2,3],[7]]</code></p>
+                <p><strong>Hint:</strong> Backtrack with running sum, prune when sum > target</p>
+                <a href="https://leetcode.com/problems/combination-sum/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: N-Queens
+                    <span class="difficulty hard">HARD</span>
+                </div>
+                <p><strong>Problem:</strong> Place n queens on n×n board so none attack each other.</p>
+                <p><strong>Hint:</strong> Backtrack row by row, check column and diagonals</p>
+                <a href="https://leetcode.com/problems/n-queens/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Word Search
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find if word exists in 2D board (can move up/down/left/right).</p>
+                <p><strong>Hint:</strong> DFS + backtracking, mark visited cells temporarily</p>
+                <a href="https://leetcode.com/problems/word-search/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Backtracking Section -->
+        </div>
+            
+            
+                <div id="backtracking-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 18: GREEDY ALGORITHMS - COMPLETE -->
+    <div id="greedy" class="section">
+        <div class="card">
+            <h2>💚 Greedy Algorithms - Make Locally Optimal Choices</h2>
+            
+            <h3>What are Greedy Algorithms?</h3>
+            <p>A greedy algorithm makes the <strong>locally optimal choice at each step</strong>, hoping to find a global optimum. It never reconsiders previous choices!</p>
+            
+            <div class="info-box">
+                <strong>When to Use Greedy:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Optimization problems:</strong> Maximize or minimize something</li>
+                    <li><strong>Greedy choice property:</strong> Local optimum leads to global optimum</li>
+                    <li><strong>No need to reconsider:</strong> Once chosen, decision stands</li>
+                    <li><strong>Examples:</strong> Scheduling, huffman coding, coin change (specific coins)</li>
+                    <li><strong>Keywords:</strong> "Maximum", "Minimum", "Optimal"</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <strong>Greedy vs Dynamic Programming:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Greedy:</strong> Make best local choice, never look back → Fast, but doesn't always work</li>
+                    <li><strong>DP:</strong> Consider all choices, pick best → Always works, but slower</li>
+                    <li><strong>Example where greedy FAILS:</strong> Coin change with coins [1, 3, 4] and amount 6:<br>
+                        Greedy: 4 + 1 + 1 = 3 coins<br>
+                        Optimal: 3 + 3 = 2 coins ✓</li>
+                </ul>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h4 style="text-align: center; color: #667eea; margin-bottom: 20px;">📊 Greedy vs DP: Activity Selection Problem</h4>
+                <svg viewBox="0 0 1200 600" style="width: 100%; height: auto;">
+                    <!-- Title -->
+                    <text x="600" y="25" font-size="20" font-weight="bold" fill="#667eea" text-anchor="middle">Schedule Maximum Non-Overlapping Activities</text>
+                    <text x="600" y="50" font-size="14" fill="#666" text-anchor="middle">Activities: [(1,3), (2,5), (4,6), (5,9), (6,7)]</text>
+                    
+                    <!-- Timeline visualization -->
+                    <rect x="100" y="80" width="1000" height="140" fill="#f8f9fa" stroke="#ddd" stroke-width="1" rx="8"/>
+                    <text x="120" y="105" font-size="13" fill="#666" font-weight="bold">Time →</text>
+                    
+                    <!-- Time markers -->
+                    <text x="200" y="105" font-size="11" fill="#999">1</text>
+                    <text x="300" y="105" font-size="11" fill="#999">2</text>
+                    <text x="400" y="105" font-size="11" fill="#999">3</text>
+                    <text x="500" y="105" font-size="11" fill="#999">4</text>
+                    <text x="600" y="105" font-size="11" fill="#999">5</text>
+                    <text x="700" y="105" font-size="11" fill="#999">6</text>
+                    <text x="800" y="105" font-size="11" fill="#999">7</text>
+                    <text x="900" y="105" font-size="11" fill="#999">8</text>
+                    <text x="1000" y="105" font-size="11" fill="#999">9</text>
+                    
+                    <!-- Activity A: (1,3) -->
+                    <rect x="200" y="120" width="200" height="25" fill="#2ecc71" stroke="#27ae60" stroke-width="2" rx="4"/>
+                    <text x="300" y="137" font-size="12" fill="white" font-weight="bold" text-anchor="middle">A (1,3)</text>
+                    
+                    <!-- Activity B: (2,5) -->
+                    <rect x="300" y="150" width="300" height="25" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="4"/>
+                    <text x="450" y="167" font-size="12" fill="white" font-weight="bold" text-anchor="middle">B (2,5)</text>
+                    
+                    <!-- Activity C: (4,6) -->
+                    <rect x="500" y="120" width="200" height="25" fill="#2ecc71" stroke="#27ae60" stroke-width="2" rx="4"/>
+                    <text x="600" y="137" font-size="12" fill="white" font-weight="bold" text-anchor="middle">C (4,6)</text>
+                    
+                    <!-- Activity D: (5,9) -->
+                    <rect x="600" y="180" width="400" height="25" fill="#e74c3c" stroke="#c0392b" stroke-width="2" rx="4"/>
+                    <text x="800" y="197" font-size="12" fill="white" font-weight="bold" text-anchor="middle">D (5,9)</text>
+                    
+                    <!-- Activity E: (6,7) -->
+                    <rect x="700" y="150" width="100" height="25" fill="#2ecc71" stroke="#27ae60" stroke-width="2" rx="4"/>
+                    <text x="750" y="167" font-size="12" fill="white" font-weight="bold" text-anchor="middle">E (6,7)</text>
+                    
+                    <!-- Greedy Approach -->
+                    <rect x="50" y="250" width="550" height="320" fill="#e8f5e9" stroke="#4caf50" stroke-width="3" rx="10"/>
+                    <text x="325" y="280" font-size="18" fill="#2e7d32" font-weight="bold" text-anchor="middle">💚 Greedy Approach - O(n log n)</text>
+                    <text x="325" y="305" font-size="13" fill="#666" text-anchor="middle">Always pick activity that ends earliest!</text>
+                    
+                    <!-- Step 1 -->
+                    <text x="70" y="335" font-size="13" fill="#2e7d32" font-weight="bold">Step 1: Sort by end time</text>
+                    <rect x="70" y="340" width="500" height="30" fill="#c8e6c9" rx="4"/>
+                    <text x="80" y="360" font-size="11" fill="#333">A(1,3), C(4,6), B(2,5), E(6,7), D(5,9)</text>
+                    <text x="80" y="375" font-size="10" fill="#666">↑ Ends earliest</text>
+                    
+                    <!-- Step 2 -->
+                    <text x="70" y="400" font-size="13" fill="#2e7d32" font-weight="bold">Step 2: Pick A (ends at 3)</text>
+                    <rect x="80" y="410" width="60" height="25" fill="#2ecc71" rx="4"/>
+                    <text x="110" y="427" font-size="11" fill="white" font-weight="bold" text-anchor="middle">A ✓</text>
+                    <text x="150" y="427" font-size="11" fill="#666">Selected! last_end = 3</text>
+                    
+                    <!-- Step 3 -->
+                    <text x="70" y="455" font-size="13" fill="#2e7d32" font-weight="bold">Step 3: Can we pick C (4,6)?</text>
+                    <text x="80" y="475" font-size="11" fill="#666">• C starts at 4 ≥ 3 (no overlap!)</text>
+                    <rect x="80" y="485" width="60" height="25" fill="#2ecc71" rx="4"/>
+                    <text x="110" y="502" font-size="11" fill="white" font-weight="bold" text-anchor="middle">C ✓</text>
+                    <text x="150" y="502" font-size="11" fill="#666">Selected! last_end = 6</text>
+                    
+                    <!-- Step 4 -->
+                    <text x="70" y="530" font-size="13" fill="#2e7d32" font-weight="bold">Step 4: Can we pick E (6,7)?</text>
+                    <text x="80" y="550" font-size="11" fill="#666">• E starts at 6 ≥ 6 (no overlap!)</text>
+                    <rect x="80" y="560" width="60" height="25" fill="#2ecc71" rx="4"/>
+                    <text x="110" y="577" font-size="11" fill="white" font-weight="bold" text-anchor="middle">E ✓</text>
+                    <text x="150" y="577" font-size="11" fill="#666">Selected! Result: 3 activities</text>
+                    
+                    <!-- DP Approach (Comparison) -->
+                    <rect x="650" y="250" width="500" height="320" fill="#e3f2fd" stroke="#2196f3" stroke-width="3" rx="10"/>
+                    <text x="900" y="280" font-size="18" fill="#1565c0" font-weight="bold" text-anchor="middle">🔍 DP Would Also Work</text>
+                    <text x="900" y="305" font-size="13" fill="#666" text-anchor="middle">But much slower - must check all combinations!</text>
+                    
+                    <!-- DP explanation -->
+                    <text x="670" y="335" font-size="13" fill="#1565c0" font-weight="bold">DP Approach:</text>
+                    <text x="680" y="360" font-size="11" fill="#666">1. Sort activities by end time</text>
+                    <text x="680" y="380" font-size="11" fill="#666">2. For each activity i:</text>
+                    <text x="695" y="400" font-size="11" fill="#666">• dp[i] = max activities ending at i</text>
+                    <text x="695" y="420" font-size="11" fill="#666">• Option 1: Don't include i → dp[i-1]</text>
+                    <text x="695" y="440" font-size="11" fill="#666">• Option 2: Include i → 1 + dp[last compatible]</text>
+                    <text x="695" y="460" font-size="11" fill="#666">• dp[i] = max(option1, option2)</text>
+                    
+                    <text x="680" y="490" font-size="11" fill="#666" font-weight="bold">Time: O(n²) or O(n log n) with binary search</text>
+                    <text x="680" y="510" font-size="11" fill="#666" font-weight="bold">Space: O(n) for DP table</text>
+                    
+                    <rect x="670" y="530" width="450" height="30" fill="#fff3e0" stroke="#ff9800" stroke-width="2" rx="4"/>
+                    <text x="895" y="552" font-size="12" fill="#e65100" font-weight="bold" text-anchor="middle">Greedy is simpler AND faster for this problem!</text>
+                    
+                    <!-- Key Insight Box -->
+                    <rect x="200" y="595" width="800" height="1" fill="#ddd"/>
+                    
+                </svg>
+                
+                <div style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #fff9e6 0%, #ffedd5 100%); border-left: 5px solid #f39c12; border-radius: 8px;">
+                    <strong style="color: #d97706; font-size: 1.1em;">🎯 When Greedy Works:</strong>
+                    <ul style="margin-top: 10px; margin-bottom: 0; color: #666;">
+                        <li><strong>Greedy choice property:</strong> Making locally optimal choice leads to globally optimal solution</li>
+                        <li><strong>Optimal substructure:</strong> Optimal solution contains optimal solutions to subproblems</li>
+                        <li><strong>No need to backtrack:</strong> Once a choice is made, we never reconsider it</li>
+                        <li><strong>Examples:</strong> Activity selection, Huffman coding, Dijkstra's algorithm, Minimum spanning tree</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Classic Greedy Problems</h3>
+
+            <h4>1. Activity Selection (Interval Scheduling)</h4>
+            <div class="code-block">
+                <div class="code-header">Maximum Number of Non-Overlapping Activities</div>
+                <pre><code><span class="keyword">def</span> <span class="function">activity_selection</span>(activities):
+    <span class="string">"""
+    Select maximum number of non-overlapping activities.
+    
+    Input: [(start1, end1), (start2, end2), ...]
+    Output: Maximum count of non-overlapping activities
+    
+    Greedy strategy: Always pick activity that ends earliest!
+    This leaves maximum room for future activities.
+    
+    Example: [(1,3), (2,5), (4,6), (6,7), (5,9)]
+    Pick: (1,3), (4,6), (6,7) → 3 activities
+    
+    Time: O(n log n) for sorting
+    Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> activities:
+        <span class="keyword">return</span> <span class="number">0</span>
+    
+    <span class="comment"># Sort by end time (greedy choice!)</span>
+    activities.<span class="function">sort</span>(key=<span class="keyword">lambda</span> x: x[<span class="number">1</span>])
+    
+    count = <span class="number">1</span>
+    last_end = activities[<span class="number">0</span>][<span class="number">1</span>]
+    
+    <span class="keyword">for</span> start, end <span class="keyword">in</span> activities[<span class="number">1</span>:]:
+        <span class="keyword">if</span> start >= last_end:  <span class="comment"># No overlap!</span>
+            count += <span class="number">1</span>
+            last_end = end
+    
+    <span class="keyword">return</span> count
+
+<span class="comment"># Test</span>
+activities = [(<span class="number">1</span>,<span class="number">3</span>), (<span class="number">2</span>,<span class="number">5</span>), (<span class="number">4</span>,<span class="number">6</span>), (<span class="number">6</span>,<span class="number">7</span>), (<span class="number">5</span>,<span class="number">9</span>)]
+<span class="builtin">print</span>(<span class="string">f"Max activities: {activity_selection(activities)}"</span>)  <span class="comment"># 3</span></code></pre>
+            </div>
+
+            <h4>2. Jump Game (Can Reach End?)</h4>
+            <div class="code-block">
+                <div class="code-header">Jump Game - Greedy Approach</div>
+                <pre><code><span class="keyword">def</span> <span class="function">can_jump</span>(nums):
+    <span class="string">"""
+    Can you reach the last index?
+    nums[i] = maximum jump length from index i
+    
+    Example: [2,3,1,1,4] → True (jump 1→3→4)
+             [3,2,1,0,4] → False (stuck at index 3)
+    
+    Greedy strategy: Track furthest position reachable!
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    max_reach = <span class="number">0</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(nums)):
+        <span class="keyword">if</span> i > max_reach:
+            <span class="keyword">return</span> <span class="keyword">False</span>  <span class="comment"># Can't reach here!</span>
+        
+        max_reach = <span class="builtin">max</span>(max_reach, i + nums[i])
+        
+        <span class="keyword">if</span> max_reach >= <span class="builtin">len</span>(nums) - <span class="number">1</span>:
+            <span class="keyword">return</span> <span class="keyword">True</span>  <span class="comment"># Can reach end!</span>
+    
+    <span class="keyword">return</span> max_reach >= <span class="builtin">len</span>(nums) - <span class="number">1</span>
+
+<span class="comment"># Jump Game II: Minimum jumps to reach end</span>
+<span class="keyword">def</span> <span class="function">min_jumps</span>(nums):
+    <span class="string">"""
+    Find minimum number of jumps to reach end.
+    
+    Greedy strategy: Make jump that reaches furthest!
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    jumps = <span class="number">0</span>
+    current_end = <span class="number">0</span>
+    farthest = <span class="number">0</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(nums) - <span class="number">1</span>):
+        farthest = <span class="builtin">max</span>(farthest, i + nums[i])
+        
+        <span class="keyword">if</span> i == current_end:  <span class="comment"># Must make a jump</span>
+            jumps += <span class="number">1</span>
+            current_end = farthest
+    
+    <span class="keyword">return</span> jumps
+
+<span class="comment"># Test</span>
+<span class="builtin">print</span>(<span class="function">can_jump</span>([<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">4</span>]))  <span class="comment"># True</span>
+<span class="builtin">print</span>(<span class="function">can_jump</span>([<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>,<span class="number">0</span>,<span class="number">4</span>]))  <span class="comment"># False</span>
+<span class="builtin">print</span>(<span class="function">min_jumps</span>([<span class="number">2</span>,<span class="number">3</span>,<span class="number">1</span>,<span class="number">1</span>,<span class="number">4</span>]))  <span class="comment"># 2 (jump 2→3→4)</span></code></pre>
+            </div>
+
+            <h4>3. Gas Station</h4>
+            <div class="code-block">
+                <div class="code-header">Find Starting Gas Station for Circular Tour</div>
+                <pre><code><span class="keyword">def</span> <span class="function">can_complete_circuit</span>(gas, cost):
+    <span class="string">"""
+    Can you complete circular route?
+    gas[i] = gas at station i
+    cost[i] = gas needed to reach station i+1
+    
+    Return starting station index, or -1 if impossible
+    
+    Greedy insight:
+    - If total gas >= total cost, solution exists
+    - Start from first station where we don't run out of gas
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="builtin">sum</span>(gas) < <span class="builtin">sum</span>(cost):
+        <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># Impossible!</span>
+    
+    start = <span class="number">0</span>
+    tank = <span class="number">0</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(gas)):
+        tank += gas[i] - cost[i]
+        
+        <span class="keyword">if</span> tank < <span class="number">0</span>:  <span class="comment"># Can't reach next station</span>
+            start = i + <span class="number">1</span>  <span class="comment"># Try starting from next</span>
+            tank = <span class="number">0</span>
+    
+    <span class="keyword">return</span> start
+
+<span class="comment"># Test</span>
+gas = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]
+cost = [<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>,<span class="number">1</span>,<span class="number">2</span>]
+<span class="builtin">print</span>(<span class="string">f"Start from station: {can_complete_circuit(gas, cost)}"</span>)  <span class="comment"># 3</span></code></pre>
+            </div>
+
+            <h4>4. Best Time to Buy and Sell Stock II</h4>
+            <div class="code-block">
+                <div class="code-header">Maximum Profit with Multiple Transactions</div>
+                <pre><code><span class="keyword">def</span> <span class="function">max_profit</span>(prices):
+    <span class="string">"""
+    Can buy and sell stock multiple times.
+    Maximize total profit.
+    
+    Example: [7,1,5,3,6,4]
+    Buy at 1, sell at 5 → profit 4
+    Buy at 3, sell at 6 → profit 3
+    Total: 7
+    
+    Greedy insight: Add every profitable day-to-day gain!
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    profit = <span class="number">0</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="builtin">len</span>(prices)):
+        <span class="comment"># If price went up, we profit from the increase</span>
+        <span class="keyword">if</span> prices[i] > prices[i-<span class="number">1</span>]:
+            profit += prices[i] - prices[i-<span class="number">1</span>]
+    
+    <span class="keyword">return</span> profit
+
+<span class="comment"># Test</span>
+prices = [<span class="number">7</span>,<span class="number">1</span>,<span class="number">5</span>,<span class="number">3</span>,<span class="number">6</span>,<span class="number">4</span>]
+<span class="builtin">print</span>(<span class="string">f"Max profit: ${max_profit(prices)}"</span>)  <span class="comment"># 7</span></code></pre>
+            </div>
+
+            <h4>5. Partition Labels</h4>
+            <div class="code-block">
+                <div class="code-header">Partition String into Maximum Parts</div>
+                <pre><code><span class="keyword">def</span> <span class="function">partition_labels</span>(s):
+    <span class="string">"""
+    Partition string into as many parts as possible where
+    each letter appears in at most one part.
+    
+    Example: "ababcbacadefegdehijhklij"
+    Output: [9,7,8] → "ababcbaca", "defegde", "hijhklij"
+    
+    Greedy strategy:
+    1. Find last occurrence of each character
+    2. Extend partition to include all occurrences
+    
+    Time: O(n), Space: O(1) - only 26 letters
+    """</span>
+    <span class="comment"># Find last occurrence of each character</span>
+    last = {c: i <span class="keyword">for</span> i, c <span class="keyword">in</span> <span class="builtin">enumerate</span>(s)}
+    
+    partitions = []
+    start = <span class="number">0</span>
+    end = <span class="number">0</span>
+    
+    <span class="keyword">for</span> i, char <span class="keyword">in</span> <span class="builtin">enumerate</span>(s):
+        end = <span class="builtin">max</span>(end, last[char])  <span class="comment"># Extend partition</span>
+        
+        <span class="keyword">if</span> i == end:  <span class="comment"># Can make partition here!</span>
+            partitions.<span class="function">append</span>(end - start + <span class="number">1</span>)
+            start = i + <span class="number">1</span>
+    
+    <span class="keyword">return</span> partitions
+
+<span class="comment"># Test</span>
+s = <span class="string">"ababcbacadefegdehijhklij"</span>
+<span class="builtin">print</span>(<span class="string">f"Partition sizes: {partition_labels(s)}"</span>)  <span class="comment"># [9, 7, 8]</span></code></pre>
+            </div>
+
+            <h4>6. Assign Cookies</h4>
+            <div class="code-block">
+                <div class="code-header">Maximize Number of Content Children</div>
+                <pre><code><span class="keyword">def</span> <span class="function">find_content_children</span>(g, s):
+    <span class="string">"""
+    g[i] = greed factor of child i (minimum cookie size needed)
+    s[j] = size of cookie j
+    
+    Maximize number of content children.
+    
+    Greedy strategy: 
+    - Give smallest cookie that satisfies each child
+    - Start with least greedy child
+    
+    Time: O(n log n + m log m)
+    Space: O(1)
+    """</span>
+    g.<span class="function">sort</span>()  <span class="comment"># Sort children by greed</span>
+    s.<span class="function">sort</span>()  <span class="comment"># Sort cookies by size</span>
+    
+    child = <span class="number">0</span>
+    cookie = <span class="number">0</span>
+    
+    <span class="keyword">while</span> child < <span class="builtin">len</span>(g) <span class="keyword">and</span> cookie < <span class="builtin">len</span>(s):
+        <span class="keyword">if</span> s[cookie] >= g[child]:  <span class="comment"># Cookie satisfies child</span>
+            child += <span class="number">1</span>
+        cookie += <span class="number">1</span>
+    
+    <span class="keyword">return</span> child
+
+<span class="comment"># Test</span>
+greed = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]
+cookies = [<span class="number">1</span>,<span class="number">1</span>]
+<span class="builtin">print</span>(<span class="string">f"Content children: {find_content_children(greed, cookies)}"</span>)  <span class="comment"># 1</span></code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Greedy Problem-Solving Strategy:</strong>
+                <ol style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Identify greedy choice:</strong> What local decision seems best?</li>
+                    <li><strong>Prove greedy works:</strong> Does local optimum lead to global?</li>
+                    <li><strong>Sort if needed:</strong> Often helps make greedy choice clearer</li>
+                    <li><strong>Implement:</strong> Usually one pass through data</li>
+                    <li><strong>Test edge cases:</strong> Greedy doesn't always work!</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <strong>When Greedy Fails:</strong>
+                <p style="margin-top: 10px;">Not all problems can be solved greedily! Use DP instead when:</p>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>Local optimum doesn't guarantee global optimum</li>
+                    <li>Need to consider future consequences of current choice</li>
+                    <li>Example: Coin change with arbitrary denominations</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Jump Game
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Determine if you can reach the last index.</p>
+                <p><strong>Input:</strong> <code>nums = [2,3,1,1,4]</code></p>
+                <p><strong>Output:</strong> <code>true</code></p>
+                <p><strong>Hint:</strong> Track furthest position reachable</p>
+                <a href="https://leetcode.com/problems/jump-game/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Best Time to Buy and Sell Stock II
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Maximize profit with unlimited transactions.</p>
+                <p><strong>Input:</strong> <code>prices = [7,1,5,3,6,4]</code></p>
+                <p><strong>Output:</strong> <code>7</code></p>
+                <p><strong>Hint:</strong> Add every upward price change</p>
+                <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Gas Station
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find starting gas station for circular tour.</p>
+                <p><strong>Hint:</strong> If total gas >= total cost, solution exists</p>
+                <a href="https://leetcode.com/problems/gas-station/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Partition Labels
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Partition string into max parts with unique letters.</p>
+                <p><strong>Hint:</strong> Track last occurrence of each char, extend partition</p>
+                <a href="https://leetcode.com/problems/partition-labels/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: Non-overlapping Intervals
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Find minimum intervals to remove to make rest non-overlapping.</p>
+                <p><strong>Hint:</strong> Sort by end time, greedy select non-overlapping</p>
+                <a href="https://leetcode.com/problems/non-overlapping-intervals/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Greedy Section -->
+        </div>
+            
+            
+                <div id="greedy-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FINAL CELEBRATION -->
+    <div class="celebration">
+        <h2>🎉 Congratulations! You've Completed the Entire DSA Journey! 🎉</h2>
+        <p style="margin-top: 20px; font-size: 1.2em;">You've mastered:</p>
+        <p style="font-size: 1.1em; margin-top: 15px;">
+            ✅ 18 Complete Sections<br>
+            ✅ All Major Data Structures<br>
+            ✅ All Essential Algorithms<br>
+            ✅ 100+ LeetCode Problems<br>
+            ✅ Interview-Ready Skills
+        </p>
+        <p style="margin-top: 25px; font-size: 1.3em; font-weight: 600;">
+            You're now ready to ace technical interviews! 🚀
+        </p>
+        <p style="margin-top: 15px; font-size: 1.1em;">
+            Keep practicing, keep learning, and good luck! 💪
+        </p>
+    </div>
+
+</div>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }
+    
+    function runCode(id) {
+        const code = document.getElementById(id + '-editor').value;
+        const out = document.getElementById(id + '-output');
+        const content = document.getElementById(id + '-content');
+        out.classList.add('show');
+        let output = '';
+        try {
+            const log = (...args) => output += args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ') + '\n';
+            new Function('console', 'print', code)({log}, log);
+            content.textContent = output || '✓ Code executed successfully (no output)';
+        } catch(e) { 
+            content.textContent = '❌ Error: ' + e.message + '\n\nStack trace:\n' + e.stack; 
+        }
+    }
+    
+    function clearCode(id) {
+        document.getElementById(id + '-editor').value = '';
+        document.getElementById(id + '-output').classList.remove('show');
+    }
+</script>
+</body>
+</html>

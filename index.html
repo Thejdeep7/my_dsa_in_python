@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Learning Journey - Part 1A (Sections 1-3)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.8; color: #1a1a1a; background: #f8f9fa; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+        .hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 40px; border-radius: 20px; text-align: center; margin-bottom: 40px; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+        .hero h1 { font-size: 3em; margin-bottom: 20px; font-weight: 700; }
+        .hero p { font-size: 1.3em; opacity: 0.95; max-width: 700px; margin: 0 auto 20px; }
+        .part-navigation { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .part-nav-btn { background: rgba(255,255,255,0.2); color: white; padding: 12px 25px; border-radius: 25px; text-decoration: none; font-weight: 600; transition: all 0.3s ease; border: 2px solid rgba(255,255,255,0.3); }
+        .part-nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .part-nav-btn.active { background: white; color: #667eea; border-color: white; }
+        .nav-sticky { position: relative; background: white; border-radius: 15px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+        .nav-btn { padding: 14px 20px; background: #f1f3f5; border: none; color: #495057; border-radius: 10px; cursor: pointer; font-weight: 600; transition: all 0.3s ease; font-size: 0.95em; text-align: left; border: 2px solid transparent; }
+        .nav-btn:hover { background: #e9ecef; transform: translateY(-2px); }
+        .nav-btn.active { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-color: #667eea; }
+        .section { display: none; animation: fadeIn 0.5s ease; }
+        .section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .card { background: white; border-radius: 16px; padding: 40px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .card h2 { color: #667eea; font-size: 2.2em; margin-bottom: 15px; font-weight: 700; }
+        .card h3 { color: #495057; font-size: 1.6em; margin-top: 35px; margin-bottom: 15px; font-weight: 600; padding-bottom: 10px; border-bottom: 2px solid #e9ecef; }
+        .card h4 { color: #764ba2; font-size: 1.3em; margin-top: 25px; margin-bottom: 12px; font-weight: 600; }
+        .card p { color: #495057; margin-bottom: 15px; font-size: 1.05em; }
+        .card ul, .card ol { margin-left: 30px; margin-bottom: 20px; color: #495057; }
+        .card li { margin-bottom: 10px; line-height: 1.7; }
+        .code-block { background: #1e1e1e; border-radius: 12px; overflow: hidden; margin: 25px 0; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .code-header { background: #2d2d2d; padding: 12px 20px; color: #9cdcfe; font-size: 0.9em; font-weight: 600; border-bottom: 1px solid #404040; }
+        pre { padding: 25px; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 14px; line-height: 1.6; margin: 0; }
+        code { color: #d4d4d4; }
+        .comment { color: #6a9955; font-style: italic; }
+        .keyword { color: #569cd6; font-weight: 600; }
+        .string { color: #ce9178; }
+        .function { color: #dcdcaa; }
+        .number { color: #b5cea8; }
+        .class { color: #4ec9b0; }
+        .builtin { color: #9cdcfe; }
+        .info-box { background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left: 5px solid #2196f3; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .info-box strong { color: #1565c0; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .tip-box { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); border-left: 5px solid #4caf50; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .tip-box strong { color: #2e7d32; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .warning-box { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); border-left: 5px solid #ff9800; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .warning-box strong { color: #e65100; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .example-box { background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); border-left: 5px solid #9c27b0; padding: 20px 25px; margin: 25px 0; border-radius: 8px; }
+        .example-box strong { color: #6a1b9a; display: block; margin-bottom: 8px; font-size: 1.1em; }
+        .complexity { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+        .complexity span { padding: 8px 16px; background: #e8f5e9; color: #2e7d32; border-radius: 20px; font-size: 0.9em; font-weight: 600; border: 2px solid #4caf50; }
+        .complexity span.medium { background: #fff3e0; color: #e65100; border-color: #ff9800; }
+        .complexity span.bad { background: #ffebee; color: #c62828; border-color: #f44336; }
+        table { width: 100%; border-collapse: collapse; margin: 25px 0; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        th { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; text-align: left; font-weight: 600; }
+        td { padding: 15px; border-bottom: 1px solid #e9ecef; color: #495057; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: #f8f9fa; }
+        .compiler-container { background: white; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        .compiler-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px; }
+        .compiler-title { font-size: 1.4em; color: #667eea; font-weight: 600; }
+        .compiler-controls { display: flex; gap: 10px; }
+        .run-btn, .clear-btn { border: none; padding: 12px 30px; border-radius: 25px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .run-btn { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .clear-btn { background: #f1f3f5; color: #495057; }
+        .run-btn:hover, .clear-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4); }
+        .code-editor { width: 100%; min-height: 300px; font-family: 'JetBrains Mono', monospace; font-size: 14px; padding: 20px; border: 2px solid #e9ecef; border-radius: 10px; background: #1e1e1e; color: #d4d4d4; resize: vertical; }
+        .output-container { margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 10px; border: 2px solid #e9ecef; min-height: 100px; font-family: 'JetBrains Mono', monospace; font-size: 14px; white-space: pre-wrap; display: none; }
+        .output-container.show { display: block; }
+        .output-header { font-weight: 600; color: #667eea; margin-bottom: 10px; }
+        .leetcode-problem { background: linear-gradient(135deg, #fff9e6 0%, #ffedd5 100%); border-left: 5px solid #f59e0b; padding: 25px; margin: 25px 0; border-radius: 8px; }
+        .leetcode-problem .problem-title { color: #d97706; font-size: 1.2em; font-weight: 700; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .difficulty { padding: 4px 12px; border-radius: 12px; font-size: 0.75em; font-weight: 600; }
+        .difficulty.easy { background: #d1fae5; color: #065f46; }
+        .difficulty.medium { background: #fef3c7; color: #92400e; }
+        .difficulty.hard { background: #fee2e2; color: #991b1b; }
+        .problem-link { display: inline-block; margin-top: 10px; padding: 8px 20px; background: #f59e0b; color: white; text-decoration: none; border-radius: 20px; font-size: 0.9em; font-weight: 600; transition: all 0.3s ease; }
+        .problem-link:hover { background: #d97706; transform: translateY(-2px); }
+        .visual-diagram { background: white; border-radius: 12px; padding: 30px; margin: 25px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .visual-diagram svg { max-width: 100%; height: auto; }
+        @media (max-width: 768px) { .hero h1 { font-size: 2em; } .nav-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="hero">
+        <h1>🚀 Complete DSA in Python</h1>
+        <p>Part 1A: Introduction, Complexity & Arrays | Build Strong Foundations</p>
+        <div class="part-navigation">
+            <span class="part-nav-btn active">Part 1A: Sec 1-3</span>
+            <a href="DSA_Part1B_Sections_4-6_COMPLETE.html" class="part-nav-btn">Part 1B: Sec 4-6</a>
+            <a href="DSA_Part1C_Sections_7-9_COMPLETE.html" class="part-nav-btn">Part 1C: Sec 7-9</a>
+            <a href="DSA_Part2A_Sections_10-12_COMPLETE.html" class="part-nav-btn">Part 2A: Sec 10-12</a>
+            <a href="DSA_Part2B_Sections_13-15_COMPLETE.html" class="part-nav-btn">Part 2B: Sec 13-15</a>
+            <a href="DSA_Part2C_Sections_16-18_COMPLETE.html" class="part-nav-btn">Part 2C: Sec 16-18</a>
+        </div>
+    </div>
+    <div class="nav-sticky">
+        <div class="nav-grid">
+            <button class="nav-btn active" onclick="showSection('intro')">1. 📚 Introduction</button>
+            <button class="nav-btn" onclick="showSection('complexity')">2. ⏱️ Complexity</button>
+            <button class="nav-btn" onclick="showSection('arrays')">3. 📊 Arrays</button>
+        </div>
+    </div>
+
+    <!-- SECTION 1: INTRODUCTION -->
+    <div id="intro" class="section active">
+        <div class="card">
+            <h2>📚 Welcome to Your DSA Journey!</h2>
+            
+            <h3>What is Data Structures and Algorithms (DSA)?</h3>
+            <p><strong>Data Structures</strong> are ways of organizing and storing data in a computer so that it can be accessed and modified efficiently. Think of them as different types of containers - some are better for certain tasks than others.</p>
+            
+            <p><strong>Algorithms</strong> are step-by-step procedures or formulas for solving problems. They're like recipes that tell you exactly what to do to achieve a specific result.</p>
+            <div class="visual-diagram">
+                <h4>DSA Learning Path Visualization</h4>
+                <svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <!-- Foundation Level -->
+                    <rect x="50" y="300" width="150" height="60" rx="10" fill="url(#grad1)" opacity="0.8"/>
+                    <text x="125" y="325" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Arrays &</text>
+                    <text x="125" y="345" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Strings</text>
+                    
+                    <rect x="230" y="300" width="150" height="60" rx="10" fill="url(#grad1)" opacity="0.8"/>
+                    <text x="305" y="325" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Linked Lists</text>
+                    <text x="305" y="345" text-anchor="middle" fill="white" font-size="14" font-weight="bold">& Stacks</text>
+                    
+                    <rect x="410" y="300" width="150" height="60" rx="10" fill="url(#grad1)" opacity="0.8"/>
+                    <text x="485" y="325" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Queues &</text>
+                    <text x="485" y="345" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Hash Tables</text>
+                    
+                    <rect x="590" y="300" width="150" height="60" rx="10" fill="url(#grad1)" opacity="0.8"/>
+                    <text x="665" y="325" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Trees &</text>
+                    <text x="665" y="345" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Heaps</text>
+                    
+                    <!-- Intermediate Level -->
+                    <rect x="140" y="200" width="150" height="60" rx="10" fill="#4caf50" opacity="0.8"/>
+                    <text x="215" y="225" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Graphs &</text>
+                    <text x="215" y="245" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Traversals</text>
+                    
+                    <rect x="320" y="200" width="150" height="60" rx="10" fill="#4caf50" opacity="0.8"/>
+                    <text x="395" y="225" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Sorting &</text>
+                    <text x="395" y="245" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Searching</text>
+                    
+                    <rect x="500" y="200" width="150" height="60" rx="10" fill="#4caf50" opacity="0.8"/>
+                    <text x="575" y="225" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Recursion &</text>
+                    <text x="575" y="245" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Backtracking</text>
+                    
+                    <!-- Advanced Level -->
+                    <rect x="250" y="100" width="150" height="60" rx="10" fill="#ff9800" opacity="0.8"/>
+                    <text x="325" y="125" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Dynamic</text>
+                    <text x="325" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Programming</text>
+                    
+                    <rect x="430" y="100" width="150" height="60" rx="10" fill="#ff9800" opacity="0.8"/>
+                    <text x="505" y="125" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Greedy &</text>
+                    <text x="505" y="145" text-anchor="middle" fill="white" font-size="14" font-weight="bold">Advanced</text>
+                    
+                    <!-- Arrows showing progression -->
+                    <line x1="125" y1="295" x2="215" y2="265" stroke="#667eea" stroke-width="2" opacity="0.6"/>
+                    <line x1="305" y1="295" x2="395" y2="265" stroke="#667eea" stroke-width="2" opacity="0.6"/>
+                    <line x1="485" y1="295" x2="575" y2="265" stroke="#667eea" stroke-width="2" opacity="0.6"/>
+                    <line x1="215" y1="195" x2="325" y2="165" stroke="#4caf50" stroke-width="2" opacity="0.6"/>
+                    <line x1="395" y1="195" x2="325" y2="165" stroke="#4caf50" stroke-width="2" opacity="0.6"/>
+                    <line x1="575" y1="195" x2="505" y2="165" stroke="#4caf50" stroke-width="2" opacity="0.6"/>
+                    
+                    <!-- Labels -->
+                    <text x="400" y="380" text-anchor="middle" fill="#667eea" font-size="16" font-weight="bold">Foundation (Part 1)</text>
+                    <text x="400" y="280" text-anchor="middle" fill="#4caf50" font-size="16" font-weight="bold">Intermediate (Part 2)</text>
+                    <text x="400" y="80" text-anchor="middle" fill="#ff9800" font-size="16" font-weight="bold">Advanced (Part 2)</text>
+                </svg>
+            </div>
+            
+            
+            <div class="info-box">
+                <strong>Why Learn DSA?</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Better Problem Solving:</strong> You'll learn to break down complex problems into manageable pieces</li>
+                    <li><strong>Write Efficient Code:</strong> Your programs will run faster and use less memory</li>
+                    <li><strong>Ace Technical Interviews:</strong> 90% of tech interviews focus on DSA</li>
+                    <li><strong>Build Better Software:</strong> Understanding DSA helps you choose the right tools for the job</li>
+                </ul>
+            </div>
+
+            <h3>How to Use This Guide</h3>
+            <p>This guide is designed to take you from beginner to interview-ready. Here's the recommended approach:</p>
+            
+            <ol>
+                <li><strong>Read Sequentially:</strong> Start from the beginning and work through each topic in order</li>
+                <li><strong>Understand Before Coding:</strong> Read the explanations first, then study the code</li>
+                <li><strong>Type Out Examples:</strong> Don't just read - type every code example yourself</li>
+                <li><strong>Use the Compiler:</strong> Practice with the built-in code compiler at the end of each section</li>
+                <li><strong>Solve LeetCode Problems:</strong> After each section, solve the provided LeetCode problems</li>
+                <li><strong>Review Regularly:</strong> Come back to earlier topics to reinforce your understanding</li>
+            </ol>
+
+            <h3>What You'll Learn in Part 1A</h3>
+            <div class="example-box">
+                <strong>Sections 1-3 Cover:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ Introduction to DSA and Learning Path</li>
+                    <li>✅ Time & Space Complexity Analysis (Big O Notation)</li>
+                    <li>✅ Arrays - Complete Coverage with All Patterns</li>
+                    <li>✅ Two Pointer Technique</li>
+                    <li>✅ Sliding Window Pattern</li>
+                    <li>✅ Kadane's Algorithm</li>
+                    <li>✅ Array Rotation and Manipulation</li>
+                </ul>
+            </div>
+
+            
+            <h3>Complete Learning Path Overview</h3>
+            <div class="example-box">
+                <strong>Your Complete DSA Journey:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Part 1A (Sections 1-3):</strong> Introduction, Complexity Analysis, Arrays</li>
+                    <li><strong>Part 1B (Sections 4-6):</strong> Strings, Linked Lists, Stacks</li>
+                    <li><strong>Part 1C (Sections 7-9):</strong> Queues, Hash Tables, Trees</li>
+                    <li><strong>Part 2A (Sections 10-12):</strong> Heaps, Graphs, BFS & DFS</li>
+                    <li><strong>Part 2B (Sections 13-15):</strong> Dynamic Programming, Sorting, Binary Search</li>
+                    <li><strong>Part 2C (Sections 16-18):</strong> Greedy Algorithms, Backtracking, Advanced Topics</li>
+                </ul>
+            </div>
+            
+            <h3>Prerequisites</h3>
+            <p>To get the most out of this guide, you should have:</p>
+            <ul>
+                <li>Basic Python knowledge (variables, loops, functions, lists)</li>
+                <li>Understanding of basic programming concepts</li>
+                <li>A computer with Python 3.x installed</li>
+                <li>Enthusiasm to learn and practice regularly!</li>
+            </ul>
+
+            <div class="tip-box">
+                <strong>Pro Tip:</strong>
+                If you're completely new to Python, spend a week learning the basics first. Focus on: variables, data types, loops (for, while), conditionals (if/else), functions, and lists. Then come back to this guide!
+            </div>
+
+            <h3>Setting Up Your Environment</h3>
+            <div class="code-block">
+                <div class="code-header">Quick Python Setup Check</div>
+                <pre><code><span class="comment"># Test if Python is installed</span>
+<span class="comment"># Run this in your terminal/command prompt:</span>
+<span class="comment"># python --version  (or python3 --version)</span>
+
+<span class="comment"># Create a test file: test_dsa.py</span>
+<span class="keyword">def</span> <span class="function">hello_dsa</span>():
+    <span class="builtin">print</span>(<span class="string">"Hello! I'm ready to learn DSA!"</span>)
+    <span class="builtin">print</span>(<span class="string">"Let's start this journey! 🚀"</span>)
+
+<span class="comment"># Call the function</span>
+<span class="function">hello_dsa</span>()
+
+<span class="comment"># Expected output:</span>
+<span class="comment"># Hello! I'm ready to learn DSA!</span>
+<span class="comment"># Let's start this journey! 🚀</span></code></pre>
+            </div>
+
+            <h3>Time Commitment</h3>
+            <p>Learning DSA is a journey, not a sprint. Here's a realistic timeline:</p>
+            <ul>
+                <li><strong>Casual Learning:</strong> 3-4 months (1-2 hours/day)</li>
+                <li><strong>Focused Learning:</strong> 1.5-2 months (3-4 hours/day)</li>
+                <li><strong>Intensive Bootcamp:</strong> 3-4 weeks (6-8 hours/day)</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>Important:</strong>
+                Consistency beats intensity! It's better to practice 1 hour every day than 7 hours once a week. Your brain needs time to process and consolidate new information.
+            </div>
+
+            <h3>Your First Week Plan</h3>
+            <p>Here's a suggested plan for your first week:</p>
+            <table>
+                <tr>
+                    <th>Day</th>
+                    <th>Topic</th>
+                    <th>Goal</th>
+                </tr>
+                <tr>
+                    <td>Day 1-2</td>
+                    <td>Introduction & Complexity</td>
+                    <td>Understand Big O, analyze simple algorithms</td>
+                </tr>
+                <tr>
+                    <td>Day 3-5</td>
+                    <td>Arrays - Basics & Two Pointers</td>
+                    <td>Solve 5-7 easy array problems</td>
+                </tr>
+                <tr>
+                    <td>Day 6-7</td>
+                    <td>Arrays - Sliding Window</td>
+                    <td>Understand the pattern, solve 3-4 problems</td>
+                </tr>
+            </table>
+
+            <h3>Ready to Start?</h3>
+            <p>Click on <strong>"2. ⏱️ Complexity"</strong> in the navigation above to begin learning about time and space complexity - the foundation of understanding algorithm efficiency!</p>
+            <h3>Additional Resources for Beginners</h3>
+            <p>To build a strong foundation, consider these:</p>
+            <ul>
+                <li><strong>Python Official Docs:</strong> For list operations</li>
+                <li><strong>Visualgo:</strong> Interactive DSA visualizations</li>
+                <li><strong>LeetCode Explore:</strong> DSA learning paths</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- SECTION 2: TIME & SPACE COMPLEXITY - COMPLETE -->
+    <div id="complexity" class="section">
+        <div class="card">
+            <h2>⏱️ Understanding Time & Space Complexity</h2>
+            
+            <h3>Why Do We Need Complexity Analysis?</h3>
+            <p>Imagine you write two programs that solve the same problem. Both give correct answers, but one takes 1 second while the other takes 1 hour. Which is better? Obviously the faster one!</p>
+            
+            <p>Complexity analysis helps us:</p>
+            <ul>
+                <li>Predict how long our code will take to run</li>
+                <li>Understand how much memory our code will use</li>
+                <li>Compare different solutions to the same problem</li>
+                <li>Make informed decisions about which algorithm to use</li>
+                <li>Prepare for technical interviews where complexity analysis is crucial</li>
+            </ul>
+
+            <h3>What is Big O Notation?</h3>
+            <p>Big O notation describes how the runtime or space requirements grow as the input size increases. It gives us the <strong>worst-case scenario</strong>.</p>
+            
+            <div class="info-box">
+                <strong>Key Concept:</strong>
+                We don't care about exact times (like "23.7 seconds") because that depends on your computer. Instead, we care about the <strong>growth rate</strong>. If input doubles, does runtime double? Stay the same? Quadruple? Big O tells us this!
+            </div>
+
+            <h3>Common Time Complexities</h3>
+            <table>
+                <tr>
+                    <th>Complexity</th>
+                    <th>Name</th>
+                    <th>Example</th>
+                    <th>n=10</th>
+                    <th>n=100</th>
+                    <th>n=1000</th>
+                </tr>
+                <tr>
+                    <td><strong>O(1)</strong></td>
+                    <td>Constant</td>
+                    <td>Array access</td>
+                    <td>1</td>
+                    <td>1</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td><strong>O(log n)</strong></td>
+                    <td>Logarithmic</td>
+                    <td>Binary search</td>
+                    <td>3</td>
+                    <td>7</td>
+                    <td>10</td>
+                </tr>
+                <tr>
+                    <td><strong>O(n)</strong></td>
+                    <td>Linear</td>
+                    <td>Loop through array</td>
+                    <td>10</td>
+                    <td>100</td>
+                    <td>1,000</td>
+                </tr>
+                <tr>
+                    <td><strong>O(n log n)</strong></td>
+                    <td>Linearithmic</td>
+                    <td>Merge sort</td>
+                    <td>30</td>
+                    <td>700</td>
+                    <td>10,000</td>
+                </tr>
+                <tr>
+                    <td><strong>O(n²)</strong></td>
+                    <td>Quadratic</td>
+                    <td>Nested loops</td>
+                    <td>100</td>
+                    <td>10,000</td>
+                    <td>1,000,000</td>
+                </tr>
+                <tr>
+                    <td><strong>O(2ⁿ)</strong></td>
+                    <td>Exponential</td>
+                    <td>Recursive Fibonacci</td>
+                    <td>1,024</td>
+                    <td>1.26e30</td>
+                    <td>∞ (too slow!)</td>
+                </tr>
+            </table>
+
+            <div class="visual-diagram">
+                <h4>Big O Complexity Growth Visualization</h4>
+                <svg viewBox="0 0 700 450" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Grid -->
+                    <line x1="60" y1="370" x2="650" y2="370" stroke="#e0e0e0" stroke-width="2"/>
+                    <line x1="60" y1="50" x2="60" y2="370" stroke="#e0e0e0" stroke-width="2"/>
+                    
+                    <!-- Y-axis labels -->
+                    <text x="40" y="55" text-anchor="end" fill="#666" font-size="12">Operations</text>
+                    <text x="40" y="150" text-anchor="end" fill="#666" font-size="10">100</text>
+                    <text x="40" y="250" text-anchor="end" fill="#666" font-size="10">50</text>
+                    <text x="40" y="350" text-anchor="end" fill="#666" font-size="10">10</text>
+                    <text x="40" y="375" text-anchor="end" fill="#666" font-size="10">0</text>
+                    
+                    <!-- X-axis labels -->
+                    <text x="350" y="405" text-anchor="middle" fill="#666" font-size="12">Input Size (n)</text>
+                    <text x="100" y="390" text-anchor="middle" fill="#666" font-size="10">10</text>
+                    <text x="250" y="390" text-anchor="middle" fill="#666" font-size="10">50</text>
+                    <text x="400" y="390" text-anchor="middle" fill="#666" font-size="10">100</text>
+                    <text x="550" y="390" text-anchor="middle" fill="#666" font-size="10">150</text>
+                    
+                    <!-- O(1) - Constant -->
+                    <line x1="60" y1="350" x2="650" y2="350" stroke="#4caf50" stroke-width="3"/>
+                    <text x="650" y="345" fill="#4caf50" font-size="12" font-weight="bold">O(1)</text>
+                    
+                    <!-- O(log n) - Logarithmic -->
+                    <path d="M 60 360 Q 200 340, 350 330 Q 500 325, 650 322" stroke="#2196f3" stroke-width="3" fill="none"/>
+                    <text x="650" y="317" fill="#2196f3" font-size="12" font-weight="bold">O(log n)</text>
+                    
+                    <!-- O(n) - Linear -->
+                    <line x1="60" y1="365" x2="650" y2="100" stroke="#ff9800" stroke-width="3"/>
+                    <text x="650" y="95" fill="#ff9800" font-size="12" font-weight="bold">O(n)</text>
+                    
+                    <!-- O(n log n) - Linearithmic -->
+                    <path d="M 60 365 Q 250 250, 400 150 Q 500 100, 650 70" stroke="#9c27b0" stroke-width="3" fill="none"/>
+                    <text x="640" y="65" fill="#9c27b0" font-size="12" font-weight="bold">O(n log n)</text>
+                    
+                    <!-- O(n²) - Quadratic -->
+                    <path d="M 60 370 Q 200 300, 350 150 Q 500 50, 580 40" stroke="#f44336" stroke-width="3" fill="none"/>
+                    <text x="585" y="40" fill="#f44336" font-size="12" font-weight="bold">O(n²)</text>
+                    
+                    <!-- O(2^n) - Exponential (truncated) -->
+                    <path d="M 60 370 Q 150 350, 200 250 Q 250 80, 270 40" stroke="#d32f2f" stroke-width="3" fill="none"/>
+                    <text x="275" y="40" fill="#d32f2f" font-size="12" font-weight="bold">O(2^n)</text>
+                    
+                    <!-- Legend -->
+                    <rect x="70" y="420" width="600" height="25" fill="#f5f5f5" rx="5"/>
+                    <text x="80" y="437" fill="#666" font-size="11" font-weight="bold">Better Performance ← → Worse Performance</text>
+                </svg>
+            </div>
+            
+            <h3>Visualizing Complexity with Real Code</h3>
+            
+            <h4>O(1) - Constant Time</h4>
+            <p><strong>What it means:</strong> No matter how big the input is, the operation takes the same time.</p>
+            <div class="code-block">
+                <div class="code-header">Example: Accessing an array element</div>
+                <pre><code><span class="keyword">def</span> <span class="function">get_first_element</span>(arr):
+    <span class="string">"""
+    This function always takes the same time whether
+    arr has 10 elements or 10 million elements!
+    
+    Time Complexity: O(1)
+    Space Complexity: O(1)
+    """</span>
+    <span class="keyword">return</span> arr[<span class="number">0</span>]  <span class="comment"># Direct memory access - instant!</span>
+
+<span class="comment"># Example usage:</span>
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+first = <span class="function">get_first_element</span>(numbers)
+<span class="builtin">print</span>(first)  <span class="comment"># Output: 1</span>
+
+<span class="comment"># Other O(1) operations:</span>
+<span class="comment"># - Getting array length: len(arr)</span>
+<span class="comment"># - Simple math: a + b</span>
+<span class="comment"># - Dictionary lookup: my_dict[key]</span>
+<span class="comment"># - Appending to end of list: arr.append(x)</span></code></pre>
+            </div>
+
+            <h4>O(n) - Linear Time</h4>
+            <p><strong>What it means:</strong> If input size doubles, runtime doubles. If input grows by 10x, runtime grows by 10x.</p>
+            <div class="code-block">
+                <div class="code-header">Example: Finding maximum in array</div>
+                <pre><code><span class="keyword">def</span> <span class="function">find_maximum</span>(arr):
+    <span class="string">"""
+    We must look at EVERY element once to find the max.
+    10 elements = 10 operations
+    100 elements = 100 operations
+    
+    Time Complexity: O(n) where n is length of array
+    Space Complexity: O(1) - only use one variable
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> arr:
+        <span class="keyword">return</span> <span class="keyword">None</span>
+    
+    max_value = arr[<span class="number">0</span>]
+    
+    <span class="comment"># This loop runs n times (n = length of arr)</span>
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:  <span class="comment"># O(n) - must check every element</span>
+        <span class="keyword">if</span> num > max_value:
+            max_value = num
+    
+    <span class="keyword">return</span> max_value
+
+<span class="comment"># Example usage:</span>
+numbers = [<span class="number">3</span>, <span class="number">7</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">5</span>]
+max_num = <span class="function">find_maximum</span>(numbers)
+<span class="builtin">print</span>(<span class="string">f"Maximum: {max_num}"</span>)  <span class="comment"># Output: Maximum: 9</span></code></pre>
+            </div>
+
+            <h4>O(n²) - Quadratic Time</h4>
+            <p><strong>What it means:</strong> If input doubles, runtime quadruples! This happens with nested loops.</p>
+            <div class="code-block">
+                <div class="code-header">Example: Find all pairs in array</div>
+                <pre><code><span class="keyword">def</span> <span class="function">print_all_pairs</span>(arr):
+    <span class="string">"""
+    For each element, we pair it with every other element.
+    5 elements = 25 pairs to check
+    10 elements = 100 pairs to check
+    
+    Time Complexity: O(n²)
+    Space Complexity: O(1)
+    """</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(arr)):      <span class="comment"># Outer loop: n times</span>
+        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="builtin">range</span>(<span class="builtin">len</span>(arr)):  <span class="comment"># Inner loop: n times</span>
+            <span class="builtin">print</span>(<span class="string">f"Pair: ({arr[i]}, {arr[j]})"</span>)
+    
+    <span class="comment"># Total operations: n × n = n²</span>
+
+<span class="comment"># Example usage:</span>
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]
+<span class="function">print_all_pairs</span>(numbers)
+<span class="comment"># Output:</span>
+<span class="comment"># Pair: (1, 1)</span>
+<span class="comment"># Pair: (1, 2)</span>
+<span class="comment"># Pair: (1, 3)</span>
+<span class="comment"># Pair: (2, 1)</span>
+<span class="comment"># ... and so on (9 total pairs)</span></code></pre>
+            </div>
+
+            <h4>O(log n) - Logarithmic Time</h4>
+            <p><strong>What it means:</strong> Very efficient! Even if input grows massively, runtime grows slowly. This happens when we split the problem in half repeatedly (like binary search).</p>
+            <div class="code-block">
+                <div class="code-header">Example: Binary search</div>
+                <pre><code><span class="keyword">def</span> <span class="function">binary_search</span>(arr, target):
+    <span class="string">"""
+    We eliminate half the array in each step!
+    1000 elements = ~10 steps
+    1 million elements = ~20 steps
+    
+    IMPORTANT: Array must be sorted!
+    
+    Time Complexity: O(log n)
+    Space Complexity: O(1)
+    """</span>
+    left = <span class="number">0</span>
+    right = <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left <= right:
+        mid = (left + right) // <span class="number">2</span>
+        
+        <span class="keyword">if</span> arr[mid] == target:
+            <span class="keyword">return</span> mid  <span class="comment"># Found it!</span>
+        <span class="keyword">elif</span> arr[mid] < target:
+            left = mid + <span class="number">1</span>  <span class="comment"># Search right half</span>
+        <span class="keyword">else</span>:
+            right = mid - <span class="number">1</span>  <span class="comment"># Search left half</span>
+    
+    <span class="keyword">return</span> -<span class="number">1</span>  <span class="comment"># Not found</span>
+
+<span class="comment"># Example usage (array MUST be sorted!):</span>
+sorted_numbers = [<span class="number">1</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">11</span>, <span class="number">13</span>]
+index = <span class="function">binary_search</span>(sorted_numbers, <span class="number">7</span>)
+<span class="builtin">print</span>(<span class="string">f"Found at index: {index}"</span>)  <span class="comment"># Output: Found at index: 3</span></code></pre>
+            </div>
+
+            <h3>Space Complexity</h3>
+            <p>Space complexity measures how much <strong>extra memory</strong> an algorithm uses. Note: We don't count the input itself, only additional space.</p>
+
+            <div class="code-block">
+                <div class="code-header">Space Complexity Examples</div>
+                <pre><code><span class="comment"># O(1) Space - Constant Space</span>
+<span class="keyword">def</span> <span class="function">sum_array</span>(arr):
+    <span class="string">"""Only uses one extra variable"""</span>
+    total = <span class="number">0</span>  <span class="comment"># Just one integer!</span>
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:
+        total += num
+    <span class="keyword">return</span> total
+<span class="comment"># Space: O(1) - same space no matter array size</span>
+
+<span class="comment"># O(n) Space - Linear Space</span>
+<span class="keyword">def</span> <span class="function">double_array</span>(arr):
+    <span class="string">"""Creates a new array of same size"""</span>
+    result = []  <span class="comment"># New array grows with input!</span>
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:
+        result.<span class="function">append</span>(num * <span class="number">2</span>)
+    <span class="keyword">return</span> result
+<span class="comment"># Space: O(n) - new array with n elements</span>
+
+<span class="comment"># O(n) Space - Recursion Stack</span>
+<span class="keyword">def</span> <span class="function">factorial</span>(n):
+    <span class="string">"""Each recursive call uses stack space"""</span>
+    <span class="keyword">if</span> n <= <span class="number">1</span>:
+        <span class="keyword">return</span> <span class="number">1</span>
+    <span class="keyword">return</span> n * <span class="function">factorial</span>(n - <span class="number">1</span>)
+<span class="comment"># Space: O(n) - n function calls on the stack</span></code></pre>
+            </div>
+
+            <h3>How to Calculate Complexity</h3>
+            <div class="tip-box">
+                <strong>Step-by-Step Method:</strong>
+                <ol style="margin-top: 10px; margin-bottom: 0;">
+                    <li><strong>Count the loops:</strong> Each loop over n items adds O(n)</li>
+                    <li><strong>Nested loops multiply:</strong> Loop inside loop = O(n²)</li>
+                    <li><strong>Sequential operations add:</strong> O(n) + O(n) = O(n)</li>
+                    <li><strong>Drop constants:</strong> O(2n) becomes O(n)</li>
+                    <li><strong>Keep the largest term:</strong> O(n² + n) becomes O(n²)</li>
+                </ol>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Practice: Analyzing Real Code</div>
+                <pre><code><span class="keyword">def</span> <span class="function">complex_function</span>(arr):
+    <span class="comment"># Step 1: Print first element - O(1)</span>
+    <span class="builtin">print</span>(arr[<span class="number">0</span>])
+    
+    <span class="comment"># Step 2: Loop through array - O(n)</span>
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:
+        <span class="builtin">print</span>(num)
+    
+    <span class="comment"># Step 3: Nested loop - O(n²)</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> arr:
+        <span class="keyword">for</span> j <span class="keyword">in</span> arr:
+            <span class="builtin">print</span>(i, j)
+    
+    <span class="comment"># Total: O(1) + O(n) + O(n²)</span>
+    <span class="comment"># Simplified: O(n²)  (we keep only the largest term!)</span>
+
+<span class="comment"># Another example:</span>
+<span class="keyword">def</span> <span class="function">another_example</span>(arr):
+    <span class="comment"># Loop 1 - O(n)</span>
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:
+        <span class="builtin">print</span>(num)
+    
+    <span class="comment"># Loop 2 - O(n)</span>
+    <span class="keyword">for</span> num <span class="keyword">in</span> arr:
+        <span class="builtin">print</span>(num * <span class="number">2</span>)
+    
+    <span class="comment"># Total: O(n) + O(n) = O(2n)</span>
+    <span class="comment"># Simplified: O(n)  (we drop the constant 2!)</span></code></pre>
+            </div>
+
+            <div class="warning-box">
+                <strong>Common Mistakes to Avoid:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>❌ Don't say "O(2n)" - always simplify to O(n)</li>
+                    <li>❌ Don't forget about recursion depth for space complexity</li>
+                    <li>❌ Don't ignore the dominant term - O(n² + n) is just O(n²)</li>
+                    <li>✅ Always think: "What happens when n gets really big?"</li>
+                </ul>
+            </div>
+
+            <h3>Additional Concepts: Big Theta and Big Omega</h3>
+            <p>While Big O is for worst-case, know these for interviews:</p>
+            <ul>
+                <li><strong>Big Omega (Ω):</strong> Best-case lower bound</li>
+                <li><strong>Big Theta (Θ):</strong> Tight bound (both upper and lower)</li>
+            </ul>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Two Sum
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to target.</p>
+                <p><strong>Input:</strong> <code>nums = [2,7,11,15], target = 9</code></p>
+                <p><strong>Output:</strong> <code>[0,1]</code></p>
+                <p><strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</p>
+                <p><strong>Constraints:</strong></p>
+                <ul>
+                    <li>2 ≤ nums.length ≤ 10⁴</li>
+                    <li>-10⁹ ≤ nums[i] ≤ 10⁹</li>
+                    <li>Only one valid answer exists</li>
+                </ul>
+                <p><strong>Hint:</strong> Think about using a hash map to store numbers you've seen</p>
+                <a href="https://leetcode.com/problems/two-sum/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Valid Anagram
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given two strings s and t, return true if t is an anagram of s, and false otherwise.</p>
+                <p><strong>Input:</strong> <code>s = "anagram", t = "nagaram"</code></p>
+                <p><strong>Output:</strong> <code>true</code></p>
+                <p><strong>Input:</strong> <code>s = "rat", t = "car"</code></p>
+                <p><strong>Output:</strong> <code>false</code></p>
+                <p><strong>Hint:</strong> Count the frequency of each character</p>
+                <a href="https://leetcode.com/problems/valid-anagram/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Best Time to Buy and Sell Stock
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> You are given an array prices where prices[i] is the price of a given stock on the ith day. You want to maximize your profit by choosing a single day to buy and different day to sell.</p>
+                <p><strong>Input:</strong> <code>prices = [7,1,5,3,6,4]</code></p>
+                <p><strong>Output:</strong> <code>5</code></p>
+                <p><strong>Explanation:</strong> Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.</p>
+                <p><strong>Hint:</strong> Track the minimum price seen so far and maximum profit</p>
+                <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Complexity Section -->
+        <div class="compiler-container">
+            <div class="compiler-header">
+                <div class="compiler-title">💻 Practice Code Compiler - Test Your Solutions</div>
+                <div class="compiler-controls">
+                    <button class="run-btn" onclick="runCode('complexity')">▶ Run Code</button>
+                    <button class="clear-btn" onclick="clearCode('complexity')">🗑️ Clear</button>
+                </div>
+            </div>
+            <textarea id="complexity-editor" class="code-editor"># Two Sum Problem - Try implementing it!
+def two_sum(nums, target):
+    """
+    Find two numbers that add up to target.
+    Return their indices.
+    """
+    # Your code here
+    seen = {}
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in seen:
+            return [seen[complement], i]
+        seen[num] = i
+    return []
+
+# Test your code
+nums = [2, 7, 11, 15]
+target = 9
+result = two_sum(nums, target)
+print(f"Indices: {result}")
+print(f"Numbers: {nums[result[0]]}, {nums[result[1]]}")
+print(f"Sum: {nums[result[0]] + nums[result[1]]}")</textarea>
+            <div id="complexity-output" class="output-container">
+                <div class="output-header">Output:</div>
+                <div id="complexity-content"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- SECTION 3: ARRAYS - COMPLETE WITH ALL PATTERNS -->
+    <div id="arrays" class="section">
+        <div class="card">
+            <h2>📊 Arrays - Your First Data Structure</h2>
+            
+            <h3>What is an Array?</h3>
+            <p>An array is a collection of items stored at <strong>contiguous memory locations</strong>. Think of it as a row of boxes, where each box holds one item and has a number (index).</p>
+            
+            <p><strong>Real-world analogy:</strong> A parking lot with numbered spaces. Each car (data) has a specific spot (index), and you can instantly drive to any spot if you know its number.</p>
+            <div class="visual-diagram">
+                <h4>Array Memory Layout - Contiguous Storage</h4>
+                <svg viewBox="0 0 800 250" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Memory blocks -->
+                    <rect x="50" y="80" width="80" height="70" fill="#667eea" opacity="0.8" stroke="#764ba2" stroke-width="2"/>
+                    <rect x="130" y="80" width="80" height="70" fill="#667eea" opacity="0.8" stroke="#764ba2" stroke-width="2"/>
+                    <rect x="210" y="80" width="80" height="70" fill="#667eea" opacity="0.8" stroke="#764ba2" stroke-width="2"/>
+                    <rect x="290" y="80" width="80" height="70" fill="#667eea" opacity="0.8" stroke="#764ba2" stroke-width="2"/>
+                    <rect x="370" y="80" width="80" height="70" fill="#667eea" opacity="0.8" stroke="#764ba2" stroke-width="2"/>
+                    <rect x="450" y="80" width="80" height="70" fill="#667eea" opacity="0.8" stroke="#764ba2" stroke-width="2"/>
+                    
+                    <!-- Values -->
+                    <text x="90" y="120" text-anchor="middle" fill="white" font-size="24" font-weight="bold">10</text>
+                    <text x="170" y="120" text-anchor="middle" fill="white" font-size="24" font-weight="bold">20</text>
+                    <text x="250" y="120" text-anchor="middle" fill="white" font-size="24" font-weight="bold">30</text>
+                    <text x="330" y="120" text-anchor="middle" fill="white" font-size="24" font-weight="bold">40</text>
+                    <text x="410" y="120" text-anchor="middle" fill="white" font-size="24" font-weight="bold">50</text>
+                    <text x="490" y="120" text-anchor="middle" fill="white" font-size="24" font-weight="bold">60</text>
+                    
+                    <!-- Indices -->
+                    <text x="90" y="175" text-anchor="middle" fill="#764ba2" font-size="14" font-weight="bold">Index 0</text>
+                    <text x="170" y="175" text-anchor="middle" fill="#764ba2" font-size="14" font-weight="bold">Index 1</text>
+                    <text x="250" y="175" text-anchor="middle" fill="#764ba2" font-size="14" font-weight="bold">Index 2</text>
+                    <text x="330" y="175" text-anchor="middle" fill="#764ba2" font-size="14" font-weight="bold">Index 3</text>
+                    <text x="410" y="175" text-anchor="middle" fill="#764ba2" font-size="14" font-weight="bold">Index 4</text>
+                    <text x="490" y="175" text-anchor="middle" fill="#764ba2" font-size="14" font-weight="bold">Index 5</text>
+                    
+                    <!-- Memory addresses -->
+                    <text x="90" y="200" text-anchor="middle" fill="#999" font-size="10">0x1000</text>
+                    <text x="170" y="200" text-anchor="middle" fill="#999" font-size="10">0x1004</text>
+                    <text x="250" y="200" text-anchor="middle" fill="#999" font-size="10">0x1008</text>
+                    <text x="330" y="200" text-anchor="middle" fill="#999" font-size="10">0x100C</text>
+                    <text x="410" y="200" text-anchor="middle" fill="#999" font-size="10">0x1010</text>
+                    <text x="490" y="200" text-anchor="middle" fill="#999" font-size="10">0x1014</text>
+                    
+                    <!-- Arrow pointing to O(1) access -->
+                    <line x1="250" y1="30" x2="250" y2="75" stroke="#4caf50" stroke-width="2" marker-end="url(#arrowgreen)"/>
+                    <text x="250" y="25" text-anchor="middle" fill="#4caf50" font-size="14" font-weight="bold">O(1) Direct Access!</text>
+                    
+                    <!-- Label -->
+                    <text x="270" y="230" text-anchor="middle" fill="#667eea" font-size="16" font-weight="bold">Contiguous Memory = Fast Access</text>
+                    
+                    <defs>
+                        <marker id="arrowgreen" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#4caf50" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+            
+
+            <div class="info-box">
+                <strong>Why Arrays Are Important:</strong>
+                <ul style="margin-top: 10px;">
+                    <li><strong>Fast Access:</strong> Get any element instantly using its index - O(1) time!</li>
+                    <li><strong>Memory Efficient:</strong> Stores data compactly in memory</li>
+                    <li><strong>Foundation for Other Structures:</strong> Many data structures are built using arrays</li>
+                    <li><strong>Common in Interviews:</strong> ~40% of coding questions involve arrays</li>
+                </ul>
+            </div>
+
+            <h3>Array Basics in Python</h3>
+            <div class="code-block">
+                <div class="code-header">Creating and Accessing Arrays (Lists in Python)</div>
+                <pre><code><span class="comment"># Creating arrays (called 'lists' in Python)</span>
+empty_array = []
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+fruits = [<span class="string">"apple"</span>, <span class="string">"banana"</span>, <span class="string">"cherry"</span>]
+mixed = [<span class="number">1</span>, <span class="string">"hello"</span>, <span class="number">3.14</span>, <span class="keyword">True</span>]  <span class="comment"># Python allows mixed types!</span>
+
+<span class="comment"># Accessing elements (0-indexed!)</span>
+first = numbers[<span class="number">0</span>]      <span class="comment"># Gets first element: 1</span>
+second = numbers[<span class="number">1</span>]     <span class="comment"># Gets second element: 2</span>
+last = numbers[-<span class="number">1</span>]       <span class="comment"># Gets last element: 5</span>
+second_last = numbers[-<span class="number">2</span>]  <span class="comment"># Gets second-last: 4</span>
+
+<span class="comment"># Common operations</span>
+length = <span class="builtin">len</span>(numbers)   <span class="comment"># Get size: 5</span>
+numbers.<span class="function">append</span>(<span class="number">6</span>)        <span class="comment"># Add to end: [1,2,3,4,5,6]</span>
+numbers.<span class="function">insert</span>(<span class="number">0</span>, <span class="number">0</span>)     <span class="comment"># Insert at start: [0,1,2,3,4,5,6]</span>
+removed = numbers.<span class="function">pop</span>()  <span class="comment"># Remove & return last: 6</span>
+numbers.<span class="function">remove</span>(<span class="number">3</span>)        <span class="comment"># Remove first occurrence of 3</span>
+
+<span class="builtin">print</span>(numbers)  <span class="comment"># [0, 1, 2, 4, 5]</span></code></pre>
+            </div>
+
+            <h3>Array Time Complexities</h3>
+            <div class="complexity">
+                <span>Access: O(1)</span>
+                <span class="medium">Search: O(n)</span>
+                <span class="bad">Insert (beginning): O(n)</span>
+                <span>Append (end): O(1)*</span>
+                <span class="bad">Delete: O(n)</span>
+            </div>
+            <p style="font-size: 0.9em; color: #666; margin-top: -15px;">*Amortized time - occasionally takes O(n) when resizing</p>
+
+            <h3>Important Array Patterns for Interviews</h3>
+            
+            <h4>Pattern 1: Two Pointer Technique</h4>
+            <p><strong>When to use:</strong> When you need to search pairs, reverse array, or work with sorted arrays.</p>
+            <div class="visual-diagram">
+                <h4>Two Pointer Technique Visualization</h4>
+                <svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Array -->
+                    <rect x="50" y="120" width="70" height="60" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                    <rect x="120" y="120" width="70" height="60" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
+                    <rect x="190" y="120" width="70" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+                    <rect x="260" y="120" width="70" height="60" fill="#fff3e0" stroke="#ff9800" stroke-width="2"/>
+                    <rect x="330" y="120" width="70" height="60" fill="#f3e5f5" stroke="#9c27b0" stroke-width="2"/>
+                    <rect x="400" y="120" width="70" height="60" fill="#e3f2fd" stroke="#2196f3" stroke-width="2"/>
+                    
+                    <!-- Values -->
+                    <text x="80" y="155" text-anchor="middle" fill="#333" font-size="20" font-weight="bold">1</text>
+                    <text x="155" y="155" text-anchor="middle" fill="#333" font-size="20" font-weight="bold">2</text>
+                    <text x="225" y="155" text-anchor="middle" fill="#333" font-size="20" font-weight="bold">3</text>
+                    <text x="295" y="155" text-anchor="middle" fill="#333" font-size="20" font-weight="bold">4</text>
+                    <text x="365" y="155" text-anchor="middle" fill="#333" font-size="20" font-weight="bold">5</text>
+                    <text x="435" y="155" text-anchor="middle" fill="#333" font-size="20" font-weight="bold">6</text>
+                    
+                    <!-- Left Pointer -->
+                    <line x1="85" y1="90" x2="85" y2="115" stroke="#2196f3" stroke-width="3" marker-end="url(#arrowblue)"/>
+                    <text x="85" y="70" text-anchor="middle" fill="#2196f3" font-size="14" font-weight="bold">Left</text>
+                    <circle cx="85" cy="75" r="20" fill="none" stroke="#2196f3" stroke-width="2"/>
+                    
+                    <!-- Right Pointer -->
+                    <line x1="435" y1="90" x2="435" y2="115" stroke="#f44336" stroke-width="3" marker-end="url(#arrowred)"/>
+                    <text x="435" y="70" text-anchor="middle" fill="#f44336" font-size="14" font-weight="bold">Right</text>
+                    <circle cx="435" cy="75" r="20" fill="none" stroke="#f44336" stroke-width="2"/>
+                    
+                    <!-- Movement arrows -->
+                    <path d="M 85 200 L 155 200" stroke="#2196f3" stroke-width="2" marker-end="url(#arrowblue)" stroke-dasharray="5,5"/>
+                    <text x="120" y="220" text-anchor="middle" fill="#2196f3" font-size="12">left++</text>
+                    
+                    <path d="M 435 200 L 365 200" stroke="#f44336" stroke-width="2" marker-end="url(#arrowred)" stroke-dasharray="5,5"/>
+                    <text x="400" y="220" text-anchor="middle" fill="#f44336" font-size="12">right--</text>
+                    
+                    <!-- Explanation -->
+                    <text x="260" y="260" text-anchor="middle" fill="#667eea" font-size="14" font-weight="bold">Pointers move towards each other → O(n) time</text>
+                    <text x="260" y="280" text-anchor="middle" fill="#999" font-size="12">Perfect for sorted arrays, palindromes, pair finding</text>
+                    
+                    <defs>
+                        <marker id="arrowblue" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#2196f3" />
+                        </marker>
+                        <marker id="arrowred" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#f44336" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+            
+            
+            <div class="code-block">
+                <div class="code-header">Two Pointers: Find Pair with Target Sum</div>
+                <pre><code><span class="keyword">def</span> <span class="function">two_sum_sorted</span>(arr, target):
+    <span class="string">"""
+    Given a SORTED array, find two numbers that add to target.
+    
+    Example: arr = [1, 2, 3, 4, 6], target = 6
+    Answer: [1, 3] (indices of numbers 2 and 4)
+    
+    Time: O(n) - we traverse array once
+    Space: O(1) - only use two pointers
+    """</span>
+    left = <span class="number">0</span>                    <span class="comment"># Start pointer</span>
+    right = <span class="builtin">len</span>(arr) - <span class="number">1</span>      <span class="comment"># End pointer</span>
+    
+    <span class="keyword">while</span> left < right:
+        current_sum = arr[left] + arr[right]
+        
+        <span class="keyword">if</span> current_sum == target:
+            <span class="keyword">return</span> [left, right]  <span class="comment"># Found it!</span>
+        
+        <span class="keyword">elif</span> current_sum < target:
+            left += <span class="number">1</span>  <span class="comment"># Need bigger sum, move left pointer right</span>
+        
+        <span class="keyword">else</span>:
+            right -= <span class="number">1</span>  <span class="comment"># Need smaller sum, move right pointer left</span>
+    
+    <span class="keyword">return</span> []  <span class="comment"># No solution found</span>
+
+<span class="comment"># Example usage:</span>
+numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">6</span>]
+result = <span class="function">two_sum_sorted</span>(numbers, <span class="number">6</span>)
+<span class="builtin">print</span>(<span class="string">f"Indices: {result}"</span>)  <span class="comment"># Output: Indices: [1, 3]</span>
+<span class="builtin">print</span>(<span class="string">f"Numbers: {numbers[result[0]]}, {numbers[result[1]]}"</span>)  <span class="comment"># 2, 4</span></code></pre>
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">Two Pointers: Reverse Array In-Place</div>
+                <pre><code><span class="keyword">def</span> <span class="function">reverse_array</span>(arr):
+    <span class="string">"""
+    Reverse array without using extra space.
+    
+    Example: [1, 2, 3, 4, 5] → [5, 4, 3, 2, 1]
+    
+    Time: O(n) - touch each element once
+    Space: O(1) - no extra array needed!
+    """</span>
+    left = <span class="number">0</span>
+    right = <span class="builtin">len</span>(arr) - <span class="number">1</span>
+    
+    <span class="keyword">while</span> left < right:
+        <span class="comment"># Swap elements</span>
+        arr[left], arr[right] = arr[right], arr[left]
+        left += <span class="number">1</span>
+        right -= <span class="number">1</span>
+    
+    <span class="keyword">return</span> arr
+
+<span class="comment"># Example:</span>
+my_array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]
+<span class="builtin">print</span>(<span class="string">f"Original: {my_array}"</span>)
+<span class="function">reverse_array</span>(my_array)
+<span class="builtin">print</span>(<span class="string">f"Reversed: {my_array}"</span>)  <span class="comment"># [5, 4, 3, 2, 1]</span></code></pre>
+            </div>
+
+            <h4>Pattern 2: Sliding Window</h4>
+            <p><strong>When to use:</strong> When you need to find subarrays or substrings that meet certain conditions.</p>
+            <div class="visual-diagram">
+                <h4>Sliding Window Technique Visualization</h4>
+                <svg viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="350" y="30" text-anchor="middle" fill="#667eea" font-size="16" font-weight="bold">Finding Maximum Sum of K=3 Consecutive Elements</text>
+                    
+                    <!-- Step 1: Initial Window -->
+                    <text x="50" y="80" fill="#333" font-size="14" font-weight="bold">Step 1: Initial Window (K=3)</text>
+                    <rect x="50" y="90" width="60" height="50" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+                    <rect x="110" y="90" width="60" height="50" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+                    <rect x="170" y="90" width="60" height="50" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+                    <rect x="230" y="90" width="60" height="50" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    <rect x="290" y="90" width="60" height="50" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    <rect x="350" y="90" width="60" height="50" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    
+                    <text x="80" y="120" text-anchor="middle" fill="white" font-size="18" font-weight="bold">2</text>
+                    <text x="140" y="120" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text>
+                    <text x="200" y="120" text-anchor="middle" fill="white" font-size="18" font-weight="bold">5</text>
+                    <text x="260" y="120" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">1</text>
+                    <text x="320" y="120" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">3</text>
+                    <text x="380" y="120" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">2</text>
+                    
+                    <text x="200" y="160" text-anchor="middle" fill="#4caf50" font-size="13" font-weight="bold">Sum = 2+1+5 = 8</text>
+                    
+                    <!-- Step 2: Slide Window -->
+                    <text x="50" y="200" fill="#333" font-size="14" font-weight="bold">Step 2: Slide Right (Remove 2, Add 1)</text>
+                    <rect x="50" y="210" width="60" height="50" fill="#ffebee" stroke="#f44336" stroke-width="2" stroke-dasharray="5,5"/>
+                    <rect x="110" y="210" width="60" height="50" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+                    <rect x="170" y="210" width="60" height="50" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+                    <rect x="230" y="210" width="60" height="50" fill="#4caf50" stroke="#2e7d32" stroke-width="2"/>
+                    <rect x="290" y="210" width="60" height="50" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    <rect x="350" y="210" width="60" height="50" fill="#e0e0e0" stroke="#999" stroke-width="2"/>
+                    
+                    <text x="80" y="240" text-anchor="middle" fill="#f44336" font-size="18" font-weight="bold">2</text>
+                    <text x="140" y="240" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text>
+                    <text x="200" y="240" text-anchor="middle" fill="white" font-size="18" font-weight="bold">5</text>
+                    <text x="260" y="240" text-anchor="middle" fill="white" font-size="18" font-weight="bold">1</text>
+                    <text x="320" y="240" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">3</text>
+                    <text x="380" y="240" text-anchor="middle" fill="#333" font-size="18" font-weight="bold">2</text>
+                    
+                    <text x="200" y="280" text-anchor="middle" fill="#4caf50" font-size="13" font-weight="bold">Sum = 8 - 2 + 1 = 7</text>
+                    
+                    <!-- Arrows -->
+                    <line x1="75" y1="145" x2="55" y2="205" stroke="#f44336" stroke-width="2" marker-end="url(#arrowred2)"/>
+                    <text x="40" y="175" fill="#f44336" font-size="11">Remove</text>
+                    
+                    <line x1="235" y1="145" x2="255" y2="205" stroke="#4caf50" stroke-width="2" marker-end="url(#arrowgreen2)"/>
+                    <text x="265" y="175" fill="#4caf50" font-size="11">Add</text>
+                    
+                    <!-- Key Insight -->
+                    <rect x="450" y="90" width="230" height="170" fill="#e3f2fd" rx="10" opacity="0.8"/>
+                    <text x="565" y="115" text-anchor="middle" fill="#1565c0" font-size="14" font-weight="bold">💡 Key Insight</text>
+                    <text x="565" y="140" text-anchor="middle" fill="#333" font-size="12">Instead of recalculating</text>
+                    <text x="565" y="160" text-anchor="middle" fill="#333" font-size="12">sum each time (O(n×k)),</text>
+                    <text x="565" y="180" text-anchor="middle" fill="#333" font-size="12">we slide the window:</text>
+                    <text x="565" y="205" text-anchor="middle" fill="#4caf50" font-size="13" font-weight="bold">new_sum = old_sum</text>
+                    <text x="565" y="225" text-anchor="middle" fill="#4caf50" font-size="13" font-weight="bold">- left_element</text>
+                    <text x="565" y="245" text-anchor="middle" fill="#4caf50" font-size="13" font-weight="bold">+ right_element</text>
+                    
+                    <!-- Complexity -->
+                    <text x="200" y="320" text-anchor="middle" fill="#667eea" font-size="14" font-weight="bold">Time Complexity: O(n) instead of O(n×k)! 🚀</text>
+                    
+                    <defs>
+                        <marker id="arrowred2" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#f44336" />
+                        </marker>
+                        <marker id="arrowgreen2" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                            <path d="M0,0 L0,6 L9,3 z" fill="#4caf50" />
+                        </marker>
+                    </defs>
+                </svg>
+            </div>
+            
+            
+            <div class="code-block">
+                <div class="code-header">Sliding Window: Maximum Sum Subarray of Size K</div>
+                <pre><code><span class="keyword">def</span> <span class="function">max_sum_subarray</span>(arr, k):
+    <span class="string">"""
+    Find maximum sum of any k consecutive elements.
+    
+    Example: arr = [2, 1, 5, 1, 3, 2], k = 3
+    Answer: 9 (subarray [5, 1, 3])
+    
+    Naive approach: Check every k-element window - O(n*k)
+    Sliding window: Slide window and update sum - O(n)
+    """</span>
+    <span class="keyword">if</span> <span class="builtin">len</span>(arr) < k:
+        <span class="keyword">return</span> <span class="number">0</span>
+    
+    <span class="comment"># Calculate sum of first window</span>
+    window_sum = <span class="builtin">sum</span>(arr[:k])
+    max_sum = window_sum
+    
+    <span class="comment"># Slide the window</span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(k, <span class="builtin">len</span>(arr)):
+        <span class="comment"># Remove leftmost element of previous window</span>
+        <span class="comment"># Add rightmost element of new window</span>
+        window_sum = window_sum - arr[i - k] + arr[i]
+        max_sum = <span class="builtin">max</span>(max_sum, window_sum)
+    
+    <span class="keyword">return</span> max_sum
+
+<span class="comment"># Example:</span>
+numbers = [<span class="number">2</span>, <span class="number">1</span>, <span class="number">5</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>]
+k = <span class="number">3</span>
+result = <span class="function">max_sum_subarray</span>(numbers, k)
+<span class="builtin">print</span>(<span class="string">f"Maximum sum of {k} consecutive elements: {result}"</span>)  <span class="comment"># 9</span></code></pre>
+            </div>
+
+            <h4>Pattern 3: Kadane's Algorithm (Maximum Subarray)</h4>
+            <p><strong>When to use:</strong> Finding maximum sum of any contiguous subarray.</p>
+            
+            <div class="code-block">
+                <div class="code-header">Kadane's Algorithm</div>
+                <pre><code><span class="keyword">def</span> <span class="function">max_subarray_sum</span>(arr):
+    <span class="string">"""
+    Find maximum sum of any contiguous subarray.
+    
+    Example: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+    Answer: 6 (subarray [4, -1, 2, 1])
+    
+    Key insight: At each position, decide:
+    - Continue current subarray? 
+    - Or start fresh from current element?
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    max_so_far = arr[<span class="number">0</span>]      <span class="comment"># Best sum we've seen</span>
+    max_ending_here = arr[<span class="number">0</span>]  <span class="comment"># Best sum ending at current position</span>
+    
+    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="builtin">len</span>(arr)):
+        <span class="comment"># Extend current subarray or start new?</span>
+        max_ending_here = <span class="builtin">max</span>(arr[i], max_ending_here + arr[i])
+        
+        <span class="comment"># Update global maximum</span>
+        max_so_far = <span class="builtin">max</span>(max_so_far, max_ending_here)
+    
+    <span class="keyword">return</span> max_so_far
+
+<span class="comment"># Example:</span>
+arr = [-<span class="number">2</span>, <span class="number">1</span>, -<span class="number">3</span>, <span class="number">4</span>, -<span class="number">1</span>, <span class="number">2</span>, <span class="number">1</span>, -<span class="number">5</span>, <span class="number">4</span>]
+result = <span class="function">max_subarray_sum</span>(arr)
+<span class="builtin">print</span>(<span class="string">f"Maximum subarray sum: {result}"</span>)  <span class="comment"># 6</span></code></pre>
+            </div>
+
+            <h3>More Essential Array Problems</h3>
+            
+            <h4>Rotate Array</h4>
+            <div class="code-block">
+                <div class="code-header">Rotate Array by K Positions</div>
+                <pre><code><span class="keyword">def</span> <span class="function">rotate_array</span>(arr, k):
+    <span class="string">"""
+    Rotate array to the right by k steps.
+    
+    Example: arr = [1, 2, 3, 4, 5], k = 2
+    Result: [4, 5, 1, 2, 3]
+    
+    Approach: Reverse the array in three steps
+    1. Reverse entire array
+    2. Reverse first k elements
+    3. Reverse remaining elements
+    
+    Time: O(n), Space: O(1)
+    """</span>
+    n = <span class="builtin">len</span>(arr)
+    k = k % n  <span class="comment"># Handle k > n</span>
+    
+    <span class="comment"># Helper function to reverse array segment</span>
+    <span class="keyword">def</span> <span class="function">reverse</span>(start, end):
+        <span class="keyword">while</span> start < end:
+            arr[start], arr[end] = arr[end], arr[start]
+            start += <span class="number">1</span>
+            end -= <span class="number">1</span>
+    
+    <span class="comment"># Step 1: Reverse entire array</span>
+    <span class="function">reverse</span>(<span class="number">0</span>, n - <span class="number">1</span>)
+    
+    <span class="comment"># Step 2: Reverse first k elements</span>
+    <span class="function">reverse</span>(<span class="number">0</span>, k - <span class="number">1</span>)
+    
+    <span class="comment"># Step 3: Reverse remaining elements</span>
+    <span class="function">reverse</span>(k, n - <span class="number">1</span>)
+    
+    <span class="keyword">return</span> arr
+
+<span class="comment"># Example:</span>
+my_array = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>]
+<span class="builtin">print</span>(<span class="string">f"Original: {my_array}"</span>)
+<span class="function">rotate_array</span>(my_array, <span class="number">3</span>)
+<span class="builtin">print</span>(<span class="string">f"Rotated by 3: {my_array}"</span>)  <span class="comment"># [5, 6, 7, 1, 2, 3, 4]</span></code></pre>
+            </div>
+
+            <h4>Remove Duplicates from Sorted Array</h4>
+            <div class="code-block">
+                <div class="code-header">Remove Duplicates In-Place</div>
+                <pre><code><span class="keyword">def</span> <span class="function">remove_duplicates</span>(arr):
+    <span class="string">"""
+    Remove duplicates from sorted array in-place.
+    Return new length.
+    
+    Example: [1, 1, 2, 2, 3, 4, 4]
+    Result: arr becomes [1, 2, 3, 4, ...], return 4
+    
+    Uses slow/fast pointer technique
+    Time: O(n), Space: O(1)
+    """</span>
+    <span class="keyword">if</span> <span class="keyword">not</span> arr:
+        <span class="keyword">return</span> <span class="number">0</span>
+    
+    slow = <span class="number">0</span>  <span class="comment"># Points to last unique element</span>
+    
+    <span class="keyword">for</span> fast <span class="keyword">in</span> <span class="builtin">range</span>(<span class="number">1</span>, <span class="builtin">len</span>(arr)):
+        <span class="keyword">if</span> arr[fast] != arr[slow]:
+            slow += <span class="number">1</span>
+            arr[slow] = arr[fast]
+    
+    <span class="keyword">return</span> slow + <span class="number">1</span>  <span class="comment"># Length of unique elements</span>
+
+<span class="comment"># Example:</span>
+numbers = [<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">4</span>]
+<span class="builtin">print</span>(<span class="string">f"Original: {numbers}"</span>)
+new_length = <span class="function">remove_duplicates</span>(numbers)
+<span class="builtin">print</span>(<span class="string">f"After removing duplicates: {numbers[:new_length]}"</span>)  <span class="comment"># [1, 2, 3, 4]</span>
+<span class="builtin">print</span>(<span class="string">f"New length: {new_length}"</span>)  <span class="comment"># 4</span></code></pre>
+            </div>
+
+            <div class="tip-box">
+                <strong>Array Interview Tips:</strong>
+                <ul style="margin-top: 10px; margin-bottom: 0;">
+                    <li>✅ <strong>Always ask:</strong> Is the array sorted? Can it have duplicates? Can it be empty?</li>
+                    <li>✅ <strong>Try two pointers first</strong> for sorted arrays or when finding pairs</li>
+                    <li>✅ <strong>Consider sliding window</strong> for subarray/substring problems</li>
+                    <li>✅ <strong>Watch for edge cases:</strong> Empty array, single element, all same elements</li>
+                    <li>✅ <strong>In-place is king:</strong> Try to solve without extra space when possible</li>
+                </ul>
+            </div>
+
+            <h3>LeetCode Practice Problems</h3>
+            
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 1: Maximum Subarray
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given an integer array nums, find the contiguous subarray which has the largest sum and return its sum.</p>
+                <p><strong>Input:</strong> <code>nums = [-2,1,-3,4,-1,2,1,-5,4]</code></p>
+                <p><strong>Output:</strong> <code>6</code></p>
+                <p><strong>Explanation:</strong> The subarray [4,-1,2,1] has the largest sum 6.</p>
+                <p><strong>Hint:</strong> Use Kadane's Algorithm</p>
+                <a href="https://leetcode.com/problems/maximum-subarray/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 2: Container With Most Water
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> You are given an integer array height of length n. Find two lines that together with the x-axis form a container that holds the most water.</p>
+                <p><strong>Input:</strong> <code>height = [1,8,6,2,5,4,8,3,7]</code></p>
+                <p><strong>Output:</strong> <code>49</code></p>
+                <p><strong>Hint:</strong> Use two pointers, start from both ends</p>
+                <a href="https://leetcode.com/problems/container-with-most-water/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 3: Rotate Array
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array, rotate the array to the right by k steps, where k is non-negative.</p>
+                <p><strong>Input:</strong> <code>nums = [1,2,3,4,5,6,7], k = 3</code></p>
+                <p><strong>Output:</strong> <code>[5,6,7,1,2,3,4]</code></p>
+                <p><strong>Hint:</strong> Reverse array three times</p>
+                <a href="https://leetcode.com/problems/rotate-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 4: Remove Duplicates from Sorted Array
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given an integer array nums sorted in non-decreasing order, remove the duplicates in-place.</p>
+                <p><strong>Input:</strong> <code>nums = [1,1,2]</code></p>
+                <p><strong>Output:</strong> <code>2, nums = [1,2,_]</code></p>
+                <p><strong>Hint:</strong> Use slow/fast pointers</p>
+                <a href="https://leetcode.com/problems/remove-duplicates-from-sorted-array/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 5: 3Sum
+                    <span class="difficulty medium">MEDIUM</span>
+                </div>
+                <p><strong>Problem:</strong> Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.</p>
+                <p><strong>Input:</strong> <code>nums = [-1,0,1,2,-1,-4]</code></p>
+                <p><strong>Output:</strong> <code>[[-1,-1,2],[-1,0,1]]</code></p>
+                <p><strong>Hint:</strong> Sort array, then use two pointers for each element</p>
+                <a href="https://leetcode.com/problems/3sum/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+            <h3>Additional LeetCode Problems</h3>
+            <div class="leetcode-problem">
+                <div class="problem-title">
+                    Problem 6: Two Sum
+                    <span class="difficulty easy">EASY</span>
+                </div>
+                <p><strong>Problem:</strong> Given an array of integers nums and an integer target, return indices of two numbers such that they add up to target.</p>
+                <p><strong>Hint:</strong> Use hashmap for O(n) solution</p>
+                <a href="https://leetcode.com/problems/two-sum/" target="_blank" class="problem-link">Solve on LeetCode →</a>
+            </div>
+        </div>
+
+        <!-- Code Compiler for Arrays Section -->
+        <div class="compiler-container">
+            <div class="compiler-header">
+                <div class="compiler-title">💻 Practice Array Problems - Test Your Solutions</div>
+                <div class="compiler-controls">
+                    <button class="run-btn" onclick="runCode('arrays')">▶ Run Code</button>
+                    <button class="clear-btn" onclick="clearCode('arrays')">🗑️ Clear</button>
+                </div>
+            </div>
+            <textarea id="arrays-editor" class="code-editor"># Kadane's Algorithm - Maximum Subarray
+def max_subarray_sum(arr):
+    """Find maximum sum of contiguous subarray"""
+    max_so_far = arr[0]
+    max_ending_here = arr[0]
+    
+    for i in range(1, len(arr)):
+        max_ending_here = max(arr[i], max_ending_here + arr[i])
+        max_so_far = max(max_so_far, max_ending_here)
+    
+    return max_so_far
+
+# Test with the example
+arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+result = max_subarray_sum(arr)
+print(f"Array: {arr}")
+print(f"Maximum subarray sum: {result}")
+
+# Try with your own test cases!
+# Test case 2
+arr2 = [1, 2, 3, 4, 5]
+print(f"\nArray: {arr2}")
+print(f"Maximum subarray sum: {max_subarray_sum(arr2)}")</textarea>
+            <div id="arrays-output" class="output-container">
+                <div class="output-header">Output:</div>
+                <div id="arrays-content"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.classList.add('active');
+            event.target.classList.add('active');
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        }
+    }
+    
+    function runCode(id) {
+        const code = document.getElementById(id + '-editor').value;
+        const out = document.getElementById(id + '-output');
+        const content = document.getElementById(id + '-content');
+        out.classList.add('show');
+        let output = '';
+        try {
+            const log = (...args) => output += args.map(a => typeof a === 'object' ? JSON.stringify(a, null, 2) : String(a)).join(' ') + '\n';
+            new Function('console', 'print', code)({log}, log);
+            content.textContent = output || '✓ Code executed successfully (no output)';
+        } catch(e) { 
+            content.textContent = '❌ Error: ' + e.message + '\n\nStack trace:\n' + e.stack; 
+        }
+    }
+    
+    function clearCode(id) {
+        document.getElementById(id + '-editor').value = '';
+        document.getElementById(id + '-output').classList.remove('show');
+    }
+</script>
+</body>
+</html>
